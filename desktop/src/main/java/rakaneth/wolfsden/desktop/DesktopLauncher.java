@@ -18,8 +18,8 @@ public class DesktopLauncher {
     private static LwjglApplicationConfiguration getDefaultConfiguration() {
         LwjglApplicationConfiguration configuration = new LwjglApplicationConfiguration();
         configuration.title = "Wolf's Den II";
-        configuration.width = 80 * 10;
-        configuration.height = 31 * 20;
+        configuration.width = 120 * 12;
+        configuration.height = 40 * 24;
         for (int size : new int[] { 128, 64, 32, 16 }) {
             configuration.addIcon("libgdx" + size + ".png", FileType.Internal);
         }
