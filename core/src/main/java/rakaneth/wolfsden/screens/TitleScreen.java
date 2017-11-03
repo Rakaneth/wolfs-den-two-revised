@@ -11,6 +11,7 @@ import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 
 import rakaneth.wolfsden.Game;
+import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class TitleScreen extends WolfScreen {
 	
@@ -36,7 +37,7 @@ public class TitleScreen extends WolfScreen {
 				break;
 			case 'N':
 			case 'n':
-				Game.setScreen(new PlayScreen());
+				Game.engine.getSystem(RenderingSystem.class).setScreen(new PlayScreen());
 				break;
 			}
 		});

@@ -1,5 +1,7 @@
 package rakaneth.wolfsden;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -10,8 +12,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.components.WolfMap;
 import rakaneth.wolfsden.screens.TitleScreen;
 import rakaneth.wolfsden.screens.WolfScreen;
+import rakaneth.wolfsden.systems.RenderingSystem;
 import squidpony.FakeLanguageGen;
 import squidpony.NaturalLanguageCipher;
 import squidpony.StringKit;
@@ -53,28 +59,34 @@ import java.util.List;
  */
 public class Game extends ApplicationAdapter {
 	public static final StatefulRNG rng = new StatefulRNG(0xDEADBEEF);
-	private static WolfScreen curScreen;
+	public static final Engine engine = new Engine();
 
 	@Override
 	public void create () 
 	{
-		curScreen = new TitleScreen();
+		DungeonGenerator dunGen = new DungeonGenerator(100, 100, rng);
+		char[][] base = dunGen.generate();
+		GreasedRegion floors = new GreasedRegion(base, '.');
+		Coord startPoint = floors.singleRandom(rng);
+		Entity player = engine.createEntity();
+		player.add(new Position(startPoint, "base"));
+		engine.addEntity(player);
+		Entity map = engine.createEntity();
+		map.add(new WolfMap(base, "base"));
+		engine.addEntity(map);
+		engine.addSystem(new RenderingSystem(new TitleScreen()));
 	}
 
 	@Override
 	public void render () 
 	{
-		curScreen.render();
+		float dt = Gdx.graphics.getDeltaTime();
+		engine.update(dt);
 	}
 
 	@Override
 	public void resize(int width, int height) 
 	{
 		super.resize(width, height);
-	}
-	
-	public static void setScreen(WolfScreen screen)
-	{
-		curScreen = screen;
 	}
 }

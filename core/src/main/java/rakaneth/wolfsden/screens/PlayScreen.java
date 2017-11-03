@@ -20,6 +20,7 @@ import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.Game;
+import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class PlayScreen extends WolfScreen
 {
@@ -40,7 +41,7 @@ public class PlayScreen extends WolfScreen
 	private TextCellFactory.Glyph	gl;
 	private Coord									player;
 
-	public PlayScreen()
+	public PlayScreen(WolfMap map)
 	{
 		vport = new StretchViewport(pixelWidth, pixelHeight);
 		vport.setScreenBounds(0, 0, pixelWidth, pixelHeight);
@@ -51,7 +52,7 @@ public class PlayScreen extends WolfScreen
 
 			switch (key) {
 			case SquidInput.ESCAPE:
-				Game.setScreen(new TitleScreen());
+				Game.engine.getSystem(RenderingSystem.class).setScreen(new TitleScreen());
 				break;
 			case SquidInput.UP_ARROW:
 				move(Direction.UP);

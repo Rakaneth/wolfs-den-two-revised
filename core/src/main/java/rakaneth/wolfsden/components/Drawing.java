@@ -6,4 +6,9 @@ import squidpony.squidgrid.gui.gdx.TextCellFactory;
 
 public class Drawing implements Component {
 	public TextCellFactory.Glyph glyph;
+	
+	public Drawing(TextCellFactory.Glyph g)
+	{
+		glyph = g;
+	}
 }
