@@ -11,6 +11,7 @@ import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 import squidpony.squidgrid.gui.gdx.SquidMessageBox;
+import squidpony.squidgrid.gui.gdx.SquidPanel;
 import squidpony.squidgrid.gui.gdx.TextCellFactory;
 import rakaneth.wolfsden.Game;
 
@@ -21,8 +22,11 @@ public class PlayScreen extends WolfScreen {
 	private final int msgHeight = 8;
 	private final int pixelWidth = 120 * cellWidth;
 	private final int pixelHeight = 40 * cellHeight;
+	private final int statWidth = 40;
+	private final int statHeight = 40;
 	private SparseLayers display;
 	private SquidMessageBox msgs;
+	private SquidPanel statPanel;
 
 	public PlayScreen()
 	{
@@ -39,7 +43,7 @@ public class PlayScreen extends WolfScreen {
 				break;
 			}
 		});
-		TextCellFactory tcf = DefaultResources.getStretchableSlabFont();
+		TextCellFactory tcf = DefaultResources.getStretchableWideSlabFont();
 		tcf
 			.width(cellWidth)
 			.height(cellHeight)
@@ -49,14 +53,17 @@ public class PlayScreen extends WolfScreen {
 		
 		msgs = new SquidMessageBox(msgWidth, msgHeight, tcf);
 		
-		display.setPosition(0, msgHeight * cellHeight);
+		display.setBounds(0, msgHeight * cellHeight, gridWidth * cellWidth, gridHeight * cellHeight);
 		msgs.setBounds(0, 0, msgWidth * cellWidth, msgHeight * cellHeight);
-		msgs.appendMessage(GDXMarkup
-		                   .instance
-		                   .colorString("[Green]Welcome[] to Wolf's Den II!"));
+		statPanel = new SquidPanel(statWidth, statHeight, tcf.copy());
+		statPanel.setBounds(gridWidth * cellWidth, 0, statWidth * cellWidth, statHeight * cellHeight);
 		stage.addActor(display);
 		stage.addActor(msgs);
+		stage.addActor(statPanel);
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
+		msgs.appendMessage(GDXMarkup
+        .instance
+        .colorString("[Green]Welcome[] to Wolf's Den II!"));
 	}
 	
 	@Override
@@ -66,7 +73,8 @@ public class PlayScreen extends WolfScreen {
 		if (input.hasNext()) input.next();
 		putCenter(display, "Play Screen", 10, SColor.MEDIUM_CRIMSON);
 		putCenter(display, "[Esc] to return to title", 11, SColor.MEDIUM_CRIMSON);
-		stage.act();
+		statPanel.put(0, 0, "Test String");
 		stage.draw();
+		stage.act();
 	}
 }
