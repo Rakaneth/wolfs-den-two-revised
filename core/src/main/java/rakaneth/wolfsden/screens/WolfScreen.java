@@ -13,7 +13,7 @@ import squidpony.squidgrid.gui.gdx.SquidInput;
 public abstract class WolfScreen {
 	protected final SColor bgColor = SColor.DARK_SLATE_GRAY;
 	protected final int cellWidth = 12;
-	protected final int cellHeight = 24;
+	protected final int cellHeight = 20;
 	protected Stage stage;
 	protected SpriteBatch batch = new SpriteBatch();
 	protected SquidInput input;

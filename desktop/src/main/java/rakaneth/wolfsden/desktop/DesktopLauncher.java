@@ -19,7 +19,7 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration configuration = new LwjglApplicationConfiguration();
         configuration.title = "Wolf's Den II";
         configuration.width = 120 * 12;
-        configuration.height = 40 * 24;
+        configuration.height = 40 * 20;
         for (int size : new int[] { 128, 64, 32, 16 }) {
             configuration.addIcon("libgdx" + size + ".png", FileType.Internal);
         }
