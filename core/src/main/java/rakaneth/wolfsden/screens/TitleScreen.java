@@ -37,7 +37,7 @@ public class TitleScreen extends WolfScreen {
 				break;
 			case 'N':
 			case 'n':
-				Game.engine.getSystem(RenderingSystem.class).setScreen(new PlayScreen());
+				Game.setScreen(new PlayScreen());
 				break;
 			}
 		});

@@ -60,33 +60,28 @@ import java.util.List;
 public class Game extends ApplicationAdapter {
 	public static final StatefulRNG rng = new StatefulRNG(0xDEADBEEF);
 	public static final Engine engine = new Engine();
+	private static WolfScreen curScreen;
 
 	@Override
 	public void create () 
 	{
-		DungeonGenerator dunGen = new DungeonGenerator(100, 100, rng);
-		char[][] base = dunGen.generate();
-		GreasedRegion floors = new GreasedRegion(base, '.');
-		Coord startPoint = floors.singleRandom(rng);
-		Entity player = engine.createEntity();
-		player.add(new Position(startPoint, "base"));
-		engine.addEntity(player);
-		Entity map = engine.createEntity();
-		map.add(new WolfMap(base, "base"));
-		engine.addEntity(map);
-		engine.addSystem(new RenderingSystem(new TitleScreen()));
+		curScreen = new TitleScreen();
 	}
 
 	@Override
 	public void render () 
 	{
-		float dt = Gdx.graphics.getDeltaTime();
-		engine.update(dt);
+		curScreen.render();
 	}
 
 	@Override
 	public void resize(int width, int height) 
 	{
 		super.resize(width, height);
+	}
+	
+	public static void setScreen(WolfScreen sc)
+	{
+		curScreen = sc;
 	}
 }

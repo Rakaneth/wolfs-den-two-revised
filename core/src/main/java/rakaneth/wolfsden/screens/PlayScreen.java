@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import squidpony.squidgrid.Direction;
+import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.GDXMarkup;
 import squidpony.squidgrid.gui.gdx.MapUtility;
@@ -17,9 +18,11 @@ import squidpony.squidgrid.gui.gdx.SquidMessageBox;
 import squidpony.squidgrid.gui.gdx.SquidPanel;
 import squidpony.squidgrid.gui.gdx.TextCellFactory;
 import squidpony.squidgrid.mapping.DungeonGenerator;
+import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.Game;
+import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class PlayScreen extends WolfScreen
@@ -36,23 +39,29 @@ public class PlayScreen extends WolfScreen
 	private SquidMessageBox				msgs;
 	private SquidPanel						statPanel;
 	private char[][]							testDungeon;
-	private DungeonGenerator			dunGen			= new DungeonGenerator(80, 32, Game.rng);
+	private DungeonGenerator			dunGen			= new DungeonGenerator(160, 64, Game.rng);
 	private Color[][]							testColors;
 	private TextCellFactory.Glyph	gl;
 	private Coord									player;
+	private FOV										fov;
+	private double[][]						visible;
+	private double[][]						resistances;
+	private char[][]							decoDungeon;
+	private Color[][] testFG;
 
-	public PlayScreen(WolfMap map)
+	public PlayScreen()
 	{
 		vport = new StretchViewport(pixelWidth, pixelHeight);
 		vport.setScreenBounds(0, 0, pixelWidth, pixelHeight);
 		stage = new Stage(vport, batch);
-		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+		display = new SparseLayers(160, 64, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+		display.getFont().tweakHeight(1.1f * cellHeight).tweakWidth(1.1f * cellWidth).initBySize();
 		input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
 		{
-
 			switch (key) {
 			case SquidInput.ESCAPE:
-				Game.engine.getSystem(RenderingSystem.class).setScreen(new TitleScreen());
+				Game.engine.getSystem(RenderingSystem.class)
+									 .setScreen(new TitleScreen());
 				break;
 			case SquidInput.UP_ARROW:
 				move(Direction.UP);
@@ -80,46 +89,43 @@ public class PlayScreen extends WolfScreen
 				break;
 			}
 		});
-		TextCellFactory tcf = DefaultResources.getStretchableWideSlabFont();
-		tcf.width(cellWidth)
-			 .height(cellHeight)
-			 .tweakWidth(1.1f * cellWidth)
-			 .tweakHeight(1.1f * cellHeight)
-			 .initBySize();
-
-		msgs = new SquidMessageBox(msgWidth, msgHeight, tcf);
-
-		display.setBounds(0, msgHeight * cellHeight, gridWidth * cellWidth, gridHeight * cellHeight);
-		msgs.setBounds(0, 0, msgWidth * cellWidth, msgHeight * cellHeight);
-		statPanel = new SquidPanel(statWidth, statHeight, tcf.copy());
-		statPanel.setPosition(960, 0);
 		stage.addActor(display);
-		stage.addActor(msgs);
-		stage.addActor(statPanel);
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
-		msgs.appendMessage(GDXMarkup.instance.colorString("[Green]Welcome[] to Wolf's Den II!"));
-		msgs.appendMessage(GDXMarkup.instance.colorString("Press [Yellow][[Esc][] to return to the title screen."));
 		testDungeon = dunGen.generate();
 		testColors = MapUtility.generateDefaultBGColors(testDungeon);
+		testFG = MapUtility.generateDefaultColors(testDungeon);
+		resistances = DungeonUtility.generateResistances(testDungeon);
 		GreasedRegion gr = new GreasedRegion(testDungeon, '.');
-		player = gr.singleRandom(Game.rng);
-		gl = display.glyph('@', SColor.BLUE.toFloatBits(), player.x, player.y);
-	}
-
-	private void drawDungeon()
-	{
-		char[][] decoDungeon = new char[gridWidth][gridHeight];
+		decoDungeon = new char[160][64];
 		for (int x = 0; x < testDungeon.length; x++)
 		{
 			for (int y = 0; y < testDungeon[x].length; y++)
 			{
 				if (testDungeon[x][y] == '#')
-					decoDungeon[x][y] = (char) 0x2592;
+					decoDungeon[x][y] = Swatch.CHAR_WALL;
 				else
-					decoDungeon[x][y] = (char) 0x00A0;
+					decoDungeon[x][y] = Swatch.CHAR_FLOOR;
 			}
 		}
-		display.put(decoDungeon, testColors);
+		player = gr.singleRandom(Game.rng);
+		gl = display.glyph('@', SColor.BLUE.toFloatBits(), player.x, player.y);
+		fov = new FOV();
+		visible = fov.calculateFOV(resistances, player.x, player.y, 10);
+	}
+
+	private void drawDungeon()
+	{
+
+		for (int dx = 0; dx < decoDungeon.length; dx++)
+		{
+			for (int dy = 0; dy < decoDungeon[dx].length; dy++)
+			{
+				if (visible[dx][dy] > 0.0)
+				{
+					display.put(dx, dy, decoDungeon[dx][dy], testFG[dx][dy], testColors[dx][dy]);
+				}
+			}
+		}
 	}
 
 	private void move(Direction d)
@@ -130,6 +136,7 @@ public class PlayScreen extends WolfScreen
 		{
 			display.slide(gl, player.x, player.y, newX, newY, 0.1f, null);
 			player = player.translate(d);
+			FOV.reuseFOV(resistances, visible, player.x, player.y, 10);
 		}
 	}
 
@@ -137,11 +144,13 @@ public class PlayScreen extends WolfScreen
 	public void render()
 	{
 		super.render();
+		stage.getCamera().position.x = gl.getX();
+		stage.getCamera().position.y = gl.getY();
+		drawDungeon();
 		if (input.hasNext())
 			input.next();
-		drawDungeon();
-		statPanel.put(0, 0, "Test String");
-		stage.draw();
 		stage.act();
+		stage.getViewport().apply(false);
+		stage.draw();
 	}
 }
