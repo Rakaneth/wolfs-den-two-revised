@@ -1,5 +1,7 @@
 package rakaneth.wolfsden.screens;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
@@ -23,36 +25,38 @@ import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
+import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.Game;
 import rakaneth.wolfsden.Swatch;
+import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.Player;
+import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.systems.PlayerControllerSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class PlayScreen extends WolfScreen
 {
-	private final int							gridWidth			 = 80;
-	private final int							gridHeight		 = 32;
-	private final int							msgWidth			 = 80;
-	private final int							msgHeight			 = 8;
-	private final int							pixelWidth		 = gridWidth * cellWidth;
-	private final int							pixelHeight		 = gridHeight * cellHeight;
-	private final int							msgPixelHeight = msgHeight * cellHeight;
-	private final int							statWidth			 = 40;
-	private final int							statHeight		 = 40;
-	private SparseLayers					display;
-	private SquidMessageBox				msgs;
-	private SquidPanel						statPanel;
-	private char[][]							testDungeon;
-	private DungeonGenerator			dunGen				 = new DungeonGenerator(160, 64, Game.rng);
-	private Color[][]							testColors;
-	private TextCellFactory.Glyph	gl;
-	private Coord									player;
-	private FOV										fov;
-	private double[][]						visible;
-	private double[][]						resistances;
-	private char[][]							decoDungeon;
-	private Color[][]							testFG;
-	private StretchViewport				msgPort;
-	private Stage									msgStage;
+	private final int					 gridWidth			= 80;
+	private final int					 gridHeight			= 32;
+	private final int					 msgWidth				= 80;
+	private final int					 msgHeight			= 8;
+	private final int					 pixelWidth			= gridWidth * cellWidth;
+	private final int					 pixelHeight		= gridHeight * cellHeight;
+	private final int					 msgPixelHeight	= msgHeight * cellHeight;
+	private final int					 statWidth			= 40;
+	private final int					 statHeight			= 40;
+	private SparseLayers			 display;
+	private SquidMessageBox		 msgs;
+	private SquidPanel				 statPanel;
+	private DungeonGenerator	 dunGen					= new DungeonGenerator(160, 64, Game.rng);
+	private FOV								 fov;
+	private StretchViewport		 msgPort;
+	private Stage							 msgStage;
+	public static final Engine engine					= new Engine();
+	private Entity						 player					= engine.createEntity();
+	private WolfMap						 curMap;
+	private double[][]				 visible;
 
 	public PlayScreen()
 	{
@@ -81,28 +85,28 @@ public class PlayScreen extends WolfScreen
 				Game.setScreen(new TitleScreen());
 				break;
 			case SquidInput.UP_ARROW:
-				move(Direction.UP);
+				sendCmd(CommandTypes.MOVE, Direction.UP);
 				break;
 			case SquidInput.UP_RIGHT_ARROW:
-				move(Direction.UP_RIGHT);
+				sendCmd(CommandTypes.MOVE, Direction.UP_RIGHT);
 				break;
 			case SquidInput.RIGHT_ARROW:
-				move(Direction.RIGHT);
+				sendCmd(CommandTypes.MOVE, Direction.RIGHT);
 				break;
 			case SquidInput.DOWN_RIGHT_ARROW:
-				move(Direction.DOWN_RIGHT);
+				sendCmd(CommandTypes.MOVE, Direction.DOWN_RIGHT);
 				break;
 			case SquidInput.DOWN_ARROW:
-				move(Direction.DOWN);
+				sendCmd(CommandTypes.MOVE, Direction.DOWN);
 				break;
 			case SquidInput.DOWN_LEFT_ARROW:
-				move(Direction.DOWN_LEFT);
+				sendCmd(CommandTypes.MOVE, Direction.DOWN_LEFT);
 				break;
 			case SquidInput.LEFT_ARROW:
-				move(Direction.LEFT);
+				sendCmd(CommandTypes.MOVE, Direction.LEFT);
 				break;
 			case SquidInput.UP_LEFT_ARROW:
-				move(Direction.UP_LEFT);
+				sendCmd(CommandTypes.MOVE, Direction.UP_LEFT);
 				break;
 			}
 		});
@@ -110,54 +114,67 @@ public class PlayScreen extends WolfScreen
 		msgStage.addActor(msgs);
 		msgStage.addActor(statPanel);
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
-		testDungeon = dunGen.generate();
-		testColors = MapUtility.generateDefaultBGColors(testDungeon);
-		testFG = MapUtility.generateDefaultColors(testDungeon);
-		resistances = DungeonUtility.generateResistances(testDungeon);
-		GreasedRegion gr = new GreasedRegion(testDungeon, '.');
-		decoDungeon = new char[160][64];
-		for (int x = 0; x < testDungeon.length; x++)
-		{
-			for (int y = 0; y < testDungeon[x].length; y++)
-			{
-				if (testDungeon[x][y] == '#')
-					decoDungeon[x][y] = Swatch.CHAR_WALL;
-				else
-					decoDungeon[x][y] = Swatch.CHAR_FLOOR;
-			}
-		}
-		player = gr.singleRandom(Game.rng);
-		gl = display.glyph('@', SColor.BLUE.toFloatBits(), player.x, player.y);
-		fov = new FOV();
-		visible = fov.calculateFOV(resistances, player.x, player.y, 10);
+		buildEngine();
+		buildDungeon();
+		buildPlayer();
+		setFOV();
 		msgs.appendMessage("Message Box");
 		statPanel.put(0, 0, "Stats");
+	}
+	
+	private void buildEngine()
+	{
+		engine.addSystem(new PlayerControllerSystem());
+		engine.addSystem(new RenderingSystem(display));
+	}
+
+	private void buildDungeon()
+	{
+		char[][] testDungeon = dunGen.generate();
+		curMap = new WolfMap(testDungeon, "base");
+	}
+
+	private void buildPlayer()
+	{
+		Coord start = curMap.getEmpty();
+		player.add(new Position(start, curMap));
+		player.add(new Drawing(display.glyph('@', SColor.LIGHT_BLUE, start.x, start.y)));
+		player.add(new Player());
+		engine.addEntity(player);
+	}
+	
+	private void setFOV()
+	{
+		fov = new FOV();
+		Coord pos = player.getComponent(Position.class).current;
+		visible = fov.calculateFOV(curMap.resistanceMap, pos.x, pos.y, 10);
+	}
+	
+	private void updateFOV()
+	{
+		Coord pos = player.getComponent(Position.class).current;
+		FOV.reuseFOV(curMap.resistanceMap, visible, pos.x, pos.y, 10);
+	}
+	
+	private void sendCmd(CommandTypes cmd, Object target)
+	{
+		Player ply = player.getComponent(Player.class);
+		ply.cmds.push(target);
+		ply.cmds.push(cmd);
 	}
 
 	private void drawDungeon()
 	{
-
+		char[][] decoDungeon = curMap.displayMap;
 		for (int dx = 0; dx < decoDungeon.length; dx++)
 		{
 			for (int dy = 0; dy < decoDungeon[dx].length; dy++)
 			{
 				if (visible[dx][dy] > 0.0)
 				{
-					display.put(dx, dy, decoDungeon[dx][dy], testFG[dx][dy], testColors[dx][dy]);
+					display.put(dx, dy, decoDungeon[dx][dy], curMap.fgs[dx][dy], curMap.bgs[dx][dy]);
 				}
 			}
-		}
-	}
-
-	private void move(Direction d)
-	{
-		int newX = player.x + d.deltaX, newY = player.y + d.deltaY;
-
-		if (testDungeon[newX][newY] != '#')
-		{
-			display.slide(gl, player.x, player.y, newX, newY, 0.1f, null);
-			player = player.translate(d);
-			FOV.reuseFOV(resistances, visible, player.x, player.y, 10);
 		}
 	}
 
@@ -166,11 +183,15 @@ public class PlayScreen extends WolfScreen
 	{
 		super.render();
 		display.clear();
-		stage.getCamera().position.x = gl.getX();
-		stage.getCamera().position.y = gl.getY();
 		drawDungeon();
 		if (input.hasNext())
 			input.next();
+		float dt = Gdx.graphics.getDeltaTime();
+		engine.update(dt);
+		updateFOV();
+		TextCellFactory.Glyph gl = player.getComponent(Drawing.class).glyph;
+		stage.getCamera().position.x = gl.getX();
+		stage.getCamera().position.y = gl.getY();
 		msgStage.getViewport()
 						.apply(false);
 		msgStage.draw();

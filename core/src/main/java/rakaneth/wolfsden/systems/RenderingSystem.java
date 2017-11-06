@@ -4,11 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
-import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
-import rakaneth.wolfsden.screens.WolfScreen;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 
 public class RenderingSystem extends IteratingSystem

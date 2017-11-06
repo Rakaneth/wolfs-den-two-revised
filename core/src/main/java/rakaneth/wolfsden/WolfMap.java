@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badlogic.gdx.graphics.Color;
+
+import squidpony.squidgrid.gui.gdx.MapUtility;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
@@ -14,8 +17,8 @@ public class WolfMap
 	public char[][]											displayMap;
 	public double[][]										resistanceMap;
 	public String												id;
-	public int[][]											fgIndices;
-	public int[][]											bgIndices;
+	public Color[][] fgs;
+	public Color[][] bgs;
 	private static final Set<Character>	walkables	= new HashSet<Character>(
 			Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
 
@@ -35,8 +38,8 @@ public class WolfMap
 			}
 		}
 		resistanceMap = DungeonUtility.generateResistances(this.baseMap);
-		bgIndices = DungeonUtility.generateBGPaletteIndices(this.baseMap);
-		fgIndices = DungeonUtility.generatePaletteIndices(this.baseMap);
+		bgs = MapUtility.generateDefaultBGColors(this.baseMap);
+		fgs = MapUtility.generateDefaultColors(this.baseMap);
 	}
 
 	public int getWidth()

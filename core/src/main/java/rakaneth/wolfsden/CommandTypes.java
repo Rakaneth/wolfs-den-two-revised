@@ -6,5 +6,6 @@ public enum CommandTypes
 	ATTACK,
 	INVENTORY,
 	TRAINING,
-	SKILL
+	SKILL,
+	WAIT
 }
