@@ -1,5 +1,5 @@
-[
-	{
+{
+	wolf: {
 		name: "Wolf",
 		str: 2,
 		stam: 2,
@@ -8,7 +8,7 @@
 		color: "Sepia",
 		glyph: "W",
 	},
-	{
+	alpha: {
 		name: "Alpha",
 		str: 4,
 		stam: 3,
@@ -16,6 +16,5 @@
 		skl: 2,
 		color: "Dark Slate Grey",
 		glyph: "W",
-	},
-	
-]
+	},	
+}

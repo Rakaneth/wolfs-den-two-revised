@@ -51,7 +51,7 @@ public class PlayScreen extends WolfScreen
 	private SparseLayers			 display;
 	private SquidMessageBox		 msgs;
 	private SquidPanel				 statPanel;
-	private DungeonGenerator	 dunGen					= new DungeonGenerator(160, 64, Game.rng);
+	private DungeonGenerator	 dunGen					= new DungeonGenerator(20, 20, Game.rng);
 	private FOV								 fov;
 	private StretchViewport		 msgPort;
 	private Stage							 msgStage;
@@ -69,7 +69,7 @@ public class PlayScreen extends WolfScreen
 		msgPort.setScreenBounds(0, 0, pixelWidth, msgPixelHeight);
 		stage = new Stage(vport, batch);
 		msgStage = new Stage(msgPort, batch);
-		display = new SparseLayers(160, 64, cellWidth, cellHeight, tcf);
+		display = new SparseLayers(200, 200, cellWidth, cellHeight, tcf);
 		display.getFont()
 					 .tweakHeight(1.1f * cellHeight)
 					 .tweakWidth(1.1f * cellWidth)
@@ -138,7 +138,8 @@ public class PlayScreen extends WolfScreen
 
 	private void buildPlayer()
 	{
-		CreatureBuilder cb = new CreatureBuilder(engine);
+		CreatureBuilder cb = new CreatureBuilder(engine, display);
+		cb.build("wolf", curMap);
 		Coord start = curMap.getEmpty();
 		player.add(new Position(start, curMap));
 		player.add(new Drawing(display.glyph('@', SColor.LIGHT_BLUE, start.x, start.y)));
