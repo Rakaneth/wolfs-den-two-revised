@@ -6,24 +6,24 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.components.Mapper;
-import rakaneth.wolfsden.components.Player;
+import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
 import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
-public class PlayerControllerSystem extends IteratingSystem
+public class ActionResolverSystem extends IteratingSystem
 {
 
-	public PlayerControllerSystem()
+	public ActionResolverSystem()
 	{
-		super(Family.all(Player.class)
+		super(Family.all(ActionStack.class)
 								.get());
 	}
 
 	@Override
 	protected void processEntity(Entity entity, float deltaTime)
 	{
-		Player playerCmd = Mapper.player.get(entity);
+		ActionStack playerCmd = Mapper.actions.get(entity);
 		Position pos = Mapper.position.get(entity);
 		if (!playerCmd.cmds.empty())
 		{

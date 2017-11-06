@@ -17,8 +17,8 @@ public class WolfMap
 	public char[][]											displayMap;
 	public double[][]										resistanceMap;
 	public String												id;
-	public Color[][] fgs;
-	public Color[][] bgs;
+	public Color[][]										fgs;
+	public Color[][]										bgs;
 	private static final Set<Character>	walkables	= new HashSet<Character>(
 			Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
 
@@ -85,7 +85,7 @@ public class WolfMap
 
 	public Coord getEmptyNear(Coord c, int radius)
 	{
-		//TODO: finish
+		// TODO: finish
 		GreasedRegion gr = new GreasedRegion();
 		return gr.singleRandom(Game.rng);
 	}
@@ -108,7 +108,7 @@ public class WolfMap
 		displayMap[c.x][c.y] = Swatch.CHAR_DOWN;
 		resistanceMap = DungeonUtility.generateResistances(this.baseMap);
 	}
-	
+
 	public void makeOutStair(Coord c)
 	{
 		baseMap[c.x][c.y] = 'o';
@@ -130,13 +130,10 @@ public class WolfMap
 			return Stairs.NONE;
 		}
 	}
-	
+
 	public enum Stairs
 	{
-		DOWN,
-		UP,
-		OUT,
-		NONE;
+		DOWN, UP, OUT, NONE;
 	}
 
 }

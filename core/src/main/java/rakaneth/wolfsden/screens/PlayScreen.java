@@ -26,13 +26,15 @@ import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.CreatureBuilder;
 import rakaneth.wolfsden.Game;
 import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Player;
+import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
-import rakaneth.wolfsden.systems.PlayerControllerSystem;
+import rakaneth.wolfsden.systems.ActionResolverSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class PlayScreen extends WolfScreen
@@ -124,7 +126,7 @@ public class PlayScreen extends WolfScreen
 
 	private void buildEngine()
 	{
-		engine.addSystem(new PlayerControllerSystem());
+		engine.addSystem(new ActionResolverSystem());
 		engine.addSystem(new RenderingSystem(display));
 	}
 
@@ -136,9 +138,11 @@ public class PlayScreen extends WolfScreen
 
 	private void buildPlayer()
 	{
+		CreatureBuilder cb = new CreatureBuilder(engine);
 		Coord start = curMap.getEmpty();
 		player.add(new Position(start, curMap));
 		player.add(new Drawing(display.glyph('@', SColor.LIGHT_BLUE, start.x, start.y)));
+		player.add(new ActionStack());
 		player.add(new Player());
 		engine.addEntity(player);
 	}
@@ -158,7 +162,7 @@ public class PlayScreen extends WolfScreen
 
 	private void sendCmd(CommandTypes cmd, Object target)
 	{
-		Player ply = player.getComponent(Player.class);
+		ActionStack ply = player.getComponent(ActionStack.class);
 		ply.cmds.push(target);
 		ply.cmds.push(cmd);
 	}
