@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Position;
-import rakaneth.wolfsden.components.WolfMap;
 import rakaneth.wolfsden.screens.TitleScreen;
 import rakaneth.wolfsden.screens.WolfScreen;
 import rakaneth.wolfsden.systems.RenderingSystem;
@@ -59,7 +58,6 @@ import java.util.List;
  */
 public class Game extends ApplicationAdapter {
 	public static final StatefulRNG rng = new StatefulRNG(0xDEADBEEF);
-	public static final Engine engine = new Engine();
 	private static WolfScreen curScreen;
 
 	@Override

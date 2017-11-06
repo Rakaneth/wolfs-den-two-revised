@@ -78,8 +78,7 @@ public class PlayScreen extends WolfScreen
 		{
 			switch (key) {
 			case SquidInput.ESCAPE:
-				Game.engine.getSystem(RenderingSystem.class)
-									 .setScreen(new TitleScreen());
+				Game.setScreen(new TitleScreen());
 				break;
 			case SquidInput.UP_ARROW:
 				move(Direction.UP);
@@ -131,7 +130,7 @@ public class PlayScreen extends WolfScreen
 		gl = display.glyph('@', SColor.BLUE.toFloatBits(), player.x, player.y);
 		fov = new FOV();
 		visible = fov.calculateFOV(resistances, player.x, player.y, 10);
-		msgs.appendMessage("Test String");
+		msgs.appendMessage("Message Box");
 		statPanel.put(0, 0, "Stats");
 	}
 

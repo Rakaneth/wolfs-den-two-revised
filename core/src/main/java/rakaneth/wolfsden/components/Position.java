@@ -2,15 +2,21 @@ package rakaneth.wolfsden.components;
 
 import com.badlogic.ashley.core.Component;
 
+import rakaneth.wolfsden.WolfMap;
 import squidpony.squidmath.Coord;
 
 public class Position implements Component {
-	public Coord pos;
-	public String mapID;
+	public Coord current;
+	public Coord prev;
 	
-	public Position(Coord startPoint, String mapID)
+	public WolfMap map;
+	public boolean dirty;
+	
+	public Position(Coord startPoint, WolfMap map)
 	{
-		pos = startPoint;
-		this.mapID = mapID;
+		current = startPoint;
+		prev = startPoint;
+		this.map = map;
+		dirty = false;
 	}
 }
