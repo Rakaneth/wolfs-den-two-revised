@@ -121,7 +121,7 @@ public class PlayScreen extends WolfScreen
 		msgs.appendMessage("Message Box");
 		statPanel.put(0, 0, "Stats");
 	}
-	
+
 	private void buildEngine()
 	{
 		engine.addSystem(new PlayerControllerSystem());
@@ -142,20 +142,20 @@ public class PlayScreen extends WolfScreen
 		player.add(new Player());
 		engine.addEntity(player);
 	}
-	
+
 	private void setFOV()
 	{
 		fov = new FOV();
 		Coord pos = player.getComponent(Position.class).current;
 		visible = fov.calculateFOV(curMap.resistanceMap, pos.x, pos.y, 10);
 	}
-	
+
 	private void updateFOV()
 	{
 		Coord pos = player.getComponent(Position.class).current;
 		FOV.reuseFOV(curMap.resistanceMap, visible, pos.x, pos.y, 10);
 	}
-	
+
 	private void sendCmd(CommandTypes cmd, Object target)
 	{
 		Player ply = player.getComponent(Player.class);

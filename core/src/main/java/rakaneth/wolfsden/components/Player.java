@@ -9,6 +9,6 @@ import squidpony.squidmath.OrderedMap;
 
 public class Player implements Component
 {
-	public Stack<Object> cmds = new Stack<>();
-	public boolean tookTurn;
+	public Stack<Object> cmds	= new Stack<>();
+	public boolean			 tookTurn;
 }

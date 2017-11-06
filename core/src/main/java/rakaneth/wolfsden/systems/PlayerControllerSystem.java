@@ -16,19 +16,21 @@ public class PlayerControllerSystem extends IteratingSystem
 
 	public PlayerControllerSystem()
 	{
-		super(Family.all(Player.class).get());
+		super(Family.all(Player.class)
+								.get());
 	}
-	
+
 	@Override
 	protected void processEntity(Entity entity, float deltaTime)
 	{
 		Player playerCmd = Mapper.player.get(entity);
 		Position pos = Mapper.position.get(entity);
-		if (!playerCmd.cmds.empty()) {
-			CommandTypes cmd = (CommandTypes)playerCmd.cmds.pop();
+		if (!playerCmd.cmds.empty())
+		{
+			CommandTypes cmd = (CommandTypes) playerCmd.cmds.pop();
 			switch (cmd) {
 			case MOVE:
-				Direction d = (Direction)playerCmd.cmds.pop();
+				Direction d = (Direction) playerCmd.cmds.pop();
 				int newX = pos.current.x + d.deltaX;
 				int newY = pos.current.y + d.deltaY;
 				Coord newCoord = Coord.get(newX, newY);
@@ -38,7 +40,8 @@ public class PlayerControllerSystem extends IteratingSystem
 					pos.current = newCoord;
 					playerCmd.tookTurn = true;
 				}
-				default: {}
+			default: {
+			}
 			}
 		}
 	}
