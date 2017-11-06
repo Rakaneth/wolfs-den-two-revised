@@ -10,8 +10,10 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Stats;
+
 import squidpony.DataConverter;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
@@ -22,7 +24,7 @@ public class CreatureBuilder
 	private static final String fileName = "data/creatures.js";
 	private HashMap<String, CreatureBase> creatures;
 	private SparseLayers display;
-
+	private static int counter = 1;
 	
 	@SuppressWarnings("unchecked")
 	public CreatureBuilder(Engine engine, SparseLayers display)
@@ -33,10 +35,11 @@ public class CreatureBuilder
 		System.out.println(creatures.get("wolf").glyph);
 		this.display = display;
 	}
-	
+
 	public Entity build(String id, WolfMap map)
 	{
 		CreatureBase base = creatures.get(id);
+		String IDid = String.format("%s-%d", id, counter++);
 		Color color = Colors.get(base.color);
 		Entity creature = new Entity();
 		Coord pos = map.getEmpty();
@@ -44,6 +47,7 @@ public class CreatureBuilder
 		creature.add(new Drawing(display.glyph(base.glyph, color, pos.x, pos.y)));
 		creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
 		creature.add(new ActionStack());
+		creature.add(new Identity(base.name, IDid));
 		engine.addEntity(creature);
 		return creature;
 	}
