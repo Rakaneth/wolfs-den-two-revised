@@ -6,7 +6,7 @@
 		stam: 2,
 		spd: 1,
 		skl: 1
-		color: "Sepia",
+		color: "CW Light Brown",
 		glyph: "W",
 	},
 	alpha: {
@@ -17,5 +17,15 @@
 		skl: 2,
 		color: "Dark Slate Grey",
 		glyph: "W",
-	},	
+	},
+	fighter: {
+		name: "Player",
+		desc: "Fighter",
+		str: 2,
+		stam: 2,
+		spd: 1,
+		skl: 1,
+		color: "White",
+		glyph: "@",
+	}
 }

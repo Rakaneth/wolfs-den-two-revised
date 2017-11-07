@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Identity;
+import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Stats;
 
@@ -50,6 +51,13 @@ public class CreatureBuilder
 		engine.addEntity(creature);
 		return creature;
 	}
+	
+	public Entity buildPlayer(String id, WolfMap map)
+	{
+		Entity p = build(id, map);
+		p.add(new Player());
+		return p;
+	}
 
 	private static class CreatureBase
 	{
@@ -60,5 +68,6 @@ public class CreatureBuilder
 		public int skl;
 		public char glyph;
 		public String color;
+		public String desc;
 	}
 }

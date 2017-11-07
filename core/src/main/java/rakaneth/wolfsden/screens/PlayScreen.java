@@ -4,37 +4,34 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import squidpony.panel.IColoredString;
 import squidpony.squidgrid.Direction;
 import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.GDXMarkup;
-import squidpony.squidgrid.gui.gdx.MapUtility;
-import squidpony.squidgrid.gui.gdx.SColor;
+import squidpony.squidgrid.gui.gdx.LinesPanel;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 import squidpony.squidgrid.gui.gdx.SquidMessageBox;
 import squidpony.squidgrid.gui.gdx.SquidPanel;
 import squidpony.squidgrid.gui.gdx.TextCellFactory;
+import squidpony.squidgrid.gui.gdx.TextFamily;
 import squidpony.squidgrid.mapping.DungeonGenerator;
-import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
-import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
 import rakaneth.wolfsden.Game;
-import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Drawing;
-import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
@@ -42,33 +39,35 @@ import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class PlayScreen extends WolfScreen
 {
-	private final int				 gridWidth			 = 80;
-	private final int				 gridHeight			 = 32;
-	private final int				 msgWidth				 = 80;
-	private final int				 msgHeight			 = 8;
-	private final int				 pixelWidth			 = gridWidth * cellWidth;
-	private final int				 pixelHeight		 = gridHeight * cellHeight;
-	private final int				 msgPixelHeight	 = msgHeight * cellHeight;
-	private final int				 statWidth			 = 40;
-	private final int				 statHeight			 = 40;
-	private final int				 fullWidth			 = gridWidth + statWidth;
-	private final int				 fullHeight			 = gridHeight + msgHeight;
-	private final int				 fullPixelWidth	 = fullWidth * cellWidth;
-	private final int				 fullPixelHeight = fullHeight * cellHeight;
-	private final int				 statPixelWidth	 = statWidth * cellWidth;
-	private final int				 statPixelHeight = statHeight * cellHeight;
-	private SparseLayers		 display;
-	private SquidMessageBox	 msgs;
-	private SquidPanel			 statPanel;
-	private DungeonGenerator dunGen					 = new DungeonGenerator(20, 20, Game.rng);
-	private FOV							 fov;
-	private Viewport				 msgPort;
-	private Stage						 msgStage;
-	public final Engine			 engine					 = new Engine();
-	private Entity					 player					 = engine.createEntity();
-	private WolfMap					 curMap;
-	private double[][]			 visible;
-	private CreatureBuilder	 cb;
+	private final int							 gridWidth			 = 80;
+	private final int							 gridHeight			 = 32;
+	private final int							 msgWidth				 = 80;
+	private final int							 msgHeight			 = 8;
+	private final int							 pixelWidth			 = gridWidth * cellWidth;
+	private final int							 pixelHeight		 = gridHeight * cellHeight;
+	private final int							 msgPixelHeight	 = msgHeight * cellHeight;
+	private final int							 statWidth			 = 40;
+	private final int							 statHeight			 = 40;
+	private final int							 fullWidth			 = gridWidth + statWidth;
+	private final int							 fullHeight			 = gridHeight + msgHeight;
+	private final int							 fullPixelWidth	 = fullWidth * cellWidth;
+	private final int							 fullPixelHeight = fullHeight * cellHeight;
+	private final int							 statPixelWidth	 = statWidth * cellWidth;
+	private final int							 statPixelHeight = statHeight * cellHeight;
+	private SparseLayers					 display;
+	private static SquidMessageBox msgs;
+	private SquidPanel						 statPanel;
+	private DungeonGenerator			 dunGen					 = new DungeonGenerator(120, 120, Game.rng);
+	private FOV										 fov;
+	private Viewport							 msgPort;
+	private Stage									 msgStage;
+	public final Engine						 engine					 = new Engine();
+	private Entity								 player;
+	private WolfMap								 curMap;
+	private double[][]						 visible;
+	private CreatureBuilder				 cb;
+	private int										 counter				 = 1;
+	// private static LinesPanel<Color> lp;
 
 	public PlayScreen()
 	{
@@ -80,16 +79,28 @@ public class PlayScreen extends WolfScreen
 		stage = new Stage(vport, batch);
 		msgStage = new Stage(msgPort, batch);
 		display = new SparseLayers(200, 200, cellWidth, cellHeight, tcf);
+		display.setBounds(0, msgPixelHeight, pixelWidth, pixelHeight);
 		display.getFont()
 					 .tweakHeight(1.1f * cellHeight)
 					 .tweakWidth(1.1f * cellWidth)
 					 .initBySize();
 		display.setPosition(0, msgPixelHeight);
-		msgs = new SquidMessageBox(msgWidth, msgHeight, tcf);
+		TextFamily slab = DefaultResources.getSlabFamily();
+		/*
+		 * slab.width(cellWidth).height(cellHeight).initBySize(); final int nl =
+		 * LinesPanel.computeMaxLines(slab.font(), msgPixelHeight); lp = new
+		 * LinesPanel<Color>(GDXMarkup.instance, slab, nl);
+		 */
+		msgs = new SquidMessageBox(msgWidth, msgHeight, slab);
+		msgs.getTextCellFactory()
+				.width(cellWidth)
+				.height(cellHeight)
+				.tweakHeight(1.5f * cellHeight)
+				.tweakWidth(1.2f * cellWidth)
+				.initBySize();
 		msgs.setBounds(0, 0, pixelWidth, msgPixelHeight);
 		statPanel = new SquidPanel(statWidth, statHeight, tcf);
-		statPanel.setBounds(pixelWidth, 0, statWidth * cellWidth, statHeight * cellHeight);
-
+		statPanel.setBounds(pixelWidth, 0, statPixelWidth, statPixelHeight);
 
 		input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
 		{
@@ -121,17 +132,22 @@ public class PlayScreen extends WolfScreen
 			case SquidInput.UP_LEFT_ARROW:
 				sendCmd(CommandTypes.MOVE, Direction.UP_LEFT);
 				break;
+			case 'T':
+				addMessage("[/]Should be italic,[] should be normal [Light Blue]%d[]", counter++);
+				break;
 			}
 		});
 		stage.addActor(display);
 		msgStage.addActor(msgs);
+		// msgStage.addActor(lp);
 		msgStage.addActor(statPanel);
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
 		buildEngine();
 		buildDungeon();
 		buildPlayer();
 		setFOV();
-		msgs.appendMessage("Message Box");
+		addMessage("Messages");
+		// addMessageLP("[/]This text should be italic;[] this text is not.");
 		statPanel.put(0, 0, "Stats");
 	}
 
@@ -150,14 +166,8 @@ public class PlayScreen extends WolfScreen
 
 	private void buildPlayer()
 	{
-
+		player = cb.build("fighter", curMap);
 		cb.build("wolf", curMap);
-		Coord start = curMap.getEmpty();
-		player.add(new Position(start, curMap));
-		player.add(new Drawing(display.glyph('@', SColor.LIGHT_BLUE, start.x, start.y)));
-		player.add(new ActionStack());
-		player.add(new Player());
-		engine.addEntity(player);
 	}
 
 	private void setFOV()
@@ -195,6 +205,20 @@ public class PlayScreen extends WolfScreen
 		}
 	}
 
+	public static void addMessage(String template, Object... args)
+	{
+		String rawText = String.format(template, args);
+		IColoredString<Color> toWrite = GDXMarkup.instance.colorString(rawText);
+		msgs.appendMessage(toWrite);
+	}
+
+	public static void addMessageLP(String template, Object... args)
+	{
+		String rawText = String.format(template, args);
+		IColoredString<Color> toWrite = GDXMarkup.instance.colorString(rawText);
+		// lp.addFirst(toWrite);
+	}
+
 	@Override
 	public void render()
 	{
@@ -207,14 +231,17 @@ public class PlayScreen extends WolfScreen
 		engine.update(dt);
 		updateFOV();
 		TextCellFactory.Glyph gl = player.getComponent(Drawing.class).glyph;
-		stage.getCamera().position.x = gl.getX();
-		stage.getCamera().position.y = gl.getY();
+		msgStage.getViewport()
+						.apply(false);
+		msgStage.draw();
+		Camera cam = stage.getCamera();
+		System.out.println(cam.viewportWidth);
+		cam.position.x = gl.getX();
+		cam.position.y = gl.getY();
+
 		stage.act();
 		stage.getViewport()
 				 .apply(false);
 		stage.draw();
-		msgStage.getViewport()
-						.apply(false);
-		msgStage.draw();
 	}
 }
