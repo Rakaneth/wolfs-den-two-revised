@@ -72,10 +72,8 @@ public class PlayScreen extends WolfScreen
 	public PlayScreen()
 	{
 		TextCellFactory tcf = DefaultResources.getStretchableSlabFont();
-		vport = new FitViewport(pixelWidth, pixelHeight);
-		vport.setScreenBounds(0, 0, pixelWidth, pixelHeight);
-		msgPort = new FitViewport(pixelWidth, msgPixelHeight);
-		msgPort.setScreenBounds(0, 0, pixelWidth, msgPixelHeight);
+		vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
+		msgPort = new StretchViewport(fullPixelWidth, fullPixelHeight);
 		stage = new Stage(vport, batch);
 		msgStage = new Stage(msgPort, batch);
 		display = new SparseLayers(200, 200, cellWidth, cellHeight, tcf);
@@ -101,6 +99,7 @@ public class PlayScreen extends WolfScreen
 		msgs.setBounds(0, 0, pixelWidth, msgPixelHeight);
 		statPanel = new SquidPanel(statWidth, statHeight, tcf);
 		statPanel.setBounds(pixelWidth, 0, statPixelWidth, statPixelHeight);
+		
 
 		input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
 		{
@@ -162,6 +161,7 @@ public class PlayScreen extends WolfScreen
 	{
 		char[][] testDungeon = dunGen.generate();
 		curMap = new WolfMap(testDungeon, "base");
+		//curMap.dark = true;
 	}
 
 	private void buildPlayer()
@@ -231,12 +231,12 @@ public class PlayScreen extends WolfScreen
 		engine.update(dt);
 		updateFOV();
 		TextCellFactory.Glyph gl = player.getComponent(Drawing.class).glyph;
+		msgStage.act();
 		msgStage.getViewport()
 						.apply(false);
 		msgStage.draw();
 		Camera cam = stage.getCamera();
-		cam.position.x = gl.getX();
-		cam.position.y = gl.getY();
+		cam.position.set(gl.getX(), gl.getY(), 0);
 
 		stage.act();
 		stage.getViewport()
