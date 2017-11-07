@@ -72,9 +72,9 @@ public class PlayScreen extends WolfScreen
 	public PlayScreen()
 	{
 		TextCellFactory tcf = DefaultResources.getStretchableSlabFont();
-		vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
+		vport = new FitViewport(pixelWidth, pixelHeight);
 		vport.setScreenBounds(0, 0, pixelWidth, pixelHeight);
-		msgPort = new StretchViewport(fullPixelWidth, fullPixelHeight);
+		msgPort = new FitViewport(pixelWidth, msgPixelHeight);
 		msgPort.setScreenBounds(0, 0, pixelWidth, msgPixelHeight);
 		stage = new Stage(vport, batch);
 		msgStage = new Stage(msgPort, batch);
@@ -235,7 +235,6 @@ public class PlayScreen extends WolfScreen
 						.apply(false);
 		msgStage.draw();
 		Camera cam = stage.getCamera();
-		System.out.println(cam.viewportWidth);
 		cam.position.x = gl.getX();
 		cam.position.y = gl.getY();
 
