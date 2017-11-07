@@ -6,6 +6,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -39,33 +42,40 @@ import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class PlayScreen extends WolfScreen
 {
-	private final int					 gridWidth			= 80;
-	private final int					 gridHeight			= 32;
-	private final int					 msgWidth				= 80;
-	private final int					 msgHeight			= 8;
-	private final int					 pixelWidth			= gridWidth * cellWidth;
-	private final int					 pixelHeight		= gridHeight * cellHeight;
-	private final int					 msgPixelHeight	= msgHeight * cellHeight;
-	private final int					 statWidth			= 40;
-	private final int					 statHeight			= 40;
-	private SparseLayers			 display;
-	private SquidMessageBox		 msgs;
-	private SquidPanel				 statPanel;
-	private DungeonGenerator	 dunGen					= new DungeonGenerator(20, 20, Game.rng);
-	private FOV								 fov;
-	private StretchViewport		 msgPort;
-	private Stage							 msgStage;
-	public static final Engine engine					= new Engine();
-	private Entity						 player					= engine.createEntity();
-	private WolfMap						 curMap;
-	private double[][]				 visible;
+	private final int				 gridWidth			 = 80;
+	private final int				 gridHeight			 = 32;
+	private final int				 msgWidth				 = 80;
+	private final int				 msgHeight			 = 8;
+	private final int				 pixelWidth			 = gridWidth * cellWidth;
+	private final int				 pixelHeight		 = gridHeight * cellHeight;
+	private final int				 msgPixelHeight	 = msgHeight * cellHeight;
+	private final int				 statWidth			 = 40;
+	private final int				 statHeight			 = 40;
+	private final int				 fullWidth			 = gridWidth + statWidth;
+	private final int				 fullHeight			 = gridHeight + msgHeight;
+	private final int				 fullPixelWidth	 = fullWidth * cellWidth;
+	private final int				 fullPixelHeight = fullHeight * cellHeight;
+	private final int				 statPixelWidth	 = statWidth * cellWidth;
+	private final int				 statPixelHeight = statHeight * cellHeight;
+	private SparseLayers		 display;
+	private SquidMessageBox	 msgs;
+	private SquidPanel			 statPanel;
+	private DungeonGenerator dunGen					 = new DungeonGenerator(20, 20, Game.rng);
+	private FOV							 fov;
+	private Viewport				 msgPort;
+	private Stage						 msgStage;
+	public final Engine			 engine					 = new Engine();
+	private Entity					 player					 = engine.createEntity();
+	private WolfMap					 curMap;
+	private double[][]			 visible;
+	private CreatureBuilder	 cb;
 
 	public PlayScreen()
 	{
 		TextCellFactory tcf = DefaultResources.getStretchableSlabFont();
-		vport = new StretchViewport(120 * cellWidth, 40 * cellHeight);
+		vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
 		vport.setScreenBounds(0, 0, pixelWidth, pixelHeight);
-		msgPort = new StretchViewport(120 * cellWidth, 40 * cellHeight);
+		msgPort = new StretchViewport(fullPixelWidth, fullPixelHeight);
 		msgPort.setScreenBounds(0, 0, pixelWidth, msgPixelHeight);
 		stage = new Stage(vport, batch);
 		msgStage = new Stage(msgPort, batch);
@@ -79,6 +89,7 @@ public class PlayScreen extends WolfScreen
 		msgs.setBounds(0, 0, pixelWidth, msgPixelHeight);
 		statPanel = new SquidPanel(statWidth, statHeight, tcf);
 		statPanel.setBounds(pixelWidth, 0, statWidth * cellWidth, statHeight * cellHeight);
+
 
 		input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
 		{
@@ -128,6 +139,7 @@ public class PlayScreen extends WolfScreen
 	{
 		engine.addSystem(new ActionResolverSystem());
 		engine.addSystem(new RenderingSystem(display));
+		cb = new CreatureBuilder(engine, display);
 	}
 
 	private void buildDungeon()
@@ -138,7 +150,7 @@ public class PlayScreen extends WolfScreen
 
 	private void buildPlayer()
 	{
-		CreatureBuilder cb = new CreatureBuilder(engine, display);
+
 		cb.build("wolf", curMap);
 		Coord start = curMap.getEmpty();
 		player.add(new Position(start, curMap));
@@ -175,7 +187,7 @@ public class PlayScreen extends WolfScreen
 		{
 			for (int dy = 0; dy < decoDungeon[dx].length; dy++)
 			{
-				if (visible[dx][dy] > 0.0)
+				if (visible[dx][dy] > 0.0 || !curMap.dark)
 				{
 					display.put(dx, dy, decoDungeon[dx][dy], curMap.fgs[dx][dy], curMap.bgs[dx][dy]);
 				}
@@ -197,12 +209,12 @@ public class PlayScreen extends WolfScreen
 		TextCellFactory.Glyph gl = player.getComponent(Drawing.class).glyph;
 		stage.getCamera().position.x = gl.getX();
 		stage.getCamera().position.y = gl.getY();
-		msgStage.getViewport()
-						.apply(false);
-		msgStage.draw();
 		stage.act();
 		stage.getViewport()
 				 .apply(false);
 		stage.draw();
+		msgStage.getViewport()
+						.apply(false);
+		msgStage.draw();
 	}
 }

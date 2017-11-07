@@ -1,3 +1,4 @@
+//use "\uxxxx" notation for arbitrary Unicode
 {
 	wolf: {
 		name: "Wolf",

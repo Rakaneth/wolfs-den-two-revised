@@ -19,6 +19,7 @@ public class WolfMap
 	public String												id;
 	public Color[][]										fgs;
 	public Color[][]										bgs;
+	public boolean dark;
 	private static final Set<Character>	walkables	= new HashSet<Character>(
 			Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
 

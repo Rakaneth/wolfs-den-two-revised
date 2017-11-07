@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
@@ -17,7 +18,7 @@ public abstract class WolfScreen {
 	protected Stage stage;
 	protected SpriteBatch batch = new SpriteBatch();
 	protected SquidInput input;
-	protected StretchViewport vport;
+	protected Viewport vport;
 	
 	public void render() 
 	{

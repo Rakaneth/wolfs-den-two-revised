@@ -32,7 +32,6 @@ public class CreatureBuilder
 		this.engine = engine;
 		DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
 		creatures = converter.fromJson(HashMap.class, CreatureBase.class, Gdx.files.internal(fileName));
-		System.out.println(creatures.get("wolf").glyph);
 		this.display = display;
 	}
 
@@ -52,7 +51,6 @@ public class CreatureBuilder
 		return creature;
 	}
 
-	@SuppressWarnings("unused")
 	private static class CreatureBase
 	{
 		public String name;
