@@ -26,6 +26,7 @@ import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
 import rakaneth.wolfsden.Game;
+import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
@@ -158,9 +159,8 @@ public class PlayScreen extends WolfScreen
 
 	private void buildDungeon()
 	{
-		char[][] testDungeon = dunGen.generate();
-		curMap = new WolfMap(testDungeon, "base");
-		curMap.dark = true;
+		MapBuilder mb = MapBuilder.instance;
+		curMap = mb.buildMap("wolfDen2");
 	}
 
 	private void buildPlayer()
@@ -239,7 +239,7 @@ public class PlayScreen extends WolfScreen
 				wy = dy + cam.y;
 				if (!curMap.isOOB(wx, wy))
 				{
-					if (curMap.dark)
+					if (curMap.isDark())
 					{
 						if (visible[wx][wy] > 0.0)
 							display.put(dx, dy, decoDungeon[wx][wy], curMap.fgFloats[wx][wy], curMap.bgFloats[wx][wy]);
