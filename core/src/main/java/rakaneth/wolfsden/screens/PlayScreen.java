@@ -99,6 +99,7 @@ public class PlayScreen extends WolfScreen
 				.tweakWidth(1.2f * cellWidth)
 				.initBySize();
 		msgs.setBounds(0, 0, msgPixelWidth, msgPixelHeight);
+		addMessage("Welcome to [/][Green]Wolf's Den II![]");
 
 		input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
 		{
@@ -129,9 +130,6 @@ public class PlayScreen extends WolfScreen
 				break;
 			case SquidInput.UP_LEFT_ARROW:
 				sendCmd(CommandTypes.MOVE, Direction.UP_LEFT);
-				break;
-			case 'T':
-				addMessage("[/]Should be italic,[] should be normal [Light Blue]%d[]", counter++);
 				break;
 			}
 		});
@@ -278,10 +276,6 @@ public class PlayScreen extends WolfScreen
 		float dt = Gdx.graphics.getDeltaTime();
 		engine.update(dt);
 		updateFOV();
-		// msgStage.act();
-		// msgStage.getViewport()
-		// .apply(false);
-		// msgStage.draw();
 		stage.act();
 		stage.getViewport()
 				 .apply(false);
