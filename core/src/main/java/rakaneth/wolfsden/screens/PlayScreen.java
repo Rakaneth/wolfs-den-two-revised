@@ -20,7 +20,6 @@ import squidpony.squidgrid.gui.gdx.SquidInput;
 import squidpony.squidgrid.gui.gdx.SquidMessageBox;
 import squidpony.squidgrid.gui.gdx.SquidPanel;
 import squidpony.squidgrid.gui.gdx.TextFamily;
-import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.CommandTypes;
@@ -64,7 +63,6 @@ public class PlayScreen extends WolfScreen
 	private SparseLayers					 display;
 	private static SquidMessageBox msgs;
 	private SquidPanel						 invPanel, statPanel, ttPanel;
-	private DungeonGenerator			 dunGen					 = new DungeonGenerator(20, 20, Game.rng);
 	private FOV										 fov;
 	public final Engine						 engine					 = new Engine();
 	private Entity								 player;

@@ -41,7 +41,6 @@ public class WolfMap
 		{
 			for (int y = 0; y < baseMap[x].length; y++)
 			{
-				
 				switch(this.baseMap[x][y])
 				{
 				case '#':
