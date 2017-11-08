@@ -71,25 +71,25 @@ public class PlayScreen extends WolfScreen
 
 	public PlayScreen()
 	{
-		TextCellFactory tcf = DefaultResources.getStretchableSlabFont();
+		TextFamily slab = DefaultResources.getSlabFamily();
 		vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
 		msgPort = new StretchViewport(fullPixelWidth, fullPixelHeight);
 		stage = new Stage(vport, batch);
 		msgStage = new Stage(msgPort, batch);
-		display = new SparseLayers(200, 200, cellWidth, cellHeight, tcf);
+		display = new SparseLayers(200, 200, cellWidth, cellHeight, slab);
 		display.setBounds(0, msgPixelHeight, pixelWidth, pixelHeight);
 		display.getFont()
 					 .tweakHeight(1.1f * cellHeight)
 					 .tweakWidth(1.1f * cellWidth)
 					 .initBySize();
 		display.setPosition(0, msgPixelHeight);
-		TextFamily slab = DefaultResources.getSlabFamily();
+		
 		/*
 		 * slab.width(cellWidth).height(cellHeight).initBySize(); final int nl =
 		 * LinesPanel.computeMaxLines(slab.font(), msgPixelHeight); lp = new
 		 * LinesPanel<Color>(GDXMarkup.instance, slab, nl);
 		 */
-		msgs = new SquidMessageBox(msgWidth, msgHeight, slab);
+		msgs = new SquidMessageBox(msgWidth, msgHeight, slab.copy());
 		msgs.getTextCellFactory()
 				.width(cellWidth)
 				.height(cellHeight)
@@ -97,7 +97,7 @@ public class PlayScreen extends WolfScreen
 				.tweakWidth(1.2f * cellWidth)
 				.initBySize();
 		msgs.setBounds(0, 0, pixelWidth, msgPixelHeight);
-		statPanel = new SquidPanel(statWidth, statHeight, tcf);
+		statPanel = new SquidPanel(statWidth, statHeight, slab.copy());
 		statPanel.setBounds(pixelWidth, 0, statPixelWidth, statPixelHeight);
 		
 
