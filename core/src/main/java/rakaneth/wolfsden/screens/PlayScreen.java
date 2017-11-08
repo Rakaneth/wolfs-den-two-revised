@@ -6,8 +6,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -19,6 +22,7 @@ import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.GDXMarkup;
 import squidpony.squidgrid.gui.gdx.LinesPanel;
+import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 import squidpony.squidgrid.gui.gdx.SquidMessageBox;
@@ -57,14 +61,14 @@ public class PlayScreen extends WolfScreen
 	private SparseLayers					 display;
 	private static SquidMessageBox msgs;
 	private SquidPanel						 statPanel;
-	private DungeonGenerator			 dunGen					 = new DungeonGenerator(120, 120, Game.rng);
+	private DungeonGenerator			 dunGen					 = new DungeonGenerator(20, 20, Game.rng);
 	private FOV										 fov;
 	private Viewport							 msgPort;
 	private Stage									 msgStage;
 	public final Engine						 engine					 = new Engine();
 	private Entity								 player;
 	private WolfMap								 curMap;
-	private double[][]						 visible;
+	private double[][]							 visible;
 	private CreatureBuilder				 cb;
 	private int										 counter				 = 1;
 	// private static LinesPanel<Color> lp;
@@ -73,33 +77,25 @@ public class PlayScreen extends WolfScreen
 	{
 		TextFamily slab = DefaultResources.getSlabFamily();
 		vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
-		msgPort = new StretchViewport(fullPixelWidth, fullPixelHeight);
+		// msgPort = new StretchViewport(fullPixelWidth, fullPixelHeight);
 		stage = new Stage(vport, batch);
-		msgStage = new Stage(msgPort, batch);
-		display = new SparseLayers(200, 200, cellWidth, cellHeight, slab);
+		// msgStage = new Stage(msgPort, batch);
+		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, slab);
 		display.setBounds(0, msgPixelHeight, pixelWidth, pixelHeight);
 		display.getFont()
 					 .tweakHeight(1.1f * cellHeight)
 					 .tweakWidth(1.1f * cellWidth)
 					 .initBySize();
 		display.setPosition(0, msgPixelHeight);
-		
+
 		/*
-		 * slab.width(cellWidth).height(cellHeight).initBySize(); final int nl =
-		 * LinesPanel.computeMaxLines(slab.font(), msgPixelHeight); lp = new
-		 * LinesPanel<Color>(GDXMarkup.instance, slab, nl);
+		 * msgs = new SquidMessageBox(msgWidth, msgHeight, slab.copy());
+		 * msgs.getTextCellFactory() .width(cellWidth) .height(cellHeight)
+		 * .tweakHeight(1.5f * cellHeight) .tweakWidth(1.2f * cellWidth) .initBySize();
+		 * msgs.setBounds(0, 0, pixelWidth, msgPixelHeight); statPanel = new
+		 * SquidPanel(statWidth, statHeight, slab.copy());
+		 * statPanel.setBounds(pixelWidth, 0, statPixelWidth, statPixelHeight);
 		 */
-		msgs = new SquidMessageBox(msgWidth, msgHeight, slab.copy());
-		msgs.getTextCellFactory()
-				.width(cellWidth)
-				.height(cellHeight)
-				.tweakHeight(1.5f * cellHeight)
-				.tweakWidth(1.2f * cellWidth)
-				.initBySize();
-		msgs.setBounds(0, 0, pixelWidth, msgPixelHeight);
-		statPanel = new SquidPanel(statWidth, statHeight, slab.copy());
-		statPanel.setBounds(pixelWidth, 0, statPixelWidth, statPixelHeight);
-		
 
 		input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
 		{
@@ -137,37 +133,38 @@ public class PlayScreen extends WolfScreen
 			}
 		});
 		stage.addActor(display);
-		msgStage.addActor(msgs);
+		// msgStage.addActor(msgs);
 		// msgStage.addActor(lp);
-		msgStage.addActor(statPanel);
+		// msgStage.addActor(statPanel);
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
 		buildEngine();
 		buildDungeon();
 		buildPlayer();
 		setFOV();
-		addMessage("Messages");
+		// addMessage("Messages");
 		// addMessageLP("[/]This text should be italic;[] this text is not.");
-		statPanel.put(0, 0, "Stats");
+		// statPanel.put(0, 0, "Stats");
 	}
 
 	private void buildEngine()
 	{
 		engine.addSystem(new ActionResolverSystem());
-		engine.addSystem(new RenderingSystem(display));
-		cb = new CreatureBuilder(engine, display);
+		engine.addSystem(new RenderingSystem(this, display));
+		cb = new CreatureBuilder(engine);
 	}
 
 	private void buildDungeon()
 	{
 		char[][] testDungeon = dunGen.generate();
 		curMap = new WolfMap(testDungeon, "base");
-		//curMap.dark = true;
+		// curMap.dark = true;
 	}
 
 	private void buildPlayer()
 	{
 		player = cb.build("fighter", curMap);
 		cb.build("wolf", curMap);
+		System.out.println(engine.getEntities().size());
 	}
 
 	private void setFOV()
@@ -190,16 +187,37 @@ public class PlayScreen extends WolfScreen
 		ply.cmds.push(cmd);
 	}
 
+	public Coord cam()
+	{
+		Coord pos = player.getComponent(Position.class).current;
+		int left = MathUtils.clamp(pos.x - gridWidth / 2, 0, curMap.getWidth() - gridWidth);
+		int top = MathUtils.clamp(pos.y - gridHeight / 2, 0, curMap.getHeight() - gridHeight);
+		return Coord.get(left, top);
+	}
+
+	private boolean inBounds(int x, int y)
+	{
+		return !(x < 0 || x >= gridWidth || y < 0 || y >= gridHeight);
+	}
+	
 	private void drawDungeon()
 	{
+		Coord cam = cam();
 		char[][] decoDungeon = curMap.displayMap;
-		for (int dx = 0; dx < decoDungeon.length; dx++)
+		int wx, wy;
+		for (int dx = 0; dx < gridWidth; dx++)
 		{
-			for (int dy = 0; dy < decoDungeon[dx].length; dy++)
+			for (int dy = 0; dy < gridHeight; dy++)
 			{
-				if (visible[dx][dy] > 0.0 || !curMap.dark)
+				wx = dx + cam.x;
+				wy = dy + cam.y;
+				if (!curMap.isOOB(wx, wy) && (!curMap.dark || visible[wx][wy] > 0.0))
 				{
-					display.put(dx, dy, decoDungeon[dx][dy], curMap.fgs[dx][dy], curMap.bgs[dx][dy]);
+					display.put(dx, dy, decoDungeon[wx][wy], curMap.fgs[wx][wy], curMap.bgs[wx][wy]);
+				}
+				else
+				{
+					display.put(dx, dy, ' ', SColor.TRANSPARENT, SColor.DARK_BLUE_DYE);
 				}
 			}
 		}
@@ -230,17 +248,18 @@ public class PlayScreen extends WolfScreen
 		float dt = Gdx.graphics.getDeltaTime();
 		engine.update(dt);
 		updateFOV();
-		TextCellFactory.Glyph gl = player.getComponent(Drawing.class).glyph;
-		msgStage.act();
-		msgStage.getViewport()
-						.apply(false);
-		msgStage.draw();
-		Camera cam = stage.getCamera();
-		cam.position.set(gl.getX(), gl.getY(), 0);
-
+		// msgStage.act();
+		// msgStage.getViewport()
+		// .apply(false);
+		// msgStage.draw();
 		stage.act();
 		stage.getViewport()
 				 .apply(false);
 		stage.draw();
+	}
+	
+	public double[][] visible()
+	{
+		return visible;
 	}
 }

@@ -53,6 +53,11 @@ public class WolfMap
 		return baseMap[0].length;
 	}
 
+	public boolean isOOB(int x, int y)
+	{
+		return x < 0 || y < 0 || x >= getWidth() || y >= getHeight();
+	}
+	
 	public boolean isOOB(Coord c)
 	{
 		return c.x < 0 || c.y < 0 || c.x >= getWidth() || c.y >= getHeight();

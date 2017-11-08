@@ -24,16 +24,14 @@ public class CreatureBuilder
 	private Engine engine;
 	private static final String fileName = "data/creatures.js";
 	private HashMap<String, CreatureBase> creatures;
-	private SparseLayers display;
 	private static int counter = 1;
 	
 	@SuppressWarnings("unchecked")
-	public CreatureBuilder(Engine engine, SparseLayers display)
+	public CreatureBuilder(Engine engine)
 	{
 		this.engine = engine;
 		DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
 		creatures = converter.fromJson(HashMap.class, CreatureBase.class, Gdx.files.internal(fileName));
-		this.display = display;
 	}
 
 	public Entity build(String id, WolfMap map)
@@ -44,7 +42,7 @@ public class CreatureBuilder
 		Entity creature = new Entity();
 		Coord pos = map.getEmpty();
 		creature.add(new Position(pos, map));
-		creature.add(new Drawing(display.glyph(base.glyph, color, pos.x, pos.y)));
+		creature.add(new Drawing(base.glyph, color));
 		creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
 		creature.add(new ActionStack());
 		creature.add(new Identity(base.name, IDid));

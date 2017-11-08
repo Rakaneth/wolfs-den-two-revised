@@ -1,14 +1,15 @@
 package rakaneth.wolfsden.components;
 
 import com.badlogic.ashley.core.Component;
-
-import squidpony.squidgrid.gui.gdx.TextCellFactory;
+import com.badlogic.gdx.graphics.Color;
 
 public class Drawing implements Component {
-	public TextCellFactory.Glyph glyph;
+	public char glyph;
+	public Color color;
 	
-	public Drawing(TextCellFactory.Glyph g)
+	public Drawing(char g, Color color)
 	{
 		glyph = g;
+		this.color = color;
 	}
 }

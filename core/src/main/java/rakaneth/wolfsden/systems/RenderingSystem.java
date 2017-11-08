@@ -6,26 +6,31 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Mapper;
-import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
+import squidpony.squidmath.Coord;
 
 public class RenderingSystem extends IteratingSystem
 {
 	private SparseLayers display;
-	public RenderingSystem(SparseLayers display)
+	private PlayScreen screen;
+	
+	public RenderingSystem(PlayScreen screen, SparseLayers display)
 	{
 		super(Family.all(Drawing.class).get());
 		this.display = display;
+		this.screen = screen;
 	}
 	
 	public void processEntity(Entity entity, float dt)
 	{
-		Position pos = Mapper.position.get(entity);
+		Coord pos = Mapper.position.get(entity).current;
 		Drawing dr = Mapper.drawing.get(entity);
-		if (pos.dirty) {
-			display.slide(dr.glyph, pos.prev.x, pos.prev.y, pos.current.x, pos.current.y, 0.1f, null);
-			pos.prev = pos.current;
-			pos.dirty = false;
+		Coord cam = screen.cam();
+		double[][] visible = screen.visible();
+		if (visible[pos.x][pos.y] > 0.0)
+		{
+			display.put(pos.x-cam.x, pos.y-cam.y, dr.glyph, dr.color);
 		}
 	}  
 }
