@@ -9,7 +9,7 @@ import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 
-import rakaneth.wolfsden.Game;
+import rakaneth.wolfsden.WolfGame;
 
 public class TitleScreen extends WolfScreen {
 	
@@ -36,7 +36,7 @@ public class TitleScreen extends WolfScreen {
 				break;
 			case 'N':
 			case 'n':
-				Game.setScreen(PlayScreen.instance);
+				WolfGame.setScreen(PlayScreen.instance);
 				break;
 			}
 		});

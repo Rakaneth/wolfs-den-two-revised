@@ -23,7 +23,7 @@ import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
-import rakaneth.wolfsden.Game;
+import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.ActionStack;
@@ -105,7 +105,7 @@ public class PlayScreen extends WolfScreen
 		{
 			switch (key) {
 			case SquidInput.ESCAPE:
-				Game.setScreen(TitleScreen.instance);
+				WolfGame.setScreen(TitleScreen.instance);
 				break;
 			case SquidInput.UP_ARROW:
 				sendCmd(CommandTypes.MOVE, Direction.UP);

@@ -119,14 +119,14 @@ public class WolfMap
 	public Coord getEmpty()
 	{
 		GreasedRegion gr = new GreasedRegion(baseMap, '.');
-		return gr.singleRandom(Game.rng);
+		return gr.singleRandom(WolfGame.rng);
 	}
 
 	public Coord getEmptyNear(Coord c, int radius)
 	{
 		// TODO: finish
 		GreasedRegion gr = new GreasedRegion();
-		return gr.singleRandom(Game.rng);
+		return gr.singleRandom(WolfGame.rng);
 	}
 
 	public Coord getEmptyNear(Coord c)

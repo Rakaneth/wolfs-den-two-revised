@@ -25,7 +25,7 @@ public final class MapBuilder
 	public WolfMap buildMap(String id)
 	{
 		MapBase base = maps.get(id);
-		DungeonGenerator dg = new DungeonGenerator(base.width, base.height, Game.rng);
+		DungeonGenerator dg = new DungeonGenerator(base.width, base.height, WolfGame.rng);
 		TilesetType tt;
 		char[][] charMap;
 		switch (base.type) {

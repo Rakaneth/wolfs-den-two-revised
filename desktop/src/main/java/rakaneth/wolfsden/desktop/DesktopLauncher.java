@@ -3,7 +3,7 @@ package rakaneth.wolfsden.desktop;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import rakaneth.wolfsden.Game;
+import rakaneth.wolfsden.WolfGame;
 
 /** Launches the desktop (LWJGL) application. */
 public class DesktopLauncher {
@@ -12,7 +12,7 @@ public class DesktopLauncher {
     }
 
     private static LwjglApplication createApplication() {
-        return new LwjglApplication(new Game(), getDefaultConfiguration());
+        return new LwjglApplication(new WolfGame(), getDefaultConfiguration());
     }
 
     private static LwjglApplicationConfiguration getDefaultConfiguration() {

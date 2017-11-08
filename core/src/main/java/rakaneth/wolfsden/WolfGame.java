@@ -6,7 +6,7 @@ import rakaneth.wolfsden.screens.TitleScreen;
 import rakaneth.wolfsden.screens.WolfScreen;
 import squidpony.squidmath.StatefulRNG;
 
-public class Game extends ApplicationAdapter {
+public class WolfGame extends ApplicationAdapter {
 	public static final StatefulRNG rng = new StatefulRNG(0xDEADBEEF);
 	private static WolfScreen curScreen;
 
