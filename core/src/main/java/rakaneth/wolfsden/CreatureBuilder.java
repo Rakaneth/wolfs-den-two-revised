@@ -16,7 +16,6 @@ import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Stats;
 
 import squidpony.DataConverter;
-import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
 public class CreatureBuilder
@@ -45,7 +44,7 @@ public class CreatureBuilder
 		creature.add(new Drawing(base.glyph, color));
 		creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
 		creature.add(new ActionStack());
-		creature.add(new Identity(base.name, IDid));
+		creature.add(new Identity(base.name, IDid, base.desc));
 		engine.addEntity(creature);
 		return creature;
 	}

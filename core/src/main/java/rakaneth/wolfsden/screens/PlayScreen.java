@@ -3,7 +3,6 @@ package rakaneth.wolfsden.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -58,7 +57,6 @@ public class PlayScreen extends WolfScreen
 	private final int							 fullHeight			 = gridHeight + msgHeight;
 	private final int							 fullPixelWidth	 = fullWidth * cellWidth;
 	private final int							 fullPixelHeight = fullHeight * cellHeight;
-
 	private final float						 grayFloat			 = SColor.SLATE_GRAY.toFloatBits();
 	private SparseLayers					 display;
 	private static SquidMessageBox msgs;
@@ -73,8 +71,9 @@ public class PlayScreen extends WolfScreen
 	GreasedRegion									 seen;
 	GreasedRegion									 currentlySeen;
 	GreasedRegion									 blockage;
+	public static final PlayScreen instance = new PlayScreen();
 
-	public PlayScreen()
+	private PlayScreen()
 	{
 		TextFamily slab = DefaultResources.getSlabFamily();
 		vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
@@ -105,7 +104,7 @@ public class PlayScreen extends WolfScreen
 		{
 			switch (key) {
 			case SquidInput.ESCAPE:
-				Game.setScreen(new TitleScreen());
+				Game.setScreen(TitleScreen.instance);
 				break;
 			case SquidInput.UP_ARROW:
 				sendCmd(CommandTypes.MOVE, Direction.UP);
@@ -141,7 +140,7 @@ public class PlayScreen extends WolfScreen
 		stage.addActor(msgs);
 		stage.addActor(statPanel);
 		stage.addActor(ttPanel);
-		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
+		setInput();
 		buildEngine();
 		buildDungeon();
 		buildPlayer();

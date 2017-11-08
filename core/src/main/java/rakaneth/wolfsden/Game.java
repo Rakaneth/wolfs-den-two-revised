@@ -1,47 +1,10 @@
 package rakaneth.wolfsden;
 
-import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import rakaneth.wolfsden.components.Drawing;
-import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.screens.TitleScreen;
 import rakaneth.wolfsden.screens.WolfScreen;
-import rakaneth.wolfsden.systems.RenderingSystem;
-import squidpony.FakeLanguageGen;
-import squidpony.NaturalLanguageCipher;
-import squidpony.StringKit;
-import squidpony.squidai.DijkstraMap;
-import squidpony.squidgrid.Direction;
-import squidpony.squidgrid.FOV;
-import squidpony.squidgrid.Radius;
-import squidpony.squidgrid.gui.gdx.DefaultResources;
-import squidpony.squidgrid.gui.gdx.MapUtility;
-import squidpony.squidgrid.gui.gdx.PanelEffect;
-import squidpony.squidgrid.gui.gdx.SColor;
-import squidpony.squidgrid.gui.gdx.SparseLayers;
-import squidpony.squidgrid.gui.gdx.SquidInput;
-import squidpony.squidgrid.gui.gdx.SquidMouse;
-import squidpony.squidgrid.gui.gdx.TextCellFactory;
-import squidpony.squidgrid.mapping.DungeonGenerator;
-import squidpony.squidgrid.mapping.DungeonUtility;
-import squidpony.squidmath.Coord;
-import squidpony.squidmath.GreasedRegion;
-import squidpony.squidmath.RNG;
-import squidpony.squidmath.SeededNoise;
 import squidpony.squidmath.StatefulRNG;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is a small, not-overly-simple demo that presents some important features of SquidLib and shows a faster,
@@ -63,7 +26,7 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void create () 
 	{
-		curScreen = new TitleScreen();
+		curScreen = TitleScreen.instance;
 	}
 
 	@Override
@@ -81,5 +44,6 @@ public class Game extends ApplicationAdapter {
 	public static void setScreen(WolfScreen sc)
 	{
 		curScreen = sc;
+		sc.setInput();
 	}
 }

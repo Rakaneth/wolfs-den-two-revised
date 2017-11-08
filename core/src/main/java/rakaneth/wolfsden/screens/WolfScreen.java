@@ -1,10 +1,10 @@
 package rakaneth.wolfsden.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import squidpony.squidgrid.gui.gdx.SColor;
@@ -33,5 +33,10 @@ public abstract class WolfScreen {
 		if (l > w) return;
 		int startX =  (w - l) / 2;
 		display.put(startX,  y, text, color);
+	}
+	
+	public void setInput()
+	{
+		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
 	}
 }

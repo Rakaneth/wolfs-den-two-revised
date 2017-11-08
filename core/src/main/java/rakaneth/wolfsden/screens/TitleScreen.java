@@ -1,7 +1,6 @@
 package rakaneth.wolfsden.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
@@ -11,15 +10,15 @@ import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 
 import rakaneth.wolfsden.Game;
-import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class TitleScreen extends WolfScreen {
 	
 	private final int gridWidth = 120;
 	private final int gridHeight = 40;
 	private SparseLayers display;
+	public static final TitleScreen instance = new TitleScreen();
 	
-	public TitleScreen()
+	private TitleScreen()
 	{
 		vport = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
 		vport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
@@ -37,12 +36,12 @@ public class TitleScreen extends WolfScreen {
 				break;
 			case 'N':
 			case 'n':
-				Game.setScreen(new PlayScreen());
+				Game.setScreen(PlayScreen.instance);
 				break;
 			}
 		});
 		stage.addActor(display);
-		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
+		setInput();
 	}
 	
 	@Override
