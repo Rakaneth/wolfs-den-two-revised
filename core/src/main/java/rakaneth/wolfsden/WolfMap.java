@@ -19,7 +19,9 @@ public class WolfMap
 	public String												id;
 	public Color[][]										fgs;
 	public Color[][]										bgs;
-	public boolean dark;
+	public boolean											dark;
+	public float[][]										bgFloats;
+	public float[][]										fgFloats;
 	private static final Set<Character>	walkables	= new HashSet<Character>(
 			Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
 
@@ -27,7 +29,13 @@ public class WolfMap
 	{
 		this.baseMap = baseMap;
 		this.id = id;
-		displayMap = new char[baseMap.length][baseMap[0].length];
+		int width = baseMap.length;
+		int height = baseMap[0].length;
+		displayMap = new char[width][height];
+		bgs = MapUtility.generateDefaultBGColors(this.baseMap);
+		fgs = MapUtility.generateDefaultColors(this.baseMap);
+		bgFloats = new float[width][height];
+		fgFloats = new float[width][height];
 		for (int x = 0; x < baseMap.length; x++)
 		{
 			for (int y = 0; y < baseMap[x].length; y++)
@@ -36,11 +44,12 @@ public class WolfMap
 					displayMap[x][y] = Swatch.CHAR_WALL;
 				else
 					displayMap[x][y] = Swatch.CHAR_FLOOR;
+				bgFloats[x][y] = bgs[x][y].toFloatBits();
+				fgFloats[x][y] = fgs[x][y].toFloatBits();
 			}
 		}
 		resistanceMap = DungeonUtility.generateResistances(this.baseMap);
-		bgs = MapUtility.generateDefaultBGColors(this.baseMap);
-		fgs = MapUtility.generateDefaultColors(this.baseMap);
+
 	}
 
 	public int getWidth()
@@ -57,7 +66,7 @@ public class WolfMap
 	{
 		return x < 0 || y < 0 || x >= getWidth() || y >= getHeight();
 	}
-	
+
 	public boolean isOOB(Coord c)
 	{
 		return c.x < 0 || c.y < 0 || c.x >= getWidth() || c.y >= getHeight();
