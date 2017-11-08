@@ -4,30 +4,21 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import squidpony.panel.IColoredString;
 import squidpony.squidgrid.Direction;
 import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.GDXMarkup;
-import squidpony.squidgrid.gui.gdx.LinesPanel;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 import squidpony.squidgrid.gui.gdx.SquidMessageBox;
 import squidpony.squidgrid.gui.gdx.SquidPanel;
-import squidpony.squidgrid.gui.gdx.TextCellFactory;
 import squidpony.squidgrid.gui.gdx.TextFamily;
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidmath.Coord;
@@ -36,7 +27,6 @@ import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
 import rakaneth.wolfsden.Game;
 import rakaneth.wolfsden.WolfMap;
-import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
@@ -84,15 +74,12 @@ public class PlayScreen extends WolfScreen
 	GreasedRegion									 seen;
 	GreasedRegion									 currentlySeen;
 	GreasedRegion									 blockage;
-	// private static LinesPanel<Color> lp;
 
 	public PlayScreen()
 	{
 		TextFamily slab = DefaultResources.getSlabFamily();
 		vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
-		// msgPort = new StretchViewport(fullPixelWidth, fullPixelHeight);
 		stage = new Stage(vport, batch);
-		// msgStage = new Stage(msgPort, batch);
 		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, slab);
 		display.setBounds(0, msgPixelHeight, pixelWidth, pixelHeight);
 		display.getFont()
@@ -114,14 +101,6 @@ public class PlayScreen extends WolfScreen
 				.tweakWidth(1.2f * cellWidth)
 				.initBySize();
 		msgs.setBounds(0, 0, msgPixelWidth, msgPixelHeight);
-
-		/*
-		 * msgs = new SquidMessageBox(msgWidth, msgHeight, slab.copy());
-		 * msgs.getTextCellFactory() .width(cellWidth) .height(cellHeight)
-		 * .tweakHeight(1.5f * cellHeight) .tweakWidth(1.2f * cellWidth) .initBySize();
-		 * 
-		 * 
-		 */
 
 		input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
 		{
@@ -163,17 +142,11 @@ public class PlayScreen extends WolfScreen
 		stage.addActor(msgs);
 		stage.addActor(statPanel);
 		stage.addActor(ttPanel);
-		// msgStage.addActor(msgs);
-		// msgStage.addActor(lp);
-		// msgStage.addActor(statPanel);
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
 		buildEngine();
 		buildDungeon();
 		buildPlayer();
 		setFOV();
-		// addMessage("Messages");
-		// addMessageLP("[/]This text should be italic;[] this text is not.");
-		// statPanel.put(0, 0, "Stats");
 	}
 
 	private void buildEngine()
@@ -243,11 +216,6 @@ public class PlayScreen extends WolfScreen
 		return Coord.get(left, top);
 	}
 
-	private boolean inBounds(int x, int y)
-	{
-		return !(x < 0 || x >= gridWidth || y < 0 || y >= gridHeight);
-	}
-
 	private void cls()
 	{
 		display.clear();
@@ -299,13 +267,6 @@ public class PlayScreen extends WolfScreen
 		String rawText = String.format(template, args);
 		IColoredString<Color> toWrite = GDXMarkup.instance.colorString(rawText);
 		msgs.appendMessage(toWrite);
-	}
-
-	public static void addMessageLP(String template, Object... args)
-	{
-		String rawText = String.format(template, args);
-		IColoredString<Color> toWrite = GDXMarkup.instance.colorString(rawText);
-		// lp.addFirst(toWrite);
 	}
 
 	@Override
