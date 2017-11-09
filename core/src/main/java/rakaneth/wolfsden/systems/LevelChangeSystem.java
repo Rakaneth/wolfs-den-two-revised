@@ -42,7 +42,8 @@ public class LevelChangeSystem extends IteratingSystem
 		}
 		pos.map = headedTo;
 		pos.current = toC;
-		if (entity.getComponent(Player.class) != null)
+		entity.remove(ChangeLevel.class);
+		if (Mapper.isPlayer(entity))
 			PlayScreen.instance.changeMap(headedTo);
 	}
 

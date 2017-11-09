@@ -184,7 +184,7 @@ public class WolfMap
 		DOWN, UP, OUT, NONE;
 	}
 
-	public void connect(Coord from, WolfMap to)
+	public void connect(Coord from, WolfMap to, Stairs toStairs)
 	{
 		int idx = from.y * getWidth() + from.x;
 		connections.put(idx, to.id);

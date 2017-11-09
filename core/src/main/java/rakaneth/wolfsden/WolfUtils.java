@@ -3,7 +3,7 @@ package rakaneth.wolfsden;
 public final class WolfUtils
 {
 	/**
-	 * Returns the nth member of the Fibnacci sequence.
+	 * Returns the nth member of the Fibonacci sequence.
 	 * @param n the number of times to iterate
 	 * @return the nth member of the Fibonacci sequence
 	 */

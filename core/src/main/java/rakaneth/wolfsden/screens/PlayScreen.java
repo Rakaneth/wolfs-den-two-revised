@@ -177,7 +177,7 @@ public class PlayScreen extends WolfScreen
 
 	private void buildPlayer()
 	{
-		player = cb.build("fighter", curMap);
+		player = cb.buildPlayer("fighter", curMap);
 		cb.build("wolf", curMap);
 	}
 

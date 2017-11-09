@@ -6,6 +6,7 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import rakaneth.wolfsden.WolfMap.Stairs;
 import squidpony.DataConverter;
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.styled.TilesetType;
@@ -75,7 +76,7 @@ public final class MapBuilder
 				upMap = maps.get(info.up);
 				if (upMap == null)
 					upMap = buildMap(info.up);
-				curMap.connect(curMap.stairsUp, upMap);
+				curMap.connect(curMap.stairsUp, upMap, Stairs.DOWN);
 			}
 			
 			if (info.down != null) 
@@ -83,7 +84,7 @@ public final class MapBuilder
 				downMap = maps.get(info.down);
 				if (downMap == null)
 					downMap = buildMap(info.down);
-				curMap.connect(curMap.stairsDown, downMap);
+				curMap.connect(curMap.stairsDown, downMap, Stairs.UP);
 			}
 			
 			if (info.out != null) 
@@ -91,7 +92,7 @@ public final class MapBuilder
 				outMap = maps.get(info.out);
 				if (outMap == null)
 					outMap = buildMap(info.out);
-				curMap.connect(curMap.stairsOut, outMap);
+				curMap.connect(curMap.stairsOut, outMap, Stairs.OUT);
 			}
 		}
 	}

@@ -61,7 +61,7 @@ public class RKDice
 		int realKeep = Math.min(roll, keep);
 		return dice.bestOf(realKeep, roll, "!6");
 	}
-	
+
 	/**
 	 * Gets the number of successes of these dice rolled against a difficulty. <br>
 	 * Every 5 over the difficulty is an additional success.
@@ -90,30 +90,36 @@ public class RKDice
 		int newKeep = Math.max(1, keep + rk.keep);
 		return new RKDice(newRoll, newKeep);
 	}
-	
+
 	/**
 	 * Statically rolls XkY without creating an instance.
-	 * @param diceString The dice string to roll, in XkY format.
+	 * 
+	 * @param diceString
+	 *          The dice string to roll, in XkY format.
 	 * @return The result of the roll.
 	 */
 	public static int roll(String diceString)
 	{
 		String[] parts = diceString.split("k");
-		if (parts.length != 2) 
+		if (parts.length != 2)
 			return 0;
-		else 
+		else
 		{
 			int roll = Integer.parseInt(parts[0]);
 			int keep = Integer.parseInt(parts[1]);
 			int realKeep = Math.min(roll, keep);
-			return dice.bestOf(realKeep, roll,  "!6");
+			return dice.bestOf(realKeep, roll, "!6");
 		}
 	}
-	
+
 	/**
-	 * Statically rolls XkY versus a difficulty of diff, counting successes as in {@link #roll(int)}.
-	 * @param diceString The dice string to roll, in XkY format.
-	 * @param diff The difficulty of the roll.
+	 * Statically rolls XkY versus a difficulty of diff, counting successes as in
+	 * {@link #roll(int)}.
+	 * 
+	 * @param diceString
+	 *          The dice string to roll, in XkY format.
+	 * @param diff
+	 *          The difficulty of the roll.
 	 * @return The number of successes.
 	 */
 	public static int roll(String diceString, int diff)
