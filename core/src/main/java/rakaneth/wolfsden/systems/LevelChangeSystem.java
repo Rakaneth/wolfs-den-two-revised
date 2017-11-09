@@ -25,26 +25,12 @@ public class LevelChangeSystem extends IteratingSystem
 	{
 		Position pos = Mapper.position.get(entity);
 		ChangeLevel lv = Mapper.changeLvl.get(entity);
-		WolfMap headedTo = pos.map.getConnection(lv.from);
-		Coord toC;
-		switch (lv.egress) {
-		case DOWN:
-			toC = headedTo.stairsDown;
-			break;
-		case OUT:
-			toC = headedTo.stairsOut;
-			break;
-		case UP:
-			toC = headedTo.stairsUp;
-			break;
-		default:
-			toC = headedTo.stairsOut;
-		}
-		pos.map = headedTo;
-		pos.current = toC;
+		WolfMap.Connection headedTo = pos.map.getConnection(lv.from);
+		pos.map = headedTo.getMap();
+		pos.current = headedTo.toC;
 		entity.remove(ChangeLevel.class);
 		if (Mapper.isPlayer(entity))
-			PlayScreen.instance.changeMap(headedTo);
+			PlayScreen.instance.changeMap(pos.map);
 	}
 
 }

@@ -25,7 +25,7 @@ public class WolfMap
 	private boolean											dark;
 	public float[][]										bgFloats;
 	public float[][]										fgFloats;
-	public Map<Integer, String>					connections;
+	public Map<Coord, Connection>				connections;
 	public Coord												stairsDown;
 	public Coord												stairsUp;
 	public Coord												stairsOut;
@@ -179,28 +179,56 @@ public class WolfMap
 		}
 	}
 
-	public enum Stairs
+	public void connect(Coord from, Coord to, WolfMap toMap)
 	{
-		DOWN, UP, OUT, NONE;
+		connections.put(from, new Connection(to, toMap.id));
 	}
 
-	public void connect(Coord from, WolfMap to, Stairs toStairs)
+	public Connection getConnection(Coord from)
 	{
-		int idx = from.y * getWidth() + from.x;
-		connections.put(idx, to.id);
+		return connections.get(from);
 	}
 
-	public WolfMap getConnection(Coord from)
-	{
-		int idx = from.y * getWidth() + from.x;
-		String mapString = connections.get(idx);
-		return MapBuilder.instance.maps.get(mapString);
-	}
-	
 	@Override
 	public String toString()
 	{
-		return id; 
+		return id;
+	}
+
+	public enum Stairs
+	{
+		DOWN, UP, OUT, NONE;
+
+		public Stairs opp()
+		{
+			switch (this) {
+			case DOWN:
+				return UP;
+			case UP:
+				return DOWN;
+			case OUT:
+				return OUT;
+			default:
+				return NONE;
+			}
+		}
+	}
+
+	public class Connection
+	{
+		public Coord	toC;
+		public String	mapID;
+
+		public Connection(Coord to, String mapID)
+		{
+			toC = to;
+			this.mapID = mapID;
+		}
+		
+		public WolfMap getMap()
+		{
+			return MapBuilder.instance.maps.get(mapID);
+		}
 	}
 
 }

@@ -76,7 +76,7 @@ public final class MapBuilder
 				upMap = maps.get(info.up);
 				if (upMap == null)
 					upMap = buildMap(info.up);
-				curMap.connect(curMap.stairsUp, upMap, Stairs.DOWN);
+				curMap.connect(curMap.stairsUp, upMap.stairsDown, upMap);
 			}
 			
 			if (info.down != null) 
@@ -84,7 +84,7 @@ public final class MapBuilder
 				downMap = maps.get(info.down);
 				if (downMap == null)
 					downMap = buildMap(info.down);
-				curMap.connect(curMap.stairsDown, downMap, Stairs.UP);
+				curMap.connect(curMap.stairsDown, downMap.stairsUp, downMap);
 			}
 			
 			if (info.out != null) 
@@ -92,7 +92,7 @@ public final class MapBuilder
 				outMap = maps.get(info.out);
 				if (outMap == null)
 					outMap = buildMap(info.out);
-				curMap.connect(curMap.stairsOut, outMap, Stairs.OUT);
+				curMap.connect(curMap.stairsOut, outMap.getEmpty(), outMap);
 			}
 		}
 	}
