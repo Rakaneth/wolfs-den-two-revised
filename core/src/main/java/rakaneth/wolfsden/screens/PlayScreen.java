@@ -32,6 +32,7 @@ import rakaneth.wolfsden.WolfMap.Stairs;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
+import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.LevelChangeSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
 
@@ -162,6 +163,7 @@ public class PlayScreen extends WolfScreen
 
 	private void buildEngine()
 	{
+		engine.addSystem(new CalcSecondariesSystem());
 		engine.addSystem(new ActionResolverSystem());
 		engine.addSystem(new RenderingSystem(this, display));
 		engine.addSystem(new LevelChangeSystem());

@@ -13,6 +13,7 @@ import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
 
 import squidpony.DataConverter;
@@ -45,6 +46,7 @@ public class CreatureBuilder
 		creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
 		creature.add(new ActionStack());
 		creature.add(new Identity(base.name, IDid, base.desc));
+		creature.add(new SecondaryStats());
 		engine.addEntity(creature);
 		return creature;
 	}

@@ -10,6 +10,7 @@ public class Mapper {
 	public static final ComponentMapper<ActionStack> actions = ComponentMapper.getFor(ActionStack.class);
 	public static final ComponentMapper<Stats> stats = ComponentMapper.getFor(Stats.class);
 	public static final ComponentMapper<ChangeLevel> changeLvl = ComponentMapper.getFor(ChangeLevel.class);
+	public static final ComponentMapper<SecondaryStats> secondaries = ComponentMapper.getFor(SecondaryStats.class);
 	
 	public static final boolean isPlayer(Entity entity)
 	{

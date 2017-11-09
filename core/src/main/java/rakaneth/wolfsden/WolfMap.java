@@ -53,10 +53,10 @@ public class WolfMap
 					displayGlyph = Swatch.CHAR_WALL;
 					break;
 				case '+':
-					displayGlyph = Swatch.CHAR_CLOSED_DOOR;
+					displayGlyph = Swatch.CHAR_CLOSED;
 					break;
 				case '\\':
-					displayGlyph = Swatch.CHAR_OPEN_DOOR;
+					displayGlyph = Swatch.CHAR_OPEN;
 					break;
 				case '>':
 					displayGlyph = Swatch.CHAR_DOWN;
