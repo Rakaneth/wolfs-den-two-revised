@@ -69,24 +69,24 @@ public final class MapBuilder
 			curMap = maps.get(id);
 			if (curMap == null)
 				curMap = buildMap(id);
-			
-			if (info.up != null) 
+
+			if (info.up != null)
 			{
 				upMap = maps.get(info.up);
 				if (upMap == null)
 					upMap = buildMap(info.up);
 				curMap.connect(curMap.stairsUp, upMap.stairsDown, upMap);
 			}
-			
-			if (info.down != null) 
+
+			if (info.down != null)
 			{
 				downMap = maps.get(info.down);
 				if (downMap == null)
 					downMap = buildMap(info.down);
 				curMap.connect(curMap.stairsDown, downMap.stairsUp, downMap);
 			}
-			
-			if (info.out != null) 
+
+			if (info.out != null)
 			{
 				outMap = maps.get(info.out);
 				if (outMap == null)
@@ -108,5 +108,6 @@ public final class MapBuilder
 		public String	 up;
 		public String	 down;
 		public String	 out;
+		public String	 name;
 	}
 }

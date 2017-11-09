@@ -403,4 +403,9 @@ public class PlayScreen extends WolfScreen
 		curMap = newMap;
 		changedLevel = true;
 	}
+	
+	public String map()
+	{
+		return curMap.id;
+	}
 }
