@@ -154,4 +154,18 @@ public class RKDice
 	{
 		keep = Math.max(1, val);
 	}
+
+	/**
+	 * Manually sets roll and keep as a unit.
+	 * 
+	 * @param roll
+	 *          The number to set roll to.
+	 * @param keep
+	 *          The number to set keep to.
+	 */
+	public void set(int roll, int keep)
+	{
+		setRoll(roll);
+		setKeep(keep);
+	}
 }

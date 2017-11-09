@@ -25,6 +25,9 @@ public class CalcSecondariesSystem extends IteratingSystem
 		
 		secStats.moveDelay = Math.max(1, 11 - stats.spd);
 		secStats.atkDelay = Math.max(1, 11 - stats.skl);
+		secStats.atk.set(stats.skl, stats.skl);
+		secStats.def = stats.spd;
+		secStats.dmg.set(stats.str, stats.str);
 	}
 
 }

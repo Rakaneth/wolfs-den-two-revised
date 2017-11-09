@@ -7,10 +7,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Mapper;
-import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.screens.PlayScreen;
-import squidpony.squidmath.Coord;
 
 public class LevelChangeSystem extends IteratingSystem
 {

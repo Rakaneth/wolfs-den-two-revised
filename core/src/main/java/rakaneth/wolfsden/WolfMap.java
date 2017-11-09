@@ -12,7 +12,6 @@ import squidpony.squidgrid.gui.gdx.MapUtility;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
-import squidpony.squidmath.OrderedMap;
 
 public class WolfMap
 {

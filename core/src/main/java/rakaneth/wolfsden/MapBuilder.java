@@ -6,7 +6,6 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import rakaneth.wolfsden.WolfMap.Stairs;
 import squidpony.DataConverter;
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.styled.TilesetType;
