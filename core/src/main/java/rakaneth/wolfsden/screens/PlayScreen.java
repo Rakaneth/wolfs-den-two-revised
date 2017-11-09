@@ -30,6 +30,7 @@ import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.ActionStack;
+import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
@@ -46,7 +47,9 @@ public class PlayScreen extends WolfScreen
 	private final int							 msgWidth				 = 40;
 	private final int							 msgHeight			 = 8;
 	private final int							 invWidth				 = 40;
-	private final int							 invHeight			 = 32;
+	private final int							 invHeight			 = 16;
+	private final int							 ablWidth				 = 40;
+	private final int							 ablHeight			 = 16;
 	private final int							 statWidth			 = 40;
 	private final int							 statHeight			 = 8;
 	private final int							 ttWidth				 = 40;
@@ -61,6 +64,8 @@ public class PlayScreen extends WolfScreen
 	private final int							 invPixelHeight	 = invHeight * cellHeight;
 	private final int							 ttPixelWidth		 = ttWidth * cellWidth;
 	private final int							 ttPixelHeight	 = ttHeight * cellHeight;
+	private final int							 ablPixelWidth	 = ablWidth * cellWidth;
+	private final int							 ablPixelHeight	 = ablHeight * cellHeight;
 	private final int							 fullWidth			 = gridWidth + invWidth + 10;
 	private final int							 fullHeight			 = gridHeight + msgHeight;
 	private final int							 fullPixelWidth	 = fullWidth * cellWidth;
@@ -68,7 +73,7 @@ public class PlayScreen extends WolfScreen
 	private final float						 grayFloat			 = SColor.SLATE_GRAY.toFloatBits();
 	private SparseLayers					 display;
 	private static SquidMessageBox msgs;
-	private SquidPanel						 invPanel, statPanel, ttPanel;
+	private SquidPanel						 invPanel, statPanel, ttPanel, ablPanel;
 	private FOV										 fov;
 	public final Engine						 engine					 = new Engine();
 	private Entity								 player;
@@ -96,13 +101,17 @@ public class PlayScreen extends WolfScreen
 					 .initBySize();
 		display.setPosition(0, msgPixelHeight);
 		invPanel = new SquidPanel(invWidth, invHeight, slab.copy());
-		invPanel.setBounds(pixelWidth, msgPixelHeight, invPixelWidth, invPixelHeight);
-		initText(invPanel.getTextCellFactory(), 1.1f, 1.1f);
+		invPanel.setBounds(pixelWidth, msgPixelHeight + ablPixelHeight, invPixelWidth, invPixelHeight);
+		initText(invPanel.getTextCellFactory(), 1.2f, 1.5f);
+		ablPanel = new SquidPanel(ablWidth, ablHeight, slab.copy());
+		ablPanel.setBounds(pixelWidth, msgPixelHeight, ablPixelWidth, ablPixelHeight);
+		initText(ablPanel.getTextCellFactory(), 1.2f, 1.5f);
 		statPanel = new SquidPanel(statWidth, statHeight, slab.copy());
 		statPanel.setBounds(msgPixelWidth, 0, statPixelWidth, statPixelHeight);
 		initText(statPanel.getTextCellFactory(), 1.2f, 1.5f);
 		ttPanel = new SquidPanel(ttWidth, ttHeight, slab.copy());
 		ttPanel.setBounds(msgPixelWidth + statPixelWidth, 0, ttPixelWidth, ttPixelHeight);
+		initText(ttPanel.getTextCellFactory(), 1.2f, 1.5f);
 		msgs = new SquidMessageBox(msgWidth, msgHeight, slab.copy());
 		initText(msgs.getTextCellFactory(), 1.2f, 1.5f);
 		msgs.setBounds(0, 0, msgPixelWidth, msgPixelHeight);
@@ -149,19 +158,19 @@ public class PlayScreen extends WolfScreen
 		stage.addActor(msgs);
 		stage.addActor(statPanel);
 		stage.addActor(ttPanel);
+		stage.addActor(ablPanel);
 		init();
 	}
 
 	private void initText(TextCellFactory tcf, float tweakWidth, float tweakHeight)
 	{
-		tcf
-		.width(cellWidth)
-		.height(cellHeight)
-		.tweakHeight(tweakHeight * cellHeight)
-		.tweakWidth(tweakWidth * cellWidth)
-		.initBySize();
+		tcf.width(cellWidth)
+			 .height(cellHeight)
+			 .tweakHeight(tweakHeight * cellHeight)
+			 .tweakWidth(tweakWidth * cellWidth)
+			 .initBySize();
 	}
-	
+
 	private void init()
 	{
 		setInput();
@@ -226,26 +235,33 @@ public class PlayScreen extends WolfScreen
 
 	private void drawHUD()
 	{
-		Coord pos = player.getComponent(Position.class).current, cam = cam();
-		border(statPanel);
-		border(invPanel); 
-		invPanel.put(1, 1, String.format("player loc: %d,%d", pos.x, pos.y));
-		invPanel.put(1, 2, String.format("cam: %d,%d", cam.x, cam.y));
+		border(statPanel, "Stats");
+		border(invPanel, "Inventory");
+		border(ttPanel, "Tooltips");
+		border(ablPanel, "Abilities");
 		String info = Swatch.WARNING;
 		String vit = Swatch.VIT;
 		String arm = Swatch.ARM;
 		String XP = Swatch.XP;
+		String warning = Swatch.WARNING;
 		Stats stats = Mapper.stats.get(player);
 		SecondaryStats secs = Mapper.secondaries.get(player);
-		IColoredString<Color> wStr = ICString("[%s]Str[] %-5d[%s]Dmg[] %5s [%s]Vit[] %5d/%5d", info, stats.str, info,
+		Identity id = Mapper.identity.get(player);
+		Position pos = Mapper.position.get(player);
+		IColoredString<Color> wStr = ICString("[%s]Str[]%5d [%s]Dmg[] %5s [%s]Vit[] %5d/%5d", info, stats.str, info,
 																					secs.dmg, vit, 50, 50),
-				wStam = ICString("[%s]Sta[] %-5d[%s]End[] %5d [%s]Arm[] %5d/%5d", info, stats.stam, info, 50, arm, 100, 100),
-				wSpd = ICString("[%s]Spd[] %-5d[%s]Def[] %5d [%s] XP[] %5d/%5d", info, stats.spd, info, secs.def, XP, 500, 500),
-				wSkl = ICString("[%s]Skl[] %-5d[%s]Atk[] %5s", info, stats.skl, info, secs.atk);
-		statPanel.put(1, 1, wStr);
-		statPanel.put(1, 2, wStam);
-		statPanel.put(1, 3, wSpd);
-		statPanel.put(1, 4, wSkl);
+				wStam = ICString("[%s]Sta[]%5d [%s]End[] %5d [%s]Arm[] %5d/%5d", info, stats.stam, info, 50, arm, 100, 100),
+				wSpd = ICString("[%s]Spd[]%5d [%s]Def[] %5d [%s] XP[] %5d/%5d", info, stats.spd, info, secs.def, XP, 500, 500),
+				wSkl = ICString("[%s]Skl[]%5d [%s]Atk[] %5s", info, stats.skl, info, secs.atk),
+				wID = ICString("[%s]%s[] - [%s]%s[]", warning, id.name, info, id.desc),
+				wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.id, pos.current);
+		
+		statPanel.put(1, 1, wID);
+		statPanel.put(1, 2, wLoc);
+		statPanel.put(1, 3, wStr);
+		statPanel.put(1, 4, wStam);
+		statPanel.put(1, 5, wSpd);
+		statPanel.put(1, 6, wSkl);
 	}
 
 	private IColoredString<Color> ICString(String template, Object... args)
@@ -254,7 +270,7 @@ public class PlayScreen extends WolfScreen
 		return GDXMarkup.instance.colorString(rawText);
 	}
 
-	private void border(SquidPanel panel)
+	private void border(SquidPanel panel, String caption)
 	{
 		int w = panel.getGridWidth();
 		int h = panel.getGridHeight();
@@ -282,6 +298,13 @@ public class PlayScreen extends WolfScreen
 		}
 
 		panel.put(borders);
+		if (caption != null)
+			panel.put(1, 0, caption);
+	}
+
+	private void border(SquidPanel panel)
+	{
+		border(panel, null);
 	}
 
 	public Coord cam()
