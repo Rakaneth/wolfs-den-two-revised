@@ -1,5 +1,7 @@
 package rakaneth.wolfsden.screens;
 
+import java.util.HashMap;
+
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -26,6 +28,7 @@ import rakaneth.wolfsden.CreatureBuilder;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.WolfMap.Stairs;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
@@ -67,11 +70,12 @@ public class PlayScreen extends WolfScreen
 	private WolfMap								 curMap;
 	private double[][]						 visible;
 	private CreatureBuilder				 cb;
-	private int										 counter				 = 1;
-	GreasedRegion									 seen;
-	GreasedRegion									 currentlySeen;
-	GreasedRegion									 blockage;
-	public static final PlayScreen instance = new PlayScreen();
+	private GreasedRegion					 seen;
+	private GreasedRegion					 currentlySeen;
+	private GreasedRegion					 blockage;
+	private MapBuilder						 mb;
+
+	public static final PlayScreen instance				 = new PlayScreen();
 
 	private PlayScreen()
 	{
@@ -131,6 +135,10 @@ public class PlayScreen extends WolfScreen
 			case SquidInput.UP_LEFT_ARROW:
 				sendCmd(CommandTypes.MOVE, Direction.UP_LEFT);
 				break;
+			case '>':
+			case '<':
+				sendCmd(CommandTypes.STAIRS);
+				break;
 			}
 		});
 		stage.addActor(display);
@@ -138,6 +146,11 @@ public class PlayScreen extends WolfScreen
 		stage.addActor(msgs);
 		stage.addActor(statPanel);
 		stage.addActor(ttPanel);
+		init();
+	}
+
+	private void init()
+	{
 		setInput();
 		buildEngine();
 		buildDungeon();
@@ -154,16 +167,15 @@ public class PlayScreen extends WolfScreen
 
 	private void buildDungeon()
 	{
-		MapBuilder mb = MapBuilder.instance;
-		curMap = mb.buildMap("wolfDen2");
+		mb = MapBuilder.instance;
+		mb.buildAll();
+		curMap = mb.maps.get("wolfDen1");
 	}
 
 	private void buildPlayer()
 	{
 		player = cb.build("fighter", curMap);
 		cb.build("wolf", curMap);
-		System.out.println(engine.getEntities()
-														 .size());
 	}
 
 	private void setFOV()
@@ -187,10 +199,13 @@ public class PlayScreen extends WolfScreen
 		blockage.fringe8way();
 	}
 
-	private void sendCmd(CommandTypes cmd, Object target)
+	private void sendCmd(CommandTypes cmd, Object... targets)
 	{
 		ActionStack ply = player.getComponent(ActionStack.class);
-		ply.cmds.push(target);
+		for (Object target : targets)
+		{
+			ply.cmds.push(target);
+		}
 		ply.cmds.push(cmd);
 	}
 
@@ -285,5 +300,31 @@ public class PlayScreen extends WolfScreen
 	public double[][] visible()
 	{
 		return visible;
+	}
+
+	public void followConnection(Coord c, Stairs stair)
+	{
+		WolfMap goTo = curMap.getConnection(c); 
+		if (goTo == null)
+			return;
+		
+		Position pos = player.getComponent(Position.class);
+		Coord goToC;
+		switch(stair) {
+		case DOWN:
+			goToC = goTo.stairsDown;
+			break;
+		case OUT:
+			goToC = goTo.stairsOut;
+			break;
+		case UP:
+			goToC = goTo.stairsUp;
+			break;
+		default:
+			goToC = goTo.stairsUp;
+		}
+		pos.map = goTo;
+		pos.current = goToC;
+		curMap = goTo;
 	}
 }

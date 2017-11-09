@@ -5,9 +5,11 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
@@ -40,6 +42,19 @@ public class ActionResolverSystem extends IteratingSystem
 					pos.current = newCoord;
 					playerCmd.tookTurn = true;
 				}
+				break;
+			case STAIRS:
+				WolfMap.Stairs stair = pos.map.getStair(pos.current);
+				switch (stair) {
+				case UP:
+				case OUT:
+				case DOWN:
+					PlayScreen.instance.followConnection(pos.current, stair);
+					break;
+				default:
+					PlayScreen.addMessage("No stairs here.");
+				}
+				break;
 			default: {
 			}
 			}

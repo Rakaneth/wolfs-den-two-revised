@@ -1,7 +1,9 @@
 package rakaneth.wolfsden;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
@@ -10,6 +12,7 @@ import squidpony.squidgrid.gui.gdx.MapUtility;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
+import squidpony.squidmath.OrderedMap;
 
 public class WolfMap
 {
@@ -22,6 +25,10 @@ public class WolfMap
 	private boolean											dark;
 	public float[][]										bgFloats;
 	public float[][]										fgFloats;
+	public Map<Integer, String>					connections;
+	public Coord												stairsDown;
+	public Coord												stairsUp;
+	public Coord												stairsOut;
 	private static final Set<Character>	walkables	= new HashSet<Character>(
 			Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
 
@@ -41,8 +48,7 @@ public class WolfMap
 		{
 			for (int y = 0; y < baseMap[x].length; y++)
 			{
-				switch(this.baseMap[x][y])
-				{
+				switch (this.baseMap[x][y]) {
 				case '#':
 					displayGlyph = Swatch.CHAR_WALL;
 					break;
@@ -68,7 +74,7 @@ public class WolfMap
 		}
 		resistanceMap = DungeonUtility.generateResistances(this.baseMap);
 		this.dark = dark;
-
+		connections = new HashMap<>();
 	}
 
 	public int getWidth()
@@ -80,7 +86,7 @@ public class WolfMap
 	{
 		return baseMap[0].length;
 	}
-	
+
 	public boolean isDark()
 	{
 		return dark;
@@ -139,6 +145,7 @@ public class WolfMap
 		baseMap[c.x][c.y] = '<';
 		displayMap[c.x][c.y] = Swatch.CHAR_UP;
 		resistanceMap = DungeonUtility.generateResistances(this.baseMap);
+		stairsUp = c;
 	}
 
 	public void makeDownStair(Coord c)
@@ -146,6 +153,7 @@ public class WolfMap
 		baseMap[c.x][c.y] = '>';
 		displayMap[c.x][c.y] = Swatch.CHAR_DOWN;
 		resistanceMap = DungeonUtility.generateResistances(this.baseMap);
+		stairsDown = c;
 	}
 
 	public void makeOutStair(Coord c)
@@ -153,6 +161,7 @@ public class WolfMap
 		baseMap[c.x][c.y] = 'o';
 		displayMap[c.x][c.y] = Swatch.CHAR_OUT;
 		resistanceMap = DungeonUtility.generateResistances(this.baseMap);
+		stairsOut = c;
 	}
 
 	public Stairs getStair(Coord c)
@@ -173,6 +182,25 @@ public class WolfMap
 	public enum Stairs
 	{
 		DOWN, UP, OUT, NONE;
+	}
+
+	public void connect(Coord from, WolfMap to)
+	{
+		int idx = from.y * getWidth() + from.x;
+		connections.put(idx, to.id);
+	}
+
+	public WolfMap getConnection(Coord from)
+	{
+		int idx = from.y * getWidth() + from.x;
+		String mapString = connections.get(idx);
+		return MapBuilder.instance.maps.get(mapString);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return id; 
 	}
 
 }
