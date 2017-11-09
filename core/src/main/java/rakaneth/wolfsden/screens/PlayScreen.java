@@ -32,6 +32,7 @@ import rakaneth.wolfsden.WolfMap.Stairs;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
+import rakaneth.wolfsden.systems.LevelChangeSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
 
 public class PlayScreen extends WolfScreen
@@ -74,6 +75,7 @@ public class PlayScreen extends WolfScreen
 	private GreasedRegion					 currentlySeen;
 	private GreasedRegion					 blockage;
 	private MapBuilder						 mb;
+	private boolean								 changedLevel;
 
 	public static final PlayScreen instance				 = new PlayScreen();
 
@@ -155,13 +157,14 @@ public class PlayScreen extends WolfScreen
 		buildEngine();
 		buildDungeon();
 		buildPlayer();
-		setFOV();
+		setFOV(curMap);
 	}
 
 	private void buildEngine()
 	{
 		engine.addSystem(new ActionResolverSystem());
 		engine.addSystem(new RenderingSystem(this, display));
+		engine.addSystem(new LevelChangeSystem());
 		cb = new CreatureBuilder(engine);
 	}
 
@@ -178,11 +181,11 @@ public class PlayScreen extends WolfScreen
 		cb.build("wolf", curMap);
 	}
 
-	private void setFOV()
+	private void setFOV(WolfMap map)
 	{
 		fov = new FOV();
 		Coord pos = player.getComponent(Position.class).current;
-		visible = fov.calculateFOV(curMap.resistanceMap, pos.x, pos.y, 10);
+		visible = fov.calculateFOV(map.resistanceMap, pos.x, pos.y, 10);
 		blockage = new GreasedRegion(visible, 0.0);
 		seen = blockage.not()
 									 .copy();
@@ -290,7 +293,15 @@ public class PlayScreen extends WolfScreen
 			input.next();
 		float dt = Gdx.graphics.getDeltaTime();
 		engine.update(dt);
-		updateFOV();
+		if (changedLevel)
+		{
+			setFOV(curMap);
+			changedLevel = false;
+		}
+		else
+		{
+			updateFOV();
+		}
 		stage.act();
 		stage.getViewport()
 				 .apply(false);
@@ -302,29 +313,9 @@ public class PlayScreen extends WolfScreen
 		return visible;
 	}
 
-	public void followConnection(Coord c, Stairs stair)
+	public void changeMap(WolfMap newMap)
 	{
-		WolfMap goTo = curMap.getConnection(c); 
-		if (goTo == null)
-			return;
-		
-		Position pos = player.getComponent(Position.class);
-		Coord goToC;
-		switch(stair) {
-		case DOWN:
-			goToC = goTo.stairsDown;
-			break;
-		case OUT:
-			goToC = goTo.stairsOut;
-			break;
-		case UP:
-			goToC = goTo.stairsUp;
-			break;
-		default:
-			goToC = goTo.stairsUp;
-		}
-		pos.map = goTo;
-		pos.current = goToC;
-		curMap = goTo;
+		curMap = newMap;
+		changedLevel = true;
 	}
 }

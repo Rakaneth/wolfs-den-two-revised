@@ -8,6 +8,7 @@ import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.ActionStack;
+import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidgrid.Direction;
@@ -49,7 +50,7 @@ public class ActionResolverSystem extends IteratingSystem
 				case UP:
 				case OUT:
 				case DOWN:
-					PlayScreen.instance.followConnection(pos.current, stair);
+					entity.add(new ChangeLevel(pos.current, stair));
 					break;
 				default:
 					PlayScreen.addMessage("No stairs here.");
