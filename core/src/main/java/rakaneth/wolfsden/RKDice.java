@@ -6,9 +6,9 @@ import squidpony.squidmath.Dice;
 
 public class RKDice
 {
-	private static Dice	dice = new Dice(WolfGame.rng);
-	private int					roll;
-	private int					keep;
+	private static Dice		dice	 = new Dice(WolfGame.rng);
+	private int						roll;
+	private int						keep;
 
 	/**
 	 * Constructor for manual building. Creates a 1k1 roll.
@@ -59,7 +59,9 @@ public class RKDice
 	public int roll()
 	{
 		int realKeep = Math.min(roll, keep);
-		return dice.bestOf(realKeep, roll, "!6");
+		if (realKeep > 0)
+			return dice.bestOf(realKeep, roll, "!6");
+		return 0;
 	}
 
 	/**
@@ -86,8 +88,8 @@ public class RKDice
 	 */
 	public RKDice add(RKDice rk)
 	{
-		int newRoll = Math.max(1, roll + rk.roll);
-		int newKeep = Math.max(1, keep + rk.keep);
+		int newRoll = roll + rk.roll;
+		int newKeep = keep + rk.keep;
 		return new RKDice(newRoll, newKeep);
 	}
 
@@ -108,13 +110,15 @@ public class RKDice
 			int roll = Integer.parseInt(parts[0]);
 			int keep = Integer.parseInt(parts[1]);
 			int realKeep = Math.min(roll, keep);
-			return dice.bestOf(realKeep, roll, "!6");
+			if (realKeep > 0)
+				return dice.bestOf(realKeep, roll, "!6");
 		}
+		return 0;
 	}
 
 	/**
 	 * Statically rolls XkY versus a difficulty of diff, counting successes as in
-	 * {@link #roll(int)}.
+	 * {@link #roll(int) roll}.
 	 * 
 	 * @param diceString
 	 *          The dice string to roll, in XkY format.
@@ -128,31 +132,39 @@ public class RKDice
 		return (raw >= 0) ? (raw / 5) + 1 : 0;
 	}
 
-	public String toString()
-	{
-		return String.format("%dk%d", roll, keep);
-	}
-
 	/**
-	 * Manually sets the number of dice to roll. Cannot be less than 1.
+	 * Statically add 2 RKDIce values without requiring an instance.
+	 * @param d1 The first addend.
+	 * @param d2 The second addend.
+	 * @return The RKDice result of d1 + d2.
+	 */
+	public static RKDice add(RKDice d1, RKDice d2)
+	{
+		int totalRoll = d1.roll + d2.roll;
+		int totalKeep = d1.keep + d2.keep;
+		return new RKDice(totalRoll, totalKeep);
+	}
+	
+	/**
+	 * Manually sets the number of dice to roll.
 	 * 
 	 * @param val
 	 *          The number to set roll to.
 	 */
 	public void setRoll(int val)
 	{
-		roll = Math.max(1, val);
+		roll = val;
 	}
 
 	/**
-	 * Manually sets the number of dice to keep. Cannot be less than 1.
+	 * Manually sets the number of dice to keep.
 	 * 
 	 * @param val
 	 *          The number to set keep to.
 	 */
 	public void setKeep(int val)
 	{
-		keep = Math.max(1, val);
+		keep = val;
 	}
 
 	/**
@@ -168,4 +180,22 @@ public class RKDice
 		setRoll(roll);
 		setKeep(keep);
 	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("%dk%d", roll, keep);
+	}
+	
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof RKDice)
+			return this.roll == ((RKDice)other).roll && this.keep == ((RKDice)other).keep;
+		else if (other == null)
+			return false;
+		else
+			return false;
+	}
+
 }
