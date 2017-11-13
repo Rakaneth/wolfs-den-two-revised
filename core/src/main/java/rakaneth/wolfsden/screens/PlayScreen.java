@@ -80,13 +80,13 @@ public class PlayScreen extends WolfScreen
 	private Entity								 player;
 	private WolfMap								 curMap;
 	private double[][]						 visible;
-	private CreatureBuilder				 cb;
+	private CreatureBuilder				 cb							 = new CreatureBuilder();
 	private GreasedRegion					 seen;
 	private GreasedRegion					 currentlySeen;
 	private GreasedRegion					 blockage;
-	private MapBuilder						 mb;
+	public final MapBuilder				 mb							 = MapBuilder.instance;;
 	private boolean								 changedLevel;
-	private ItemBuilder						 ib;
+	public final ItemBuilder			 ib							 = new ItemBuilder();
 
 	public static final PlayScreen instance				 = new PlayScreen();
 
@@ -188,13 +188,11 @@ public class PlayScreen extends WolfScreen
 		engine.addSystem(new ActionResolverSystem());
 		engine.addSystem(new RenderingSystem(this, display));
 		engine.addSystem(new LevelChangeSystem());
-		cb = new CreatureBuilder(engine);
-		ib = new ItemBuilder(engine);
+
 	}
 
 	private void buildDungeon()
 	{
-		mb = MapBuilder.instance;
 		mb.buildAll();
 		curMap = mb.maps.get("wolfDen1");
 	}
@@ -242,6 +240,7 @@ public class PlayScreen extends WolfScreen
 		border(invPanel, "Inventory");
 		border(ttPanel, "Tooltips");
 		border(ablPanel, "Abilities");
+		msgs.putBorders();
 		String info = Swatch.WARNING;
 		String vit = Swatch.VIT;
 		String arm = Swatch.ARM;
@@ -275,32 +274,7 @@ public class PlayScreen extends WolfScreen
 
 	private void border(SquidPanel panel, String caption)
 	{
-		int w = panel.getGridWidth();
-		int h = panel.getGridHeight();
-		char[][] borders = new char[w][h];
-		borders[0][0] = Swatch.BOX_TOP_LEFT;
-		borders[w - 1][0] = Swatch.BOX_TOP_RIGHT;
-		borders[0][h - 1] = Swatch.BOX_BOT_LEFT;
-		borders[w - 1][h - 1] = Swatch.BOX_BOT_RIGHT;
-		for (int i = 1; i < w - 1; i++)
-		{
-			borders[i][0] = Swatch.BOX_HORZ;
-			borders[i][h - 1] = Swatch.BOX_HORZ;
-		}
-		for (int j = 1; j < h - 1; j++)
-		{
-			borders[0][j] = Swatch.BOX_VERT;
-			borders[w - 1][j] = Swatch.BOX_VERT;
-		}
-		for (int x = 1; x < w - 1; x++)
-		{
-			for (int y = 1; y < h - 1; y++)
-			{
-				borders[x][y] = ' ';
-			}
-		}
-
-		panel.put(borders);
+		panel.putBorders();
 		if (caption != null)
 			panel.put(1, 0, caption);
 	}

@@ -1,12 +1,26 @@
 {
-	hands: {
+	rightHand: {
 		name: "No Mainhand",
-		atk: "0k0",
-		dmg: "0k0",
 		delay: 5,
 		slot: "MH",
-		desc: "Your bare main hand.,"
-	}
+		desc: "Your bare main hand.",
+	},
+	leftHand: {
+		name: "No Offhand",
+		delay: 5,
+		slot: "OH",
+		desc: "Your bare off hand.",
+	},
+	naked: {
+		name: "No Armor",
+		slot: "ARMOR",
+		desc: "You wear no armor.",
+	},
+	unadorned: {
+		name: "No Trinket",
+		slot: "TRINKET",
+		desc: "You wear no trinket."
+	},
 	ironSword: {
 		name: "Iron Sword",
 		desc: "A three-foot-long length of iron,sharpened to a point.",
@@ -20,7 +34,6 @@
 	mattock: {
 		name: "Mattock",
 		desc: "A pickaxes designed for digging into rock.",
-		atk: "0k0",
 		dmg: "0k1",
 		delay: 10,
 		slot: "MH",
@@ -39,21 +52,24 @@
 	},
 	chainMail: {
 		name: "Chainmail",
-		desc: ""
+		desc: "A durable chain hauberk.",
 		atk: "-1k0",
 		def: -1,
 		prot: 15,
 		slot: "ARMOR",
 		rarity: 5,
-		
+		glyph: "]",
+		color: "Grey",
 	},
 	amulet: {
 		name: "Amulet",
+		desc: "A protective talisman of the Raven, Oath of War and Death."
 		atk: "1k0",
 		def: 1,
 		prot: 10,
 		slot: "TRINKET",
 		rarity: 5,
+		glyph: "=",
+		color: "White",
 	}
-	
 }

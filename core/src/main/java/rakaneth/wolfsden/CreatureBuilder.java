@@ -1,4 +1,5 @@
 package rakaneth.wolfsden;
+
 import java.util.HashMap;
 
 import com.badlogic.ashley.core.Engine;
@@ -10,26 +11,25 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.EquipDoll;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
-
+import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
 import squidpony.squidmath.Coord;
 
 public class CreatureBuilder
 {
-	private Engine engine;
-	private static final String fileName = "data/creatures.js";
-	private HashMap<String, CreatureBase> creatures;
-	private static int counter = 1;
-	
+	private static final String						fileName = "data/creatures.js";
+	private HashMap<String, CreatureBase>	creatures;
+	private static int										counter	 = 1;
+
 	@SuppressWarnings("unchecked")
-	public CreatureBuilder(Engine engine)
+	public CreatureBuilder()
 	{
-		this.engine = engine;
 		DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
 		creatures = converter.fromJson(HashMap.class, CreatureBase.class, Gdx.files.internal(fileName));
 	}
@@ -41,32 +41,60 @@ public class CreatureBuilder
 		Color color = Colors.get(base.color);
 		Entity creature = new Entity();
 		Coord pos = map.getEmpty();
+		PlayScreen ps = PlayScreen.instance;
 		creature.add(new Position(pos, map));
 		creature.add(new Drawing(base.glyph, color));
 		creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
 		creature.add(new ActionStack());
 		creature.add(new Identity(base.name, IDid, base.desc));
 		creature.add(new SecondaryStats());
-		engine.addEntity(creature);
+		creature.add(new EquipDoll());
+		
+		if (base.mh != null)
+			ps.ib.equip(creature, base.mh);
+		else
+			ps.ib.equip(creature, "rightHand");
+		
+		if (base.oh != null)
+			ps.ib.equip(creature, base.oh);
+		else
+			ps.ib.equip(creature, "leftHand");
+		
+		if (base.armor != null)
+			ps.ib.equip(creature, base.armor);
+		else
+			ps.ib.equip(creature, "naked");
+		
+		if (base.trinket != null)
+			ps.ib.equip(creature, base.trinket);
+		else
+			ps.ib.equip(creature,  "unadorned");
+		
+		ps.engine.addEntity(creature);
 		return creature;
 	}
-	
+
 	public Entity buildPlayer(String id, WolfMap map)
 	{
 		Entity p = build(id, map);
 		p.add(new Player());
+
 		return p;
 	}
 
 	private static class CreatureBase
 	{
-		public String name;
-		public int str;
-		public int stam;
-		public int spd;
-		public int skl;
-		public char glyph;
-		public String color;
-		public String desc;
+		public String	name;
+		public int		str;
+		public int		stam;
+		public int		spd;
+		public int		skl;
+		public char		glyph;
+		public String	color;
+		public String	desc;
+		public String	mh;
+		public String	oh;
+		public String	armor;
+		public String	trinket;
 	}
 }

@@ -10,16 +10,18 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import rakaneth.wolfsden.components.Armor;
 import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.EquipDoll;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mainhand;
+import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Offhand;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Trinket;
+import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
 
 public class ItemBuilder
 {
-	private Engine engine;
 	private static final String itemFileName = "data/items.js";
 	private static final String equipFileName = "data/equipment.js";
 	private HashMap<String, ItemBase> consumables;
@@ -28,9 +30,8 @@ public class ItemBuilder
 	private static int equipCounter = 1;
 	
 	@SuppressWarnings("unchecked")
-	public ItemBuilder(Engine engine)
+	public ItemBuilder()
 	{
-		this.engine = engine;
 		DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
 		consumables = converter.fromJson(HashMap.class, ItemBase.class, Gdx.files.internal(itemFileName));
 		equipment = converter.fromJson(HashMap.class, EquipBase.class, Gdx.files.internal(equipFileName));
@@ -38,17 +39,16 @@ public class ItemBuilder
 	
 	public Entity forge(String id, WolfMap map)
 	{
+		Engine engine = PlayScreen.instance.engine;
 		EquipBase base = equipment.get(id);
 		if (base == null)
 			return null;
 		
 		String IDid = String.format("%s-%d", id, equipCounter++);
 		Entity mold = engine.createEntity();
-		mold.add(new Drawing(base.glyph, Colors.get(base.color)));
-		mold.add(new Position(map.getEmpty(), map));
 		mold.add(new Identity(base.name, IDid, base.desc));
-		RKDice atk = new RKDice(base.atk);
-		RKDice dmg = new RKDice(base.dmg);
+		RKDice atk = base.atk == null ? new RKDice() : new RKDice(base.atk);
+		RKDice dmg = base.dmg == null ? new RKDice() : new RKDice(base.dmg);
 		switch(base.slot) {
 		case ARMOR:
 			mold.add(new Armor(atk, base.def, dmg, base.mov, base.delay, base.prot));
@@ -63,8 +63,18 @@ public class ItemBuilder
 			mold.add(new Offhand(atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		}
+		if (map != null) 
+		{
+			mold.add(new Drawing(base.glyph, Colors.get(base.color)));
+			mold.add(new Position(map.getEmpty(), map));
+		}
 		engine.addEntity(mold);
 		return mold;
+	}
+	
+	public Entity forge(String id)
+	{
+		return forge(id, null);
 	}
 	
 	
@@ -82,6 +92,33 @@ public class ItemBuilder
 		public enum ItemType
 		{
 			REPAIR, FOOD, BUFF;
+		}
+	}
+	
+	public void equip(Entity wielder, String itemID)
+	{
+		EquipDoll eqd = Mapper.equipets.get(wielder);
+		if (eqd == null)
+			return;
+		
+		EquipBase base = equipment.get(itemID);
+		if (base == null)
+			return;
+		
+		Entity item = forge(itemID);
+		switch (base.slot) {
+		case MH:
+			eqd.mh = item;
+			break;
+		case OH:
+			eqd.oh = item;
+			break;
+		case TRINKET:
+			eqd.trinket = item;
+			break;
+		case ARMOR:
+			eqd.armor = item;
+			break;
 		}
 	}
 	
