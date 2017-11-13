@@ -25,6 +25,7 @@ import squidpony.squidmath.GreasedRegion;
 
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
+import rakaneth.wolfsden.ItemBuilder;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.Swatch;
@@ -85,6 +86,7 @@ public class PlayScreen extends WolfScreen
 	private GreasedRegion					 blockage;
 	private MapBuilder						 mb;
 	private boolean								 changedLevel;
+	private ItemBuilder						 ib;
 
 	public static final PlayScreen instance				 = new PlayScreen();
 
@@ -187,6 +189,7 @@ public class PlayScreen extends WolfScreen
 		engine.addSystem(new RenderingSystem(this, display));
 		engine.addSystem(new LevelChangeSystem());
 		cb = new CreatureBuilder(engine);
+		ib = new ItemBuilder(engine);
 	}
 
 	private void buildDungeon()
@@ -255,7 +258,7 @@ public class PlayScreen extends WolfScreen
 				wSkl = ICString("[%s]Skl[]%5d [%s]Atk[] %5s", info, stats.skl, info, secs.atk),
 				wID = ICString("[%s]%s[] - [%s]%s[]", warning, id.name, info, id.desc),
 				wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.id, pos.current);
-		
+
 		statPanel.put(1, 1, wID);
 		statPanel.put(1, 2, wLoc);
 		statPanel.put(1, 3, wStr);
@@ -403,7 +406,7 @@ public class PlayScreen extends WolfScreen
 		curMap = newMap;
 		changedLevel = true;
 	}
-	
+
 	public String map()
 	{
 		return curMap.id;
