@@ -242,11 +242,12 @@ public class PlayScreen extends WolfScreen
 
   private void drawHUD()
   {
-    border(statPanel, "Stats");
-    border(invPanel, "Inventory");
-    border(ttPanel, "Tooltips");
-    border(ablPanel, "Abilities");
-    msgs.putBorders();
+    float white = SColor.FLOAT_WHITE;
+    statPanel.putBorders(white, "Stats");
+    invPanel.putBorders(white, "Inventory and Equipment");
+    ttPanel.putBorders(white, "Information");
+    ablPanel.putBorders(white, "Abilities");
+    msgs.putBorders(white, "Messages");
     String info = Swatch.WARNING;
     String vit = Swatch.VIT;
     String arm = Swatch.ARM;
@@ -291,18 +292,6 @@ public class PlayScreen extends WolfScreen
   {
     String rawText = String.format(template, args);
     return GDXMarkup.instance.colorString(rawText);
-  }
-
-  private void border(SquidPanel panel, String caption)
-  {
-    panel.putBorders();
-    if (caption != null)
-      panel.put(1, 0, caption);
-  }
-
-  private void border(SquidPanel panel)
-  {
-    border(panel, null);
   }
 
   public Coord cam()
