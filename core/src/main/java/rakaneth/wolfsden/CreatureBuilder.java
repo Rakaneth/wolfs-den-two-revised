@@ -17,6 +17,7 @@ import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Vitals;
+import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
 import squidpony.squidmath.Coord;
@@ -48,6 +49,7 @@ public class CreatureBuilder
     creature.add(new Identity(base.name, IDid, base.desc));
     creature.add(new SecondaryStats());
     creature.add(new Vitals());
+    creature.add(new FreshCreature());
 
     if (base.mh != null)
       PlayScreen.ib.equip(creature, base.mh);

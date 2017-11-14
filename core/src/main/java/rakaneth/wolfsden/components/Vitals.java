@@ -46,5 +46,9 @@ public class Vitals implements Component
   {
     end = MathUtils.clamp(end + amt, 0, maxEnd);
   }
-
+  
+  public void rest()
+  {
+    end = maxEnd;
+  }
 }

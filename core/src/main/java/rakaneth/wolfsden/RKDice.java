@@ -13,12 +13,12 @@ public class RKDice
   private int         keep;
 
   /**
-   * Constructor for manual building. Creates a 1k1 roll.
+   * Constructor for manual building. Creates a 0k0 roll.
    */
   public RKDice()
   {
-    setRoll(1);
-    setKeep(1);
+    setRoll(0);
+    setKeep(0);
   }
 
   /**

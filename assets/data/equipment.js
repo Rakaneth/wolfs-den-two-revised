@@ -2,6 +2,7 @@
 	rightHand: {
 		name: "No Mainhand",
 		delay: 5,
+		dmg: "0k1",
 		slot: "MH",
 		desc: "Your bare main hand.",
 	},
