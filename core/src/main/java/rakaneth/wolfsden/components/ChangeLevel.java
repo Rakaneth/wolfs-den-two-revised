@@ -7,12 +7,12 @@ import squidpony.squidmath.Coord;
 
 public class ChangeLevel implements Component
 {
-	public Coord from;
-	public Stairs egress;
-	
-	public ChangeLevel(Coord from, Stairs egress)
-	{
-		this.from = from;
-		this.egress = egress;
-	}
+  public Coord  from;
+  public Stairs egress;
+
+  public ChangeLevel(Coord from, Stairs egress)
+  {
+    this.from = from;
+    this.egress = egress;
+  }
 }

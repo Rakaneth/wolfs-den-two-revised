@@ -13,28 +13,29 @@ import squidpony.squidmath.Coord;
 
 public class RenderingSystem extends IteratingSystem
 {
-	private SparseLayers display;
-	
-	public RenderingSystem(PlayScreen screen, SparseLayers display)
-	{
-		super(Family.all(Drawing.class).get());
-		this.display = display;
-	}
-	
-	public void processEntity(Entity entity, float dt)
-	{
-		
-		Position pos = Mapper.position.get(entity);
-		if (pos.map.id.equals(PlayScreen.instance.map()))
-		{
-			Coord curPos = pos.current;		
-			Drawing dr = Mapper.drawing.get(entity);
-			Coord cam = PlayScreen.instance.cam();
-			double[][] visible = PlayScreen.instance.visible();
-			if (visible[curPos.x][curPos.y] > 0.0)
-			{
-				display.put(curPos.x-cam.x, curPos.y-cam.y, dr.glyph, dr.color);
-			}
-		}
-	}  
+  private SparseLayers display;
+
+  public RenderingSystem(PlayScreen screen, SparseLayers display)
+  {
+    super(Family.all(Drawing.class)
+                .get());
+    this.display = display;
+  }
+
+  public void processEntity(Entity entity, float dt)
+  {
+
+    Position pos = Mapper.position.get(entity);
+    if (pos.map.id.equals(PlayScreen.instance.map()))
+    {
+      Coord curPos = pos.current;
+      Drawing dr = Mapper.drawing.get(entity);
+      Coord cam = PlayScreen.instance.cam();
+      double[][] visible = PlayScreen.instance.visible();
+      if (visible[curPos.x][curPos.y] > 0.0)
+      {
+        display.put(curPos.x - cam.x, curPos.y - cam.y, dr.glyph, dr.color);
+      }
+    }
+  }
 }
