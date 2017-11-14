@@ -1,14 +1,16 @@
 package rakaneth.wolfsden;
 
+import java.util.Arrays;
+
 import rakaneth.wolfsden.WolfGame;
 
 import squidpony.squidmath.Dice;
 
 public class RKDice
 {
-	private static Dice		dice	 = new Dice(WolfGame.rng);
-	private int						roll;
-	private int						keep;
+	private static Dice	dice = new Dice(WolfGame.rng);
+	private int					roll;
+	private int					keep;
 
 	/**
 	 * Constructor for manual building. Creates a 1k1 roll.
@@ -134,8 +136,11 @@ public class RKDice
 
 	/**
 	 * Statically add 2 RKDIce values without requiring an instance.
-	 * @param d1 The first addend.
-	 * @param d2 The second addend.
+	 * 
+	 * @param d1
+	 *          The first addend.
+	 * @param d2
+	 *          The second addend.
 	 * @return The RKDice result of d1 + d2.
 	 */
 	public static RKDice add(RKDice d1, RKDice d2)
@@ -144,7 +149,18 @@ public class RKDice
 		int totalKeep = d1.keep + d2.keep;
 		return new RKDice(totalRoll, totalKeep);
 	}
-	
+
+	/**
+	 * Statically add multiple RKDice values without requiring an instance.
+	 * @param dice The list of RKDice to add.
+	 * @return The RKDice sum of all arguments.
+	 */
+	public static RKDice add(RKDice... dice)
+	{
+		return Arrays.stream(dice)
+								 .reduce(new RKDice(), (d1, d2) -> add(d1, d2));
+	}
+
 	/**
 	 * Manually sets the number of dice to roll.
 	 * 
@@ -186,12 +202,12 @@ public class RKDice
 	{
 		return String.format("%dk%d", roll, keep);
 	}
-	
+
 	@Override
 	public boolean equals(Object other)
 	{
 		if (other instanceof RKDice)
-			return this.roll == ((RKDice)other).roll && this.keep == ((RKDice)other).keep;
+			return this.roll == ((RKDice) other).roll && this.keep == ((RKDice) other).keep;
 		else if (other == null)
 			return false;
 		else
