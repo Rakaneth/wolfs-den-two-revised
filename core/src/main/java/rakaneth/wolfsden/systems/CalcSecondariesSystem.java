@@ -41,17 +41,15 @@ public class CalcSecondariesSystem extends IteratingSystem
     RKDice totalAtk = RKDice.add(arm.atk, trink.atk, mh.atk, oh.atk);
     RKDice totalDmg = RKDice.add(arm.dmg, trink.dmg, mh.dmg, oh.dmg);
     int totalDef = arm.def + trink.def + mh.def + oh.def;
-    int maxMov = Arrays.stream(new int[] { arm.mov, mh.mov, oh.mov })
-                       .max()
-                       .getAsInt()
-        + trink.mov;
-    int maxDelay = Arrays.stream(new int[] { arm.delay, mh.delay, oh.delay })
-                         .max()
-                         .getAsInt()
-        + trink.delay;
+    
+    //Base mov is in armor, others provide penalties (positive) or bonuses
+    int maxMov = arm.mov + trink.mov + mh.mov + oh.mov;
+    
+    //Base delay is in MH or OH; others provide penalites (positive) or bonuses
+    int maxDelay = Math.max(mh.delay, oh.delay) + trink.delay + arm.delay;
 
-    secStats.moveDelay = Math.max(1, 11 - stats.spd + maxMov);
-    secStats.atkDelay = Math.max(1, 11 - stats.skl + maxDelay);
+    secStats.moveDelay = Math.max(1, maxMov - stats.spd);
+    secStats.atkDelay = Math.max(1, maxDelay - stats.skl );
     secStats.atk = RKDice.add(new RKDice(stats.skl, stats.skl), totalAtk);
     secStats.def = stats.spd + totalDef;
     secStats.dmg = RKDice.add(new RKDice(stats.str, 0), totalDmg);

@@ -41,6 +41,7 @@
 		rarity: 10,
 		glyph: "\u2196",
 		color: "Sepia",
+		dig: true,
 	},
 	wolfFur: {
 		name: "Wolf Furs",

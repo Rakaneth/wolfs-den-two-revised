@@ -263,13 +263,14 @@ public class PlayScreen extends WolfScreen
     Offhand oh = Mapper.offhands.get(player);
     Vitals vitals = Mapper.vitals.get(player);
     String eqTemplate = "%8s: %s";
-    IColoredString<Color> wStr = ICString("[%s]Str[]%5d [%s]Dmg[] %6s [%s]Vit[] %5d/%5d", info, stats.str, info,
+    IColoredString<Color> wStr = ICString("[%s]Str[]%2d [%s]Dmg[] %6s [%s]Vit[] %5d/%5d", info, stats.str, info,
                                           secs.dmg, vit, vitals.vit, vitals.maxVit),
-        wStam = ICString("[%s]Sta[]%5d [%s]End[]%3d/%3d [%s]Arm[] %5d/%5d", info, stats.stam, info, vitals.end,
+        wStam = ICString("[%s]Sta[]%2d [%s]End[]%3d/%3d [%s]Arm[] %5d/%5d", info, stats.stam, info, vitals.end,
                          vitals.maxEnd, arm, 100, 100),
-        wSpd = ICString("[%s]Spd[]%5d [%s]Def[] %6d [%s] XP[] %5d/%5d", info, stats.spd, info, secs.def, XP, vitals.XP,
+        wSpd = ICString("[%s]Spd[]%2d [%s]Def[] %6d [%s] XP[] %5d/%5d", info, stats.spd, info, secs.def, XP, vitals.XP,
                         vitals.totXP),
-        wSkl = ICString("[%s]Skl[]%5d [%s]Atk[] %6s", info, stats.skl, info, secs.atk),
+        wSkl = ICString("[%s]Skl[]%2d [%s]Atk[] %6s [%s]Mov[] %2d [%s]Dly[] %2d", info, stats.skl, info, secs.atk, info,
+                        secs.moveDelay, info, secs.atkDelay),
         wID = ICString("[%s]%s[] - [%s]%s[]", warning, id.name, info, id.desc),
         wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.name(), pos.current),
         wMH = ICString(eqTemplate, "Mainhand", mh.name), wOH = ICString(eqTemplate, "Offhand", oh.name),
