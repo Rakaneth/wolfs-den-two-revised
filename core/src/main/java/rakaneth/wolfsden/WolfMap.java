@@ -28,7 +28,7 @@ public class WolfMap
   public Coord                        stairsDown;
   public Coord                        stairsUp;
   public Coord                        stairsOut;
-  private final String name;
+  private final String                name;
   private static final Set<Character> walkables = new HashSet<Character>(
       Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
 
@@ -92,7 +92,7 @@ public class WolfMap
   {
     return dark;
   }
-  
+
   public String name()
   {
     return name;
@@ -136,8 +136,8 @@ public class WolfMap
 
   public Coord getEmptyNear(Coord c, int radius)
   {
-    // TODO: finish
     GreasedRegion gr = new GreasedRegion();
+    gr.insertRectangle(c.x, c.y, radius, radius);
     return gr.singleRandom(WolfGame.rng);
   }
 

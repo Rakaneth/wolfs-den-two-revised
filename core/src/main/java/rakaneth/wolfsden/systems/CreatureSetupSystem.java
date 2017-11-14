@@ -12,9 +12,10 @@ public class CreatureSetupSystem extends IteratingSystem
 {
   public CreatureSetupSystem()
   {
-    super(Family.all(FreshCreature.class).get());
+    super(Family.all(FreshCreature.class)
+                .get());
   }
-  
+
   @Override
   protected void processEntity(Entity entity, float deltaTime)
   {

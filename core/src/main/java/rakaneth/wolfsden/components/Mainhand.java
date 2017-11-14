@@ -5,7 +5,7 @@ import rakaneth.wolfsden.RKDice;
 public class Mainhand extends Equipment
 {
   public boolean dig;
-  
+
   public Mainhand()
   {
     super();

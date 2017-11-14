@@ -1,7 +1,15 @@
 package rakaneth.wolfsden.components;
 
+import java.util.Arrays;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
+
+import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.screens.PlayScreen;
+import squidpony.squidmath.Coord;
 
 public class Mapper
 {
@@ -23,5 +31,15 @@ public class Mapper
   {
     ComponentMapper<Player> pm = ComponentMapper.getFor(Player.class);
     return pm.get(entity) != null;
+  }
+
+  public static final Entity[] itemAt(Coord c, WolfMap m)
+  {
+    Family searchFam = Family.all(Position.class)
+                             .get();
+    ImmutableArray<Entity> toSearch = PlayScreen.engine.getEntitiesFor(searchFam);
+    return Arrays.stream(toSearch.toArray())
+                 .filter(f -> position.get(f).current.equals(c) && position.get(f).map.id.equals(m.id))
+                 .toArray(Entity[]::new);
   }
 }

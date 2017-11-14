@@ -56,7 +56,7 @@ public class ItemBuilder
   {
     Engine engine = PlayScreen.engine;
     EquipBase base = equipment.get(id);
-    Entity mold = engine.createEntity(); 
+    Entity mold = engine.createEntity();
     if (base == null)
     {
       ItemBase iBase = consumables.get(id);
@@ -68,10 +68,9 @@ public class ItemBuilder
         mold.add(new Identity(iBase.name, conID, iBase.desc));
         mold.add(new Consumable(1, iBase.value, iBase.iType));
       }
-    }
-    else
+    } else
     {
-      String IDid = String.format("%s-%d", id, equipCounter++);  
+      String IDid = String.format("%s-%d", id, equipCounter++);
       mold.add(new Identity(base.name, IDid, base.desc));
       RKDice atk = base.atk == null ? new RKDice() : new RKDice(base.atk);
       RKDice dmg = base.dmg == null ? new RKDice() : new RKDice(base.dmg);
@@ -90,15 +89,15 @@ public class ItemBuilder
         mold.add(new Offhand(base.name, base.desc, atk, base.def, dmg, base.mov, base.delay, base.prot));
         break;
       }
-    } 
-    
+    }
+
     if (map != null)
     {
       Color color = base.color == null ? SColor.WHITE : Colors.get(base.color);
       mold.add(new Drawing(base.glyph, color));
       mold.add(new Position(map.getEmpty(), map));
     }
-    
+
     engine.addEntity(mold);
     return mold;
   }
@@ -107,20 +106,20 @@ public class ItemBuilder
   {
     return seed(id, null);
   }
-  
+
   public Entity seed(String id, WolfMap map, Coord pos)
   {
     Entity base = seed(id, map);
     Mapper.position.get(base).current = pos;
     return base;
   }
-  
+
   public Entity seedRandom(WolfMap map)
   {
     String id = randomItems.random();
     return seed(id, map);
   }
-  
+
   public Entity seedRandom()
   {
     String id = randomItems.random();
