@@ -2,7 +2,6 @@ package rakaneth.wolfsden;
 
 import java.util.HashMap;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Identity;
+import rakaneth.wolfsden.components.Inventory;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
@@ -50,6 +50,7 @@ public class CreatureBuilder
     creature.add(new SecondaryStats());
     creature.add(new Vitals());
     creature.add(new FreshCreature());
+    creature.add(new Inventory());
 
     if (base.mh != null)
       PlayScreen.ib.equip(creature, base.mh);

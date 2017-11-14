@@ -201,6 +201,11 @@ public class PlayScreen extends WolfScreen
   {
     mb.buildAll();
     curMap = mb.maps.get("wolfDen1");
+    int numItems = WolfGame.rng.between(1, 21);
+    for (int i = 0; i < numItems; i++)
+    {
+      ib.seedRandom(curMap);
+    }
   }
 
   private void buildPlayer()
@@ -248,7 +253,7 @@ public class PlayScreen extends WolfScreen
     ttPanel.putBorders(white, "Information");
     ablPanel.putBorders(white, "Abilities");
     msgs.putBorders(white, "Messages");
-    String info = Swatch.WARNING;
+    String info = Swatch.INFO;
     String vit = Swatch.VIT;
     String arm = Swatch.ARM;
     String XP = Swatch.XP;

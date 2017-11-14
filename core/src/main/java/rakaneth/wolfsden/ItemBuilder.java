@@ -6,6 +6,7 @@ import java.util.Map;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
 
@@ -14,11 +15,14 @@ import rakaneth.wolfsden.components.Consumable;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mainhand;
+import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Offhand;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Trinket;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
+import squidpony.squidgrid.gui.gdx.SColor;
+import squidpony.squidmath.Coord;
 import squidpony.squidmath.ProbabilityTable;
 
 public class ItemBuilder
@@ -90,7 +94,8 @@ public class ItemBuilder
     
     if (map != null)
     {
-      mold.add(new Drawing(base.glyph, Colors.get(base.color)));
+      Color color = base.color == null ? SColor.WHITE : Colors.get(base.color);
+      mold.add(new Drawing(base.glyph, color));
       mold.add(new Position(map.getEmpty(), map));
     }
     
@@ -101,6 +106,13 @@ public class ItemBuilder
   public Entity seed(String id)
   {
     return seed(id, null);
+  }
+  
+  public Entity seed(String id, WolfMap map, Coord pos)
+  {
+    Entity base = seed(id, map);
+    Mapper.position.get(base).current = pos;
+    return base;
   }
   
   public Entity seedRandom(WolfMap map)
