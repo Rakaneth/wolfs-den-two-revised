@@ -28,13 +28,15 @@ public class WolfMap
   public Coord                        stairsDown;
   public Coord                        stairsUp;
   public Coord                        stairsOut;
+  private final String name;
   private static final Set<Character> walkables = new HashSet<Character>(
       Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
 
-  public WolfMap(char[][] baseMap, String id, boolean dark)
+  public WolfMap(char[][] baseMap, String id, boolean dark, String name)
   {
     this.baseMap = baseMap;
     this.id = id;
+    this.name = name;
     int width = baseMap.length;
     int height = baseMap[0].length;
     displayMap = new char[width][height];
@@ -89,6 +91,11 @@ public class WolfMap
   public boolean isDark()
   {
     return dark;
+  }
+  
+  public String name()
+  {
+    return name;
   }
 
   public boolean isOOB(int x, int y)

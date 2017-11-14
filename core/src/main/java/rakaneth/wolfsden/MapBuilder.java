@@ -48,7 +48,7 @@ public final class MapBuilder
     charMap = dg.addDoors(base.doors, base.doubleDoors)
                 .addWater(base.water)
                 .generate(tt);
-    WolfMap raw = new WolfMap(charMap, id, base.dark);
+    WolfMap raw = new WolfMap(charMap, id, base.dark, base.name);
     if (base.up != null)
       raw.makeUpStair(dg.stairsUp);
     if (base.down != null)

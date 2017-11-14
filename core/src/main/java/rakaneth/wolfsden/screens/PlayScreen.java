@@ -195,7 +195,6 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new ActionResolverSystem());
     engine.addSystem(new RenderingSystem(this, display));
     engine.addSystem(new LevelChangeSystem());
-
   }
 
   private void buildDungeon()
@@ -271,7 +270,7 @@ public class PlayScreen extends WolfScreen
                         vitals.totXP),
         wSkl = ICString("[%s]Skl[]%5d [%s]Atk[] %6s", info, stats.skl, info, secs.atk),
         wID = ICString("[%s]%s[] - [%s]%s[]", warning, id.name, info, id.desc),
-        wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.id, pos.current),
+        wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.name(), pos.current),
         wMH = ICString(eqTemplate, "Mainhand", mh.name), wOH = ICString(eqTemplate, "Offhand", oh.name),
         wArm = ICString(eqTemplate, "Armor", armor.name), wTrink = ICString(eqTemplate, "Trinket", trink.name);
 

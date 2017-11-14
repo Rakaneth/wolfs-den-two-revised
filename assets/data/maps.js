@@ -5,6 +5,7 @@
 		dark: true,
 		type: "cave",
 		down: "wolfDen2",
+		name: "Wolf's Den-1",
 	},
 	wolfDen2: {
 		width: 120,
@@ -14,6 +15,7 @@
 		water: 10,
 		up: "wolfDen1",
 		down: "wolfDen3",
+		name: "Wolf's Den-2",
 	},
 	wolfDen3: {
 		width: 100,
@@ -23,5 +25,6 @@
 		doors: 10,
 		doubleDoors: true,
 		up: "wolfDen2",
+		name: "Wolf's Den-3",
 	}
 }
