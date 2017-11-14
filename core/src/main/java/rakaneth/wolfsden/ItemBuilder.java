@@ -10,10 +10,8 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import rakaneth.wolfsden.components.Armor;
 import rakaneth.wolfsden.components.Drawing;
-import rakaneth.wolfsden.components.EquipDoll;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mainhand;
-import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Offhand;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Trinket;
@@ -37,9 +35,9 @@ public class ItemBuilder
 		equipment = converter.fromJson(HashMap.class, EquipBase.class, Gdx.files.internal(equipFileName));
 	}
 	
-	public Entity forge(String id, WolfMap map)
+	public Entity seed(String id, WolfMap map)
 	{
-		Engine engine = PlayScreen.instance.engine;
+		Engine engine = PlayScreen.engine;
 		EquipBase base = equipment.get(id);
 		if (base == null)
 			return null;
@@ -51,16 +49,16 @@ public class ItemBuilder
 		RKDice dmg = base.dmg == null ? new RKDice() : new RKDice(base.dmg);
 		switch(base.slot) {
 		case ARMOR:
-			mold.add(new Armor(atk, base.def, dmg, base.mov, base.delay, base.prot));
+			mold.add(new Armor(base.name, base.desc, atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		case TRINKET:
-			mold.add(new Trinket(atk, base.def, dmg, base.mov, base.delay, base.prot));
+			mold.add(new Trinket(base.name, base.desc,atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		case MH:
-			mold.add(new Mainhand(atk, base.def, dmg, base.mov, base.delay, base.prot));
+			mold.add(new Mainhand(base.name, base.desc,atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		case OH:
-			mold.add(new Offhand(atk, base.def, dmg, base.mov, base.delay, base.prot));
+			mold.add(new Offhand(base.name, base.desc,atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		}
 		if (map != null) 
@@ -74,7 +72,7 @@ public class ItemBuilder
 	
 	public Entity forge(String id)
 	{
-		return forge(id, null);
+		return seed(id, null);
 	}
 	
 	
@@ -97,27 +95,25 @@ public class ItemBuilder
 	
 	public void equip(Entity wielder, String itemID)
 	{
-		EquipDoll eqd = Mapper.equipets.get(wielder);
-		if (eqd == null)
-			return;
 		
 		EquipBase base = equipment.get(itemID);
 		if (base == null)
 			return;
 		
-		Entity item = forge(itemID);
+		RKDice atk = base.atk == null ? new RKDice() : new RKDice(base.atk);
+		RKDice dmg = base.dmg == null ? new RKDice() : new RKDice(base.dmg);
 		switch (base.slot) {
 		case MH:
-			eqd.mh = item;
+			wielder.add(new Mainhand(base.name, base.desc, atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		case OH:
-			eqd.oh = item;
+			wielder.add(new Offhand(base.name, base.desc,atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		case TRINKET:
-			eqd.trinket = item;
+			wielder.add(new Trinket(base.name, base.desc,atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		case ARMOR:
-			eqd.armor = item;
+			wielder.add(new Armor(base.name, base.desc, atk, base.def, dmg, base.mov, base.delay, base.prot));
 			break;
 		}
 	}

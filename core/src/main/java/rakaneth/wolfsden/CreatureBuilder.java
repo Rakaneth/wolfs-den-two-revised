@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
-import rakaneth.wolfsden.components.EquipDoll;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
@@ -41,36 +40,34 @@ public class CreatureBuilder
 		Color color = Colors.get(base.color);
 		Entity creature = new Entity();
 		Coord pos = map.getEmpty();
-		PlayScreen ps = PlayScreen.instance;
 		creature.add(new Position(pos, map));
 		creature.add(new Drawing(base.glyph, color));
 		creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
 		creature.add(new ActionStack());
 		creature.add(new Identity(base.name, IDid, base.desc));
 		creature.add(new SecondaryStats());
-		creature.add(new EquipDoll());
 		
 		if (base.mh != null)
-			ps.ib.equip(creature, base.mh);
+			PlayScreen.ib.equip(creature, base.mh);
 		else
-			ps.ib.equip(creature, "rightHand");
+			PlayScreen.ib.equip(creature, "rightHand");
 		
 		if (base.oh != null)
-			ps.ib.equip(creature, base.oh);
+			PlayScreen.ib.equip(creature, base.oh);
 		else
-			ps.ib.equip(creature, "leftHand");
+			PlayScreen.ib.equip(creature, "leftHand");
 		
 		if (base.armor != null)
-			ps.ib.equip(creature, base.armor);
+			PlayScreen.ib.equip(creature, base.armor);
 		else
-			ps.ib.equip(creature, "naked");
+			PlayScreen.ib.equip(creature, "naked");
 		
 		if (base.trinket != null)
-			ps.ib.equip(creature, base.trinket);
+			PlayScreen.ib.equip(creature, base.trinket);
 		else
-			ps.ib.equip(creature,  "unadorned");
+			PlayScreen.ib.equip(creature, "unadorned");
 		
-		ps.engine.addEntity(creature);
+		PlayScreen.engine.addEntity(creature);
 		return creature;
 	}
 

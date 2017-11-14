@@ -27,5 +27,7 @@
 		skl: 1,
 		color: "White",
 		glyph: "@",
+		mh: "ironSword",
+		armor: "chainMail",
 	}
 }

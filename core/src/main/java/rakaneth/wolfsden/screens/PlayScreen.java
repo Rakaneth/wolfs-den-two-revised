@@ -31,11 +31,15 @@ import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.ActionStack;
+import rakaneth.wolfsden.components.Armor;
 import rakaneth.wolfsden.components.Identity;
+import rakaneth.wolfsden.components.Mainhand;
 import rakaneth.wolfsden.components.Mapper;
+import rakaneth.wolfsden.components.Offhand;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
+import rakaneth.wolfsden.components.Trinket;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
 import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.LevelChangeSystem;
@@ -76,17 +80,17 @@ public class PlayScreen extends WolfScreen
 	private static SquidMessageBox msgs;
 	private SquidPanel						 invPanel, statPanel, ttPanel, ablPanel;
 	private FOV										 fov;
-	public final Engine						 engine					 = new Engine();
+	public static final Engine		 engine					 = new Engine();
 	private Entity								 player;
 	private WolfMap								 curMap;
 	private double[][]						 visible;
-	private CreatureBuilder				 cb							 = new CreatureBuilder();
+	public static CreatureBuilder	 cb							 = new CreatureBuilder();
 	private GreasedRegion					 seen;
 	private GreasedRegion					 currentlySeen;
 	private GreasedRegion					 blockage;
-	public final MapBuilder				 mb							 = MapBuilder.instance;;
+	public static MapBuilder			 mb							 = MapBuilder.instance;;
 	private boolean								 changedLevel;
-	public final ItemBuilder			 ib							 = new ItemBuilder();
+	public static ItemBuilder			 ib							 = new ItemBuilder();
 
 	public static final PlayScreen instance				 = new PlayScreen();
 
@@ -250,13 +254,23 @@ public class PlayScreen extends WolfScreen
 		SecondaryStats secs = Mapper.secondaries.get(player);
 		Identity id = Mapper.identity.get(player);
 		Position pos = Mapper.position.get(player);
+		Armor armor = Mapper.armors.get(player);
+		Trinket trink = Mapper.trinkets.get(player);
+		Mainhand mh = Mapper.mainhands.get(player);
+		Offhand oh = Mapper.offhands.get(player);
+		String eqTemplate = "%8s: %s";
 		IColoredString<Color> wStr = ICString("[%s]Str[]%5d [%s]Dmg[] %5s [%s]Vit[] %5d/%5d", info, stats.str, info,
 																					secs.dmg, vit, 50, 50),
 				wStam = ICString("[%s]Sta[]%5d [%s]End[] %5d [%s]Arm[] %5d/%5d", info, stats.stam, info, 50, arm, 100, 100),
 				wSpd = ICString("[%s]Spd[]%5d [%s]Def[] %5d [%s] XP[] %5d/%5d", info, stats.spd, info, secs.def, XP, 500, 500),
 				wSkl = ICString("[%s]Skl[]%5d [%s]Atk[] %5s", info, stats.skl, info, secs.atk),
 				wID = ICString("[%s]%s[] - [%s]%s[]", warning, id.name, info, id.desc),
-				wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.id, pos.current);
+				wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.id, pos.current),
+				wMH = ICString(eqTemplate, "Mainhand", mh.name),
+				wOH = ICString(eqTemplate, "Offhand", oh.name),
+				wArm = ICString(eqTemplate, "Armor", armor.name),
+				wTrink = ICString(eqTemplate, "Trinket", trink.name);
+				
 
 		statPanel.put(1, 1, wID);
 		statPanel.put(1, 2, wLoc);
@@ -264,6 +278,11 @@ public class PlayScreen extends WolfScreen
 		statPanel.put(1, 4, wStam);
 		statPanel.put(1, 5, wSpd);
 		statPanel.put(1, 6, wSkl);
+		
+		invPanel.put(1, 1, wMH);
+		invPanel.put(1, 2, wOH);
+		invPanel.put(1, 3, wArm);
+		invPanel.put(1, 4, wTrink);
 	}
 
 	private IColoredString<Color> ICString(String template, Object... args)

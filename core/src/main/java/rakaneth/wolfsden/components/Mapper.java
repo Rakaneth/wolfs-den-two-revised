@@ -15,7 +15,6 @@ public class Mapper {
 	public static final ComponentMapper<Mainhand> mainhands = ComponentMapper.getFor(Mainhand.class);
 	public static final ComponentMapper<Offhand> offhands = ComponentMapper.getFor(Offhand.class);
 	public static final ComponentMapper<Trinket> trinkets = ComponentMapper.getFor(Trinket.class);
-	public static final ComponentMapper<EquipDoll> equipets = ComponentMapper.getFor(EquipDoll.class);
 	
 	public static final boolean isPlayer(Entity entity)
 	{

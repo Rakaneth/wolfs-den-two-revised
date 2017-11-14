@@ -6,6 +6,8 @@ import rakaneth.wolfsden.RKDice;
 
 public abstract class Equipment implements Component
 {
+	public String name;
+	public String desc;
 	public RKDice atk;
 	public int def;
 	public RKDice dmg;
@@ -21,10 +23,14 @@ public abstract class Equipment implements Component
 		mov = 0;
 		delay = 0;
 		prot = 0;
+		name = "No Name";
+		desc = "No Desc";
 	}
 	
-	public Equipment(RKDice atk, int def, RKDice dmg, int mov, int delay, int prot)
+	public Equipment(String name, String desc, RKDice atk, int def, RKDice dmg, int mov, int delay, int prot)
 	{
+		this.name = name;
+		this.desc = desc;
 		this.atk = atk;
 		this.def = def;
 		this.dmg = dmg;
