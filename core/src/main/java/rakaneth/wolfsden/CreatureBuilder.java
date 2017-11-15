@@ -46,7 +46,7 @@ public class CreatureBuilder
     creature.add(new Drawing(base.glyph, color));
     creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
     creature.add(new ActionStack());
-    creature.add(new Identity(base.name, IDid, base.desc));
+    creature.add(new Identity(base.name, IDid, base.desc, base.factions));
     creature.add(new SecondaryStats());
     creature.add(new Vitals());
     creature.add(new FreshCreature());
@@ -71,6 +71,7 @@ public class CreatureBuilder
       PlayScreen.ib.equip(creature, base.trinket);
     else
       PlayScreen.ib.equip(creature, "unadorned");
+      
 
     PlayScreen.engine.addEntity(creature);
     return creature;
@@ -80,7 +81,6 @@ public class CreatureBuilder
   {
     Entity p = build(id, map);
     p.add(new Player());
-
     return p;
   }
 
@@ -98,5 +98,6 @@ public class CreatureBuilder
     public String oh;
     public String armor;
     public String trinket;
+    public String[] factions;
   }
 }

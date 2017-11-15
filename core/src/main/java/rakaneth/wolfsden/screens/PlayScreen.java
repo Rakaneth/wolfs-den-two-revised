@@ -25,6 +25,7 @@ import squidpony.squidmath.GreasedRegion;
 
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
+import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.ItemBuilder;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.MapBuilder;
@@ -211,7 +212,12 @@ public class PlayScreen extends WolfScreen
   private void buildPlayer()
   {
     player = cb.buildPlayer("fighter", curMap);
-    cb.build("wolf", curMap);
+    Entity wolf = cb.build("wolf", curMap);
+    int wolfReact = FactionManager.instance.getReaction(wolf, player);
+    int playerReact = FactionManager.instance.getReaction(player, wolf);
+    
+    System.out.println(String.format("Wolf to player: %d\nPlayer to wolf: %d", wolfReact, playerReact));
+    
   }
 
   private void setFOV(WolfMap map)

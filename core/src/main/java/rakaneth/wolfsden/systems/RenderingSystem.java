@@ -24,7 +24,6 @@ public class RenderingSystem extends IteratingSystem
 
   public void processEntity(Entity entity, float dt)
   {
-
     Position pos = Mapper.position.get(entity);
     if (pos.map.id.equals(PlayScreen.instance.map()))
     {

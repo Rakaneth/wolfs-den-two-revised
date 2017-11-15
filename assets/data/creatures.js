@@ -8,6 +8,7 @@
 		skl: 1
 		color: "CW Light Brown",
 		glyph: "W",
+		factions: ["monsters"],
 	},
 	alpha: {
 		name: "Alpha",
@@ -17,6 +18,7 @@
 		skl: 2,
 		color: "Dark Slate Grey",
 		glyph: "W",
+		factions: ["monsters"],
 	},
 	fighter: {
 		name: "Player",
@@ -29,5 +31,6 @@
 		glyph: "@",
 		mh: "ironSword",
 		armor: "chainMail",
+		factions: ["player"],
 	}
 }
