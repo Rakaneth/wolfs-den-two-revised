@@ -77,7 +77,7 @@ public class ActionResolverSystem extends IteratingSystem
         paused = false;
       } else if (!paused)
       {
-        logger.log(Level.WARNING, "{0} took no action due to empty stack", entity.getComponent(Identity.class).id);
+        //logger.log(Level.WARNING, "{0} took no action due to empty stack", entity.getComponent(Identity.class).id);
       }
     }
   }
