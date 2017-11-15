@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.ActionStack;
@@ -30,6 +31,18 @@ public class ActionResolverSystem extends IteratingSystem
                 .get());
   }
 
+  private void move(Position pos, Direction d)
+  {
+    int newX = pos.current.x + d.deltaX;
+    int newY = pos.current.y + d.deltaY;
+    Coord newCoord = Coord.get(newX, newY);
+    if (pos.map.isPassable(newCoord))
+    {
+      pos.dirty = true;
+      pos.current = newCoord;
+    }
+  }
+
   @Override
   protected void processEntity(Entity entity, float deltaTime)
   {
@@ -48,17 +61,9 @@ public class ActionResolverSystem extends IteratingSystem
         CommandTypes cmd = (CommandTypes) playerCmd.cmds.pop();
         switch (cmd) {
         case MOVE:
-          Direction d = (Direction) playerCmd.cmds.pop();
-          int newX = pos.current.x + d.deltaX;
-          int newY = pos.current.y + d.deltaY;
-          Coord newCoord = Coord.get(newX, newY);
-          if (pos.map.isPassable(newCoord))
-          {
-            pos.dirty = true;
-            pos.current = newCoord;
-            playerCmd.tookTurn = true;
-            playerCmd.delay = sStats.moveDelay;
-          }
+          move(pos, (Direction) playerCmd.cmds.pop());
+          playerCmd.tookTurn = true;
+          playerCmd.delay = sStats.moveDelay;
           break;
         case STAIRS:
           WolfMap.Stairs stair = pos.map.getStair(pos.current);
@@ -72,12 +77,19 @@ public class ActionResolverSystem extends IteratingSystem
             PlayScreen.addMessage("No stairs here.");
           }
           break;
+        case RANDOM:
+          Direction d = WolfGame.rng.getRandomElement(Direction.values());
+          move(pos, d);
+          playerCmd.tookTurn = true;
+          playerCmd.delay = sStats.moveDelay;
+          break;
         default:
         }
         paused = false;
       } else if (!paused)
       {
-        //logger.log(Level.WARNING, "{0} took no action due to empty stack", entity.getComponent(Identity.class).id);
+        // logger.log(Level.WARNING, "{0} took no action due to empty stack",
+        // entity.getComponent(Identity.class).id);
       }
     }
   }

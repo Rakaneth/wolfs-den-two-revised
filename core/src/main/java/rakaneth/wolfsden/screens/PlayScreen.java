@@ -42,11 +42,14 @@ import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Trinket;
 import rakaneth.wolfsden.components.Vitals;
+import rakaneth.wolfsden.components.WolfAI;
+import rakaneth.wolfsden.systems.AIDecisionSystem;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
 import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.CreatureSetupSystem;
 import rakaneth.wolfsden.systems.LevelChangeSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
+import rakaneth.wolfsden.systems.WolfDecisionSystem;
 
 public class PlayScreen extends WolfScreen
 {
@@ -193,6 +196,7 @@ public class PlayScreen extends WolfScreen
   {
     engine.addSystem(new CalcSecondariesSystem());
     engine.addSystem(new CreatureSetupSystem());
+    engine.addSystem(new WolfDecisionSystem());
     engine.addSystem(new ActionResolverSystem());
     engine.addSystem(new RenderingSystem(this, display));
     engine.addSystem(new LevelChangeSystem());
@@ -215,9 +219,9 @@ public class PlayScreen extends WolfScreen
     Entity wolf = cb.build("wolf", curMap);
     int wolfReact = FactionManager.instance.getReaction(wolf, player);
     int playerReact = FactionManager.instance.getReaction(player, wolf);
-    
+
     System.out.println(String.format("Wolf to player: %d\nPlayer to wolf: %d", wolfReact, playerReact));
-    
+
   }
 
   private void setFOV(WolfMap map)

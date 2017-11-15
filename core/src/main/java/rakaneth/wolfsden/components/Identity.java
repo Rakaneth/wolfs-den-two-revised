@@ -8,9 +8,9 @@ import com.badlogic.ashley.core.Component;
 
 public class Identity implements Component
 {
-  public String name;
-  public String desc;
-  public String id;
+  public String       name;
+  public String       desc;
+  public String       id;
   public List<String> factions;
 
   public Identity(String id)
@@ -29,7 +29,7 @@ public class Identity implements Component
     this.factions = new ArrayList<String>();
   }
 
-  public Identity(String name, String id, String desc, String...factions)
+  public Identity(String name, String id, String desc, String... factions)
   {
     this.name = name;
     this.id = id;

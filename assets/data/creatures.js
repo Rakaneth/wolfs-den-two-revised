@@ -9,6 +9,7 @@
 		color: "CW Light Brown",
 		glyph: "W",
 		factions: ["monsters"],
+		ai: "wolf",
 	},
 	alpha: {
 		name: "Alpha",
@@ -19,6 +20,7 @@
 		color: "Dark Slate Grey",
 		glyph: "W",
 		factions: ["monsters"],
+		ai: "alpha",
 	},
 	fighter: {
 		name: "Player",

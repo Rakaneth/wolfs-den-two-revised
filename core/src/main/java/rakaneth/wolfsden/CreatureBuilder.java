@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Identity;
@@ -17,6 +18,7 @@ import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Vitals;
+import rakaneth.wolfsden.components.WolfAI;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
@@ -71,7 +73,16 @@ public class CreatureBuilder
       PlayScreen.ib.equip(creature, base.trinket);
     else
       PlayScreen.ib.equip(creature, "unadorned");
-      
+
+    // TODO: different AIs
+    if (base.ai != null)
+    {
+      switch (base.ai) {
+      case "wolf":
+        creature.add(new WolfAI());
+        break;
+      }
+    }
 
     PlayScreen.engine.addEntity(creature);
     return creature;
@@ -86,18 +97,19 @@ public class CreatureBuilder
 
   private static class CreatureBase
   {
-    public String name;
-    public int    str;
-    public int    stam;
-    public int    spd;
-    public int    skl;
-    public char   glyph;
-    public String color;
-    public String desc;
-    public String mh;
-    public String oh;
-    public String armor;
-    public String trinket;
+    public String   name;
+    public int      str;
+    public int      stam;
+    public int      spd;
+    public int      skl;
+    public char     glyph;
+    public String   color;
+    public String   desc;
+    public String   mh;
+    public String   oh;
+    public String   armor;
+    public String   trinket;
     public String[] factions;
+    public String   ai;
   }
 }
