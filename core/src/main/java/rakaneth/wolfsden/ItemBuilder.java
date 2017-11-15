@@ -94,7 +94,7 @@ public class ItemBuilder
     if (map != null)
     {
       Color color = base.color == null ? SColor.WHITE : Colors.get(base.color);
-      mold.add(new Drawing(base.glyph, color));
+      mold.add(new Drawing(base.glyph, color, 2));
       mold.add(new Position(map.getEmpty(), map));
     }
 

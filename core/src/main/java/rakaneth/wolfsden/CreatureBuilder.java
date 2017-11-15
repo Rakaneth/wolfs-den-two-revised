@@ -92,6 +92,7 @@ public class CreatureBuilder
   {
     Entity p = build(id, map);
     p.add(new Player());
+    p.getComponent(Drawing.class).layer = 4;
     return p;
   }
 
