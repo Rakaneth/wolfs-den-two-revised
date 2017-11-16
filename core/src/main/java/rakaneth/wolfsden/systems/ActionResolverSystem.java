@@ -1,8 +1,5 @@
 package rakaneth.wolfsden.systems;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -13,7 +10,6 @@ import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.ChangeLevel;
-import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.screens.PlayScreen;
@@ -22,7 +18,6 @@ import squidpony.squidmath.Coord;
 
 public class ActionResolverSystem extends IteratingSystem
 {
-  private static final Logger logger = Logger.getLogger(ActionResolverSystem.class.getName());
   private boolean             paused;
 
   public ActionResolverSystem()

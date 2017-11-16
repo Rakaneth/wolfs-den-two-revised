@@ -18,7 +18,7 @@ public class RenderingSystem extends SortedIteratingSystem
 
   public RenderingSystem(PlayScreen screen, SparseLayers display)
   {
-    super(Family.all(Drawing.class)
+    super(Family.all(Drawing.class, Position.class)
                 .get(),
         (e1, e2) ->
         {
