@@ -4,23 +4,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.JsonWriter;
 
 import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
+import squidpony.DataConverter;
 
 public class FactionManager
 {
-  private Map<String, Map<String, Integer>> factions;
+  private Map<String, Map<String, Float>> factions;
   public static final FactionManager        instance = new FactionManager();
+  private static final String               fileName = "data/factions.js";
 
+  @SuppressWarnings("unchecked")
   private FactionManager()
   {
-    factions = new HashMap<>();
-    changeReaction("monsters", "player", -100);
+    DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
+    factions = converter.fromJson(HashMap.class, HashMap.class, Gdx.files.internal(fileName));
   }
 
-  public Map<String, Integer> getReactions(String id)
+  public Map<String, Float> getReactions(String id)
   {
     return factions.get(id);
   }
@@ -28,7 +33,7 @@ public class FactionManager
   public void addFaction(String id)
   {
     if (factions.get(id) == null)
-      factions.put(id, new HashMap<String, Integer>());
+      factions.put(id, new HashMap<String, Float>());
   }
 
   public void removeFaction(String id)
@@ -36,7 +41,7 @@ public class FactionManager
     factions.remove(id);
   }
 
-  public void addReaction(String faction, String target, int reaction)
+  public void addReaction(String faction, String target, float reaction)
   {
     addFaction(faction);
     factions.get(faction)
@@ -45,7 +50,7 @@ public class FactionManager
 
   public void removeReaction(String faction, String target)
   {
-    Map<String, Integer> reactTable = getReactions(faction);
+    Map<String, Float> reactTable = getReactions(faction);
 
     if (reactTable == null)
       return;
@@ -53,29 +58,29 @@ public class FactionManager
     reactTable.remove(target);
   }
 
-  public void changeReaction(String faction, String target, int amt)
+  public void changeReaction(String faction, String target, float amt)
   {
     addFaction(faction);
-    Map<String, Integer> reactTable = getReactions(faction);
+    Map<String, Float> reactTable = getReactions(faction);
 
-    Integer current = reactTable.get(target);
+    Float current = reactTable.get(target);
 
     if (current == null)
       addReaction(faction, target, amt);
     else
     {
-      int total = current + amt;
+      float total = current + amt;
       reactTable.replace(target, total);
     }
   }
 
-  public int getReaction(String faction, String target)
+  public float getReaction(String faction, String target)
   {
-    Map<String, Integer> reactTable = getReactions(faction);
+    Map<String, Float> reactTable = getReactions(faction);
     if (reactTable == null)
       return 0;
 
-    Integer current = reactTable.get(target);
+    Float current = reactTable.get(target);
 
     if (current == null)
       return 0;
