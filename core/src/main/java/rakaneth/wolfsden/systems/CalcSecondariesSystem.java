@@ -51,7 +51,7 @@ public class CalcSecondariesSystem extends IteratingSystem
     secStats.moveDelay = Math.max(1, maxMov - stats.spd);
     secStats.atkDelay = Math.max(1, maxDelay - stats.skl);
     secStats.atk = RKDice.add(new RKDice(stats.skl, stats.skl), totalAtk);
-    secStats.def = stats.spd + totalDef;
+    secStats.def = (stats.spd * 4) + totalDef;
     secStats.dmg = RKDice.add(new RKDice(stats.str, 0), totalDmg);
     vitals.maxVit = stats.stam * 10;
     vitals.maxEnd = stats.stam * 15;
