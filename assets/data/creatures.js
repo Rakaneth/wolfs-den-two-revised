@@ -33,6 +33,6 @@
 		glyph: "@",
 		mh: "ironSword",
 		armor: "chainMail",
-		factions: ["player"],
+		ai: "fighter",
 	}
 }

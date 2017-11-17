@@ -1,5 +1,7 @@
 package rakaneth.wolfsden;
 
+import com.badlogic.gdx.ai.GdxAI;
+
 public final class WolfUtils
 {
   /**
@@ -56,5 +58,10 @@ public final class WolfUtils
   public static <T> T ifNull(T value, T dFault)
   {
     return (value == null ? dFault : value);
+  }
+  
+  public static void log(String tag, String template, Object...args)
+  {
+    GdxAI.getLogger().info(tag, String.format(template, args));
   }
 }

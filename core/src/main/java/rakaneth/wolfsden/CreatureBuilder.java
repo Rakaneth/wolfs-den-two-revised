@@ -5,12 +5,13 @@ import java.util.HashMap;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import rakaneth.wolfsden.ai.WolfState;
 import rakaneth.wolfsden.components.AI;
-import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.Identity;
@@ -20,7 +21,6 @@ import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Vitals;
-import rakaneth.wolfsden.components.WolfAI;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
@@ -46,11 +46,14 @@ public class CreatureBuilder
     Color color = Colors.get(base.color);
     Entity creature = new Entity();
     Coord pos = map.getEmpty();
+    
+    if (base.factions == null)
+      base.factions = new ArrayList<>();
+    
     base.factions.add(IDid);
     creature.add(new Position(pos, map));
     creature.add(new Drawing(base.glyph, color));
     creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
-    creature.add(new ActionStack());
     creature.add(new Identity(base.name, IDid, base.desc));
     creature.add(new SecondaryStats());
     creature.add(new Vitals());
@@ -78,14 +81,19 @@ public class CreatureBuilder
     else
       PlayScreen.ib.equip(creature, "unadorned");
 
-    // TODO: different AIs
+
     if (base.ai != null)
     {
+      // TODO: different AIs
+      AI ai = new AI(IDid);
+      DefaultStateMachine ds = null;  
       switch (base.ai) {
       case "wolf":
-        creature.add(new WolfAI());
+        ds = new DefaultStateMachine<AI, WolfState>(ai, WolfState.FOLLOW_ALPHA);
         break;
       }
+      ai.stateMachine = ds;
+      creature.add(ai);
     }
 
     PlayScreen.engine.addEntity(creature);
@@ -97,6 +105,7 @@ public class CreatureBuilder
     Entity p = build(id, map);
     p.add(new Player());
     p.getComponent(Drawing.class).layer = 4;
+    p.getComponent(Factions.class).factions.add("player");
     return p;
   }
 

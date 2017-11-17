@@ -24,6 +24,7 @@ public class WolfMap
   private boolean                     dark;
   public float[][]                    bgFloats;
   public float[][]                    fgFloats;
+  public double[][]                   aStarMap;
   public Map<Coord, Connection>       connections;
   public Coord                        stairsDown;
   public Coord                        stairsUp;
@@ -44,7 +45,9 @@ public class WolfMap
     fgs = MapUtility.generateDefaultColors(this.baseMap);
     bgFloats = new float[width][height];
     fgFloats = new float[width][height];
+    aStarMap = new double[width][height];
     char displayGlyph;
+    double aStar;
     for (int x = 0; x < baseMap.length; x++)
     {
       for (int y = 0; y < baseMap[x].length; y++)
@@ -52,23 +55,30 @@ public class WolfMap
         switch (this.baseMap[x][y]) {
         case '#':
           displayGlyph = Swatch.CHAR_WALL;
+          aStar = -1;
           break;
         case '+':
           displayGlyph = Swatch.CHAR_CLOSED;
+          aStar = -1;
           break;
         case '\\':
           displayGlyph = Swatch.CHAR_OPEN;
+          aStar = 1;
           break;
         case '>':
           displayGlyph = Swatch.CHAR_DOWN;
+          aStar = 1;
           break;
         case '<':
           displayGlyph = Swatch.CHAR_UP;
+          aStar = 1;
           break;
         default:
           displayGlyph = Swatch.CHAR_FLOOR;
+          aStar = 1;
         }
         displayMap[x][y] = displayGlyph;
+        aStarMap[x][y] = aStar;
         bgFloats[x][y] = bgs[x][y].toFloatBits();
         fgFloats[x][y] = fgs[x][y].toFloatBits();
       }
@@ -203,21 +213,21 @@ public class WolfMap
 
   public enum Stairs
   {
-    DOWN, UP, OUT, NONE;
+  DOWN, UP, OUT, NONE;
 
-    public Stairs opp()
-    {
-      switch (this) {
-      case DOWN:
-        return UP;
-      case UP:
-        return DOWN;
-      case OUT:
-        return OUT;
-      default:
-        return NONE;
-      }
+  public Stairs opp()
+  {
+    switch (this) {
+    case DOWN:
+      return UP;
+    case UP:
+      return DOWN;
+    case OUT:
+      return OUT;
+    default:
+      return NONE;
     }
+  }
   }
 
   public class Connection

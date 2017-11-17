@@ -8,7 +8,8 @@ import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.Mapper;
-import rakaneth.wolfsden.components.ActionStack;
+import rakaneth.wolfsden.components.Player;
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
@@ -18,11 +19,12 @@ import squidpony.squidmath.Coord;
 
 public class ActionResolverSystem extends IteratingSystem
 {
-  private boolean             paused;
+  private boolean paused;
 
   public ActionResolverSystem()
   {
-    super(Family.all(ActionStack.class, SecondaryStats.class)
+    super(Family.all(SecondaryStats.class)
+                .one(AI.class)
                 .get());
   }
 
@@ -41,24 +43,29 @@ public class ActionResolverSystem extends IteratingSystem
   @Override
   protected void processEntity(Entity entity, float deltaTime)
   {
-    ActionStack playerCmd = Mapper.actions.get(entity);
     SecondaryStats sStats = Mapper.secondaries.get(entity);
+    AI ai = Mapper.AIs.get(entity);
     if (!paused)
-      playerCmd.delay -= 1;
+      ai.delay -= 1;
 
-    if (playerCmd.delay <= 0)
+    if (ai.delay <= 0)
     {
+      if (ai.stateMachine != null)
+        ai.stateMachine.update();
+
       if (Mapper.isPlayer(entity))
         paused = true;
+
       Position pos = Mapper.position.get(entity);
-      if (!playerCmd.cmds.empty())
+      if (!ai.actionStack.empty())
       {
-        CommandTypes cmd = (CommandTypes) playerCmd.cmds.pop();
+        CommandTypes cmd = (CommandTypes) ai.actionStack.pop();
         switch (cmd) {
         case MOVE:
-          move(pos, (Direction) playerCmd.cmds.pop());
-          playerCmd.tookTurn = true;
-          playerCmd.delay = sStats.moveDelay;
+          move(pos, (Direction) ai.actionStack.pop());
+          ai.location = pos.current;
+          ai.tookTurn = true;
+          ai.delay = sStats.moveDelay;
           break;
         case STAIRS:
           WolfMap.Stairs stair = pos.map.getStair(pos.current);
@@ -75,8 +82,8 @@ public class ActionResolverSystem extends IteratingSystem
         case RANDOM:
           Direction d = WolfGame.rng.getRandomElement(Direction.values());
           move(pos, d);
-          playerCmd.tookTurn = true;
-          playerCmd.delay = sStats.moveDelay;
+          ai.tookTurn = true;
+          ai.delay = sStats.moveDelay;
           break;
         default:
         }

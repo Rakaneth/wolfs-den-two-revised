@@ -13,10 +13,10 @@ import squidpony.squidmath.Coord;
 
 public class Mapper
 {
+  public static final ComponentMapper<Player>         player      = ComponentMapper.getFor(Player.class);
   public static final ComponentMapper<Drawing>        drawing     = ComponentMapper.getFor(Drawing.class);
   public static final ComponentMapper<Identity>       identity    = ComponentMapper.getFor(Identity.class);
   public static final ComponentMapper<Position>       position    = ComponentMapper.getFor(Position.class);
-  public static final ComponentMapper<ActionStack>    actions     = ComponentMapper.getFor(ActionStack.class);
   public static final ComponentMapper<Stats>          stats       = ComponentMapper.getFor(Stats.class);
   public static final ComponentMapper<ChangeLevel>    changeLvl   = ComponentMapper.getFor(ChangeLevel.class);
   public static final ComponentMapper<SecondaryStats> secondaries = ComponentMapper.getFor(SecondaryStats.class);
@@ -27,11 +27,11 @@ public class Mapper
   public static final ComponentMapper<Vitals>         vitals      = ComponentMapper.getFor(Vitals.class);
   public static final ComponentMapper<Consumable>     consumables = ComponentMapper.getFor(Consumable.class);
   public static final ComponentMapper<Factions>       factions    = ComponentMapper.getFor(Factions.class);
+  public static final ComponentMapper<AI>             AIs         = ComponentMapper.getFor(AI.class);
 
   public static final boolean isPlayer(Entity entity)
   {
-    ComponentMapper<Player> pm = ComponentMapper.getFor(Player.class);
-    return pm.get(entity) != null;
+    return player.get(entity) != null;
   }
 
   public static final Entity[] itemAt(Coord c, WolfMap m)

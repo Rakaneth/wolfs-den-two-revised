@@ -3,6 +3,7 @@ package rakaneth.wolfsden.screens;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,7 +32,7 @@ import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.WolfMap;
-import rakaneth.wolfsden.components.ActionStack;
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Armor;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mainhand;
@@ -42,14 +43,12 @@ import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Trinket;
 import rakaneth.wolfsden.components.Vitals;
-import rakaneth.wolfsden.components.WolfAI;
-import rakaneth.wolfsden.systems.AIDecisionSystem;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
 import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.CreatureSetupSystem;
 import rakaneth.wolfsden.systems.LevelChangeSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
-import rakaneth.wolfsden.systems.WolfDecisionSystem;
+import rakaneth.wolfsden.systems.VisionSystem;
 
 public class PlayScreen extends WolfScreen
 {
@@ -196,7 +195,7 @@ public class PlayScreen extends WolfScreen
   {
     engine.addSystem(new CalcSecondariesSystem());
     engine.addSystem(new CreatureSetupSystem());
-    engine.addSystem(new WolfDecisionSystem());
+    engine.addSystem(new VisionSystem());
     engine.addSystem(new ActionResolverSystem());
     engine.addSystem(new RenderingSystem(this, display));
     engine.addSystem(new LevelChangeSystem());
@@ -249,12 +248,12 @@ public class PlayScreen extends WolfScreen
 
   private void sendCmd(CommandTypes cmd, Object... targets)
   {
-    ActionStack ply = player.getComponent(ActionStack.class);
+    AI ply = player.getComponent(AI.class);
     for (Object target : targets)
     {
-      ply.cmds.push(target);
+      ply.actionStack.push(target);
     }
-    ply.cmds.push(cmd);
+    ply.actionStack.push(cmd);
   }
 
   private void drawHUD()
@@ -383,6 +382,7 @@ public class PlayScreen extends WolfScreen
     if (input.hasNext())
       input.next();
     float dt = Gdx.graphics.getDeltaTime();
+    GdxAI.getTimepiece().update(dt);
     engine.update(dt);
     if (changedLevel)
     {
