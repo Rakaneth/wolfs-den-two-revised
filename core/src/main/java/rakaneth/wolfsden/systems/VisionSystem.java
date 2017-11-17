@@ -7,13 +7,15 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidgrid.FOV;
 
 public class VisionSystem extends IteratingSystem
 {
   public VisionSystem()
   {
-    super(Family.all(AI.class, Position.class).get());
+    super(Family.all(AI.class, Position.class)
+                .get());
   }
 
   @Override
@@ -21,10 +23,12 @@ public class VisionSystem extends IteratingSystem
   {
     Position pos = Mapper.position.get(entity);
     AI ai = Mapper.AIs.get(entity);
-    
+
     if (pos.dirty)
     {
       FOV.reuseFOV(pos.map.resistanceMap, ai.visible, pos.current.x, pos.current.y, ai.visionRadius);
+      ai.grVisible.refill(ai.visible, 0.0)
+                  .not();
     }
   }
 

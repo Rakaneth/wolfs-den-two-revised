@@ -1,5 +1,7 @@
 package rakaneth.wolfsden.components;
 
+import java.util.HashMap;
+
 import com.badlogic.ashley.core.Component;
 
 import rakaneth.wolfsden.WolfMap;
@@ -12,6 +14,7 @@ public class Position implements Component
 
   public WolfMap map;
   public boolean dirty;
+  public static final HashMap<String, Position> atlas = new HashMap<>();
 
   public Position(Coord startPoint, WolfMap map)
   {

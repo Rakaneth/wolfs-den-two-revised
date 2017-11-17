@@ -27,6 +27,7 @@ import squidpony.squidmath.GreasedRegion;
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
 import rakaneth.wolfsden.FactionManager;
+import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.ItemBuilder;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.MapBuilder;
@@ -46,6 +47,7 @@ import rakaneth.wolfsden.components.Vitals;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
 import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.CreatureSetupSystem;
+import rakaneth.wolfsden.systems.EndStepSystem;
 import rakaneth.wolfsden.systems.LevelChangeSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
 import rakaneth.wolfsden.systems.VisionSystem;
@@ -199,6 +201,7 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new ActionResolverSystem());
     engine.addSystem(new RenderingSystem(this, display));
     engine.addSystem(new LevelChangeSystem());
+    engine.addSystem(new EndStepSystem());
   }
 
   private void buildDungeon()

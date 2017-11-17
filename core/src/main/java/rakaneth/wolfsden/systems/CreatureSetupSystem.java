@@ -38,6 +38,9 @@ public class CreatureSetupSystem extends IteratingSystem
     //set up pathfinding
     ai.aStar = new AStarSearch(pos.map.aStarMap, SearchType.CHEBYSHEV);
     
+    //add to atlas
+    Position.atlas.put(ai.eID, pos);
+    
     //remove component when done
     entity.remove(FreshCreature.class);
     

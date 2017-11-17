@@ -5,8 +5,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.AI;
@@ -19,7 +21,7 @@ import squidpony.squidmath.Coord;
 
 public class ActionResolverSystem extends IteratingSystem
 {
-  private boolean paused;
+  public static boolean paused;
 
   public ActionResolverSystem()
   {
@@ -28,8 +30,9 @@ public class ActionResolverSystem extends IteratingSystem
                 .get());
   }
 
-  private void move(Position pos, Direction d)
+  private void move(Position pos, AI ai)
   {
+    Direction d = (Direction) ai.actionStack.pop();
     int newX = pos.current.x + d.deltaX;
     int newY = pos.current.y + d.deltaY;
     Coord newCoord = Coord.get(newX, newY);
@@ -37,7 +40,16 @@ public class ActionResolverSystem extends IteratingSystem
     {
       pos.dirty = true;
       pos.current = newCoord;
+      Position.atlas.replace(ai.eID, pos);
     }
+    ai.tookTurn = true;
+    ai.location = pos.current;
+  }
+  
+  private void moveRandom(Position pos, AI ai)
+  {
+    ai.actionStack.push(WolfGame.rng.getRandomElement(Direction.values()));
+    move(pos, ai);
   }
 
   @Override
@@ -46,8 +58,8 @@ public class ActionResolverSystem extends IteratingSystem
     SecondaryStats sStats = Mapper.secondaries.get(entity);
     AI ai = Mapper.AIs.get(entity);
     if (!paused)
-      ai.delay -= 1;
-
+      ai.delay--;
+    
     if (ai.delay <= 0)
     {
       if (ai.stateMachine != null)
@@ -59,12 +71,11 @@ public class ActionResolverSystem extends IteratingSystem
       Position pos = Mapper.position.get(entity);
       if (!ai.actionStack.empty())
       {
+        WolfUtils.log("Action", "%s acts on tick %d", ai.eID, GameInfo.turnCount);
         CommandTypes cmd = (CommandTypes) ai.actionStack.pop();
         switch (cmd) {
         case MOVE:
-          move(pos, (Direction) ai.actionStack.pop());
-          ai.location = pos.current;
-          ai.tookTurn = true;
+          move(pos, ai);
           ai.delay = sStats.moveDelay;
           break;
         case STAIRS:
@@ -74,15 +85,15 @@ public class ActionResolverSystem extends IteratingSystem
           case OUT:
           case DOWN:
             entity.add(new ChangeLevel(pos.current, stair));
+            ai.delay = 10;
+            ai.tookTurn = true;
             break;
           default:
             PlayScreen.addMessage("No stairs here.");
           }
           break;
         case RANDOM:
-          Direction d = WolfGame.rng.getRandomElement(Direction.values());
-          move(pos, d);
-          ai.tookTurn = true;
+          moveRandom(pos, ai);
           ai.delay = sStats.moveDelay;
           break;
         default:
@@ -90,8 +101,7 @@ public class ActionResolverSystem extends IteratingSystem
         paused = false;
       } else if (!paused)
       {
-        // logger.log(Level.WARNING, "{0} took no action due to empty stack",
-        // entity.getComponent(Identity.class).id);
+        //entity took no action due to empty stack
       }
     }
   }
