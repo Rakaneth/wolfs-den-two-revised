@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.badlogic.ashley.core.Entity;
 
+import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
 
@@ -84,13 +85,13 @@ public class FactionManager
 
   public int getReaction(Entity e1, Entity e2)
   {
-    Identity id1 = Mapper.identity.get(e1);
-    Identity id2 = Mapper.identity.get(e2);
+    Factions fac1 = Mapper.factions.get(e1);
+    Factions fac2 = Mapper.factions.get(e2);
 
     int acc = 0;
-    for (String f : id1.factions)
+    for (String f : fac1.factions)
     {
-      for (String c : id2.factions)
+      for (String c : fac2.factions)
       {
         acc += getReaction(f, c);
       }

@@ -217,6 +217,8 @@ public class PlayScreen extends WolfScreen
   {
     player = cb.buildPlayer("fighter", curMap);
     Entity wolf = cb.build("wolf", curMap);
+    String wolfID = wolf.getComponent(Identity.class).id;
+    FactionManager.instance.changeReaction(wolfID, "player", 30);
     int wolfReact = FactionManager.instance.getReaction(wolf, player);
     int playerReact = FactionManager.instance.getReaction(player, wolf);
 

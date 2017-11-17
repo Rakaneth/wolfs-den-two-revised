@@ -1,5 +1,6 @@
 package rakaneth.wolfsden;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.ashley.core.Entity;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.ActionStack;
 import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Inventory;
 import rakaneth.wolfsden.components.Player;
@@ -44,15 +46,17 @@ public class CreatureBuilder
     Color color = Colors.get(base.color);
     Entity creature = new Entity();
     Coord pos = map.getEmpty();
+    base.factions.add(IDid);
     creature.add(new Position(pos, map));
     creature.add(new Drawing(base.glyph, color));
     creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
     creature.add(new ActionStack());
-    creature.add(new Identity(base.name, IDid, base.desc, base.factions));
+    creature.add(new Identity(base.name, IDid, base.desc));
     creature.add(new SecondaryStats());
     creature.add(new Vitals());
     creature.add(new FreshCreature());
     creature.add(new Inventory());
+    creature.add(new Factions(base.factions));
 
     if (base.mh != null)
       PlayScreen.ib.equip(creature, base.mh);
@@ -98,19 +102,19 @@ public class CreatureBuilder
 
   private static class CreatureBase
   {
-    public String   name;
-    public int      str;
-    public int      stam;
-    public int      spd;
-    public int      skl;
-    public char     glyph;
-    public String   color;
-    public String   desc;
-    public String   mh;
-    public String   oh;
-    public String   armor;
-    public String   trinket;
-    public String[] factions;
-    public String   ai;
+    public String            name;
+    public int               str;
+    public int               stam;
+    public int               spd;
+    public int               skl;
+    public char              glyph;
+    public String            color;
+    public String            desc;
+    public String            mh;
+    public String            oh;
+    public String            armor;
+    public String            trinket;
+    public ArrayList<String> factions;
+    public String            ai;
   }
 }
