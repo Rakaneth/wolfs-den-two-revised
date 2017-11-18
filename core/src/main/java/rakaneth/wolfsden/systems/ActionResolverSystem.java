@@ -40,7 +40,6 @@ public class ActionResolverSystem extends IteratingSystem
     {
       pos.dirty = true;
       pos.current = newCoord;
-      Position.atlas.replace(ai.eID, pos);
     }
     ai.tookTurn = true;
     ai.location = pos.current;
@@ -77,6 +76,7 @@ public class ActionResolverSystem extends IteratingSystem
         case MOVE:
           move(pos, ai);
           ai.delay = sStats.moveDelay;
+          Position.atlas.replace(entity, pos);
           break;
         case STAIRS:
           WolfMap.Stairs stair = pos.map.getStair(pos.current);
@@ -87,6 +87,7 @@ public class ActionResolverSystem extends IteratingSystem
             entity.add(new ChangeLevel(pos.current, stair));
             ai.delay = 10;
             ai.tookTurn = true;
+            Position.atlas.replace(entity, pos);
             break;
           default:
             PlayScreen.addMessage("No stairs here.");
@@ -94,6 +95,7 @@ public class ActionResolverSystem extends IteratingSystem
           break;
         case RANDOM:
           moveRandom(pos, ai);
+          Position.atlas.replace(entity, pos);
           ai.delay = sStats.moveDelay;
           break;
         default:

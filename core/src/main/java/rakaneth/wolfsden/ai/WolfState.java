@@ -72,7 +72,9 @@ public enum WolfState implements State<AI>
       if (ai.leader != null && ai.visibleAllies.contains(ai.leader))
         ai.stateMachine.changeState(FOLLOW_ALPHA);
       else
-        ai.sendCmd(CommandTypes.RANDOM);
+        if (ai.visibleEnemies.size() > 0)
+        	WolfUtils.log("AI", "%s detects prey", ai.eID);
+      	ai.sendCmd(CommandTypes.RANDOM);
     }
     
     @Override 

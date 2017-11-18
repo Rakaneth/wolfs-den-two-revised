@@ -39,7 +39,7 @@ public class CreatureSetupSystem extends IteratingSystem
     ai.aStar = new AStarSearch(pos.map.aStarMap, SearchType.CHEBYSHEV);
     
     //add to atlas
-    Position.atlas.put(ai.eID, pos);
+    Position.atlas.put(entity, pos);
     
     //remove component when done
     entity.remove(FreshCreature.class);
