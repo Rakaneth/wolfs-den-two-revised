@@ -3,6 +3,7 @@ package rakaneth.wolfsden.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.ashley.systems.SortedIteratingSystem;
 
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.GameInfo;
@@ -14,19 +15,24 @@ import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
+import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
-public class ActionResolverSystem extends IteratingSystem
+public class ActionResolverSystem extends SortedIteratingSystem
 {
   public static boolean paused;
 
   public ActionResolverSystem()
   {
-    super(Family.all(SecondaryStats.class)
+    super(Family.all(Stats.class, SecondaryStats.class)
                 .one(AI.class)
-                .get());
+                .get(),
+        (e1, e2) ->
+        {
+          return Mapper.stats.get(e2).spd - Mapper.stats.get(e1).spd;
+        });
   }
 
   private void move(Position pos, AI ai)
@@ -43,7 +49,7 @@ public class ActionResolverSystem extends IteratingSystem
     ai.tookTurn = true;
     ai.location = pos.current;
   }
-  
+
   private void moveRandom(Position pos, AI ai)
   {
     ai.actionStack.push(WolfGame.rng.getRandomElement(Direction.values()));
@@ -57,7 +63,7 @@ public class ActionResolverSystem extends IteratingSystem
     AI ai = Mapper.AIs.get(entity);
     if (!paused)
       ai.delay--;
-    
+
     if (ai.delay <= 0)
     {
       if (ai.stateMachine != null)
@@ -103,7 +109,7 @@ public class ActionResolverSystem extends IteratingSystem
         paused = false;
       } else if (!paused)
       {
-        //entity took no action due to empty stack
+        // entity took no action due to empty stack
       }
     }
   }
