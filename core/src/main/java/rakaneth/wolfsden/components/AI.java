@@ -7,6 +7,8 @@ import java.util.Stack;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 
 import rakaneth.wolfsden.CommandTypes;
 import squidpony.squidgrid.FOV;
@@ -14,7 +16,7 @@ import squidpony.squidmath.AStarSearch;
 import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 
-public class AI implements Component
+public class AI implements Component, Telegraph
 {
   public double[][]          visible;
   public FOV                 fov            = new FOV();
@@ -46,5 +48,10 @@ public class AI implements Component
       actionStack.push(o);
     }
     actionStack.push(cmd);
+  }
+  
+  public boolean handleMessage(Telegram tele)
+  {
+    return stateMachine.handleMessage(tele);
   }
 }

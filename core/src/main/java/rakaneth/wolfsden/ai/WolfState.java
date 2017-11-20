@@ -89,5 +89,9 @@ public enum WolfState implements State<AI>
       return false;
     }
   };
-
+  
+  public boolean onMessage(AI ai, Telegram tele)
+  {
+    return false;
+  }
 }
