@@ -39,13 +39,14 @@ public class CreatureBuilder
     creatures = converter.fromJson(HashMap.class, CreatureBase.class, Gdx.files.internal(fileName));
   }
 
-  public Entity build(String id, WolfMap map)
+  public Entity build(String id, WolfMap map, String name)
   {
     CreatureBase base = creatures.get(id);
     String IDid = String.format("%s-%d", id, counter++);
     Color color = Colors.get(base.color);
     Entity creature = new Entity();
     Coord pos = map.getEmpty();
+    String nm = WolfUtils.ifNull(name, base.name);
 
     if (base.factions == null)
       base.factions = new ArrayList<>();
@@ -54,7 +55,7 @@ public class CreatureBuilder
     creature.add(new Position(pos, map));
     creature.add(new Drawing(base.glyph, color));
     creature.add(new Stats(base.str, base.stam, base.spd, base.skl));
-    creature.add(new Identity(base.name, IDid, base.desc));
+    creature.add(new Identity(nm, IDid, base.desc));
     creature.add(new SecondaryStats());
     creature.add(new Vitals());
     creature.add(new FreshCreature());
@@ -100,10 +101,15 @@ public class CreatureBuilder
     PlayScreen.engine.addEntity(creature);
     return creature;
   }
-
-  public Entity buildPlayer(String id, WolfMap map)
+  
+  public Entity build(String id, WolfMap map)
   {
-    Entity p = build(id, map);
+    return build(id, map, null);
+  }
+
+  public Entity buildPlayer(String id, WolfMap map, String name)
+  {
+    Entity p = build(id, map, name);
     p.add(new Player());
     p.getComponent(Drawing.class).layer = 4;
     p.getComponent(Factions.class).factions.add("player");

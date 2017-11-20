@@ -2,6 +2,7 @@
 {
 	wolf: {
 		name: "Wolf",
+		desc: "A large, savage wolf",
 		str: 2,
 		stam: 2,
 		spd: 1,
@@ -14,6 +15,7 @@
 	},
 	alpha: {
 		name: "Alpha",
+		desc: "A massive, black-furred wolf",
 		str: 4,
 		stam: 3,
 		spd: 2,
