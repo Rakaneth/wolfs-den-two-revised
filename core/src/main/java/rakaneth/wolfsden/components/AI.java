@@ -33,9 +33,10 @@ public class AI implements Component
   public int                 delay;
   public boolean             tookTurn;
 
-  public AI(String eid)
+  public AI(String eid, double vision)
   {
     eID = eid;
+    visionRadius = vision;
   }
 
   public void sendCmd(CommandTypes cmd, Object... args)

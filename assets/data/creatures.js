@@ -10,6 +10,7 @@
 		glyph: "W",
 		factions: ["monsters"],
 		ai: "wolf",
+		vision: 10,
 	},
 	alpha: {
 		name: "Alpha",
@@ -21,6 +22,7 @@
 		glyph: "W",
 		factions: ["monsters"],
 		ai: "alpha",
+		vision: 14,
 	},
 	fighter: {
 		name: "Player",
@@ -34,5 +36,6 @@
 		mh: "ironSword",
 		armor: "chainMail",
 		ai: "fighter",
+		vision: 10,
 	}
 }

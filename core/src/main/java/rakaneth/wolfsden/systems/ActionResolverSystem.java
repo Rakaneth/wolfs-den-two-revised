@@ -10,7 +10,6 @@ import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.Mapper;
-import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Position;
@@ -68,6 +67,7 @@ public class ActionResolverSystem extends IteratingSystem
         paused = true;
 
       Position pos = Mapper.position.get(entity);
+      pos.dirty = false;
       if (!ai.actionStack.empty())
       {
         WolfUtils.log("Action", "%s acts on tick %d", ai.eID, GameInfo.turnCount);

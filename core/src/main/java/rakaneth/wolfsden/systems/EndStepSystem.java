@@ -38,7 +38,6 @@ public class EndStepSystem extends EntitySystem
       Position pos = Mapper.position.get(entity);
       AI ai = Mapper.AIs.get(entity);
       ai.tookTurn = false;
-      pos.dirty = false;
     }
     
     if (!ActionResolverSystem.paused) 

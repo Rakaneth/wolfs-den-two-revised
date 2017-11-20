@@ -46,10 +46,10 @@ public class CreatureBuilder
     Color color = Colors.get(base.color);
     Entity creature = new Entity();
     Coord pos = map.getEmpty();
-    
+
     if (base.factions == null)
       base.factions = new ArrayList<>();
-    
+
     base.factions.add(IDid);
     creature.add(new Position(pos, map));
     creature.add(new Drawing(base.glyph, color));
@@ -81,12 +81,13 @@ public class CreatureBuilder
     else
       PlayScreen.ib.equip(creature, "unadorned");
 
-
     if (base.ai != null)
     {
       // TODO: different AIs
-      AI ai = new AI(IDid);
-      DefaultStateMachine ds = null;  
+      if (base.vision == 0)
+        base.vision = 6;
+      AI ai = new AI(IDid, base.vision);
+      DefaultStateMachine ds = null;
       switch (base.ai) {
       case "wolf":
         ds = new DefaultStateMachine<AI, WolfState>(ai, WolfState.FOLLOW_ALPHA);
@@ -125,5 +126,6 @@ public class CreatureBuilder
     public String            trinket;
     public ArrayList<String> factions;
     public String            ai;
+    public double            vision;
   }
 }
