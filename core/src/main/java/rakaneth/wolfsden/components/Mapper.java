@@ -1,6 +1,9 @@
 package rakaneth.wolfsden.components;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -28,19 +31,26 @@ public class Mapper
   public static final ComponentMapper<Consumable>     consumables = ComponentMapper.getFor(Consumable.class);
   public static final ComponentMapper<Factions>       factions    = ComponentMapper.getFor(Factions.class);
   public static final ComponentMapper<AI>             AIs         = ComponentMapper.getFor(AI.class);
+  public static final ComponentMapper<Attack>         attackers   = ComponentMapper.getFor(Attack.class);
+  public static final HashMap<Entity, Position>       atlas       = new HashMap<>();
 
   public static final boolean isPlayer(Entity entity)
   {
     return player.get(entity) != null;
   }
 
-  public static final Entity[] itemAt(Coord c, WolfMap m)
+  public static final Entity creatureAt(Coord c, WolfMap map)
   {
-    Family searchFam = Family.all(Position.class)
-                             .get();
-    ImmutableArray<Entity> toSearch = PlayScreen.engine.getEntitiesFor(searchFam);
-    return Arrays.stream(toSearch.toArray())
-                 .filter(f -> position.get(f).current.equals(c) && position.get(f).map.id.equals(m.id))
-                 .toArray(Entity[]::new);
+    Optional<Map.Entry<Entity, Position>> result = atlas.entrySet()
+                                                        .stream()
+                                                        .filter(f -> f.getValue().current.equals(c)
+                                                            && f.getValue().map.id.equals(map.id))
+                                                        .findFirst();
+
+    if (result.isPresent())
+      return result.get()
+                   .getKey();
+    else
+      return null;
   }
 }

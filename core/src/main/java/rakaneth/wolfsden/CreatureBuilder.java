@@ -24,6 +24,7 @@ import rakaneth.wolfsden.components.Vitals;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
+import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidmath.Coord;
 
 public class CreatureBuilder
@@ -43,7 +44,7 @@ public class CreatureBuilder
   {
     CreatureBase base = creatures.get(id);
     String IDid = String.format("%s-%d", id, counter++);
-    Color color = Colors.get(base.color);
+    SColor color = (SColor) Colors.get(base.color);
     Entity creature = new Entity();
     Coord pos = map.getEmpty();
     String nm = WolfUtils.ifNull(name, base.name);

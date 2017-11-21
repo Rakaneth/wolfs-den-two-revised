@@ -35,7 +35,7 @@ public class VisionSystem extends IteratingSystem
 			ai.visibleOthers.clear();
 			FactionManager fm = FactionManager.instance;
 			// TODO: filter between allies and enemies
-			Position.atlas.entrySet()
+			Mapper.atlas.entrySet()
 										.stream()
 										.filter((f) ->
 										{

@@ -45,6 +45,7 @@ import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Trinket;
 import rakaneth.wolfsden.components.Vitals;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
+import rakaneth.wolfsden.systems.AttackResolverSystem;
 import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.CreatureSetupSystem;
 import rakaneth.wolfsden.systems.EndStepSystem;
@@ -132,38 +133,53 @@ public class PlayScreen extends WolfScreen
 
     input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
     {
+      CommandTypes cmd = CommandTypes.MOVE;
+      Direction d = Direction.NONE;
       switch (key) {
       case SquidInput.ESCAPE:
         WolfGame.setScreen(TitleScreen.instance);
         break;
       case SquidInput.UP_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.UP);
+        d = Direction.UP;
         break;
       case SquidInput.UP_RIGHT_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.UP_RIGHT);
+        d = Direction.UP_RIGHT;
         break;
       case SquidInput.RIGHT_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.RIGHT);
+        d = Direction.RIGHT;
         break;
       case SquidInput.DOWN_RIGHT_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.DOWN_RIGHT);
+        d = Direction.DOWN_RIGHT;
         break;
       case SquidInput.DOWN_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.DOWN);
+        d = Direction.DOWN;
         break;
       case SquidInput.DOWN_LEFT_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.DOWN_LEFT);
+        d = Direction.DOWN_LEFT;
         break;
       case SquidInput.LEFT_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.LEFT);
+        d = Direction.LEFT;
         break;
       case SquidInput.UP_LEFT_ARROW:
-        sendCmd(CommandTypes.MOVE, Direction.UP_LEFT);
+        d = Direction.UP_LEFT;
         break;
       case '>':
       case '<':
-        sendCmd(CommandTypes.STAIRS);
+        cmd = CommandTypes.STAIRS;
         break;
+      }
+      
+      if (cmd == CommandTypes.STAIRS)
+        sendCmd(cmd);
+      else
+      {
+        Position pos = player.getComponent(Position.class);
+        Coord toMove = pos.current.translate(d);
+        Entity creature = Mapper.creatureAt(toMove, pos.map);
+        if (creature != null)
+          sendCmd(CommandTypes.INTERACT, creature);
+        else
+          sendCmd(cmd, d);
       }
     });
     stage.addActor(display);
@@ -199,6 +215,7 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new CreatureSetupSystem());
     engine.addSystem(new VisionSystem());
     engine.addSystem(new ActionResolverSystem());
+    engine.addSystem(new AttackResolverSystem());
     engine.addSystem(new RenderingSystem(this, display));
     engine.addSystem(new LevelChangeSystem());
     engine.addSystem(new EndStepSystem());

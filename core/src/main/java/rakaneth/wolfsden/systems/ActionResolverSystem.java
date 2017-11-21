@@ -6,12 +6,14 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.AI;
+import rakaneth.wolfsden.components.Attack;
 import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
@@ -26,8 +28,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
 
   public ActionResolverSystem()
   {
-    super(Family.all(Stats.class, SecondaryStats.class)
-                .one(AI.class)
+    super(Family.all(Stats.class, SecondaryStats.class, AI.class)
                 .get(),
         (e1, e2) ->
         {
@@ -54,6 +55,18 @@ public class ActionResolverSystem extends SortedIteratingSystem
   {
     ai.actionStack.push(WolfGame.rng.getRandomElement(Direction.values()));
     move(pos, ai);
+  }
+  
+  private void swap(Entity e1, Entity e2)
+  {
+    Position e1p = Mapper.position.get(e1);
+    Position e2p = Mapper.position.get(e2);
+    Coord temp;
+    temp = e1p.current;
+    e1p.current = e2p.current;
+    e2p.current = temp;
+    Mapper.atlas.replace(e1, e1p);
+    Mapper.atlas.replace(e2, e2p);
   }
 
   @Override
@@ -82,7 +95,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
         case MOVE:
           move(pos, ai);
           ai.delay = sStats.moveDelay;
-          Position.atlas.replace(entity, pos);
+          Mapper.atlas.replace(entity, pos);
           break;
         case STAIRS:
           WolfMap.Stairs stair = pos.map.getStair(pos.current);
@@ -93,7 +106,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
             entity.add(new ChangeLevel(pos.current, stair));
             ai.delay = 10;
             ai.tookTurn = true;
-            Position.atlas.replace(entity, pos);
+            Mapper.atlas.replace(entity, pos);
             break;
           default:
             PlayScreen.addMessage("No stairs here.");
@@ -101,8 +114,16 @@ public class ActionResolverSystem extends SortedIteratingSystem
           break;
         case RANDOM:
           moveRandom(pos, ai);
-          Position.atlas.replace(entity, pos);
+          Mapper.atlas.replace(entity, pos);
           ai.delay = sStats.moveDelay;
+          break;
+        case INTERACT:
+          Entity other = (Entity) ai.actionStack.pop();
+          if (FactionManager.instance.isEnemy(entity, other))
+            entity.add(new Attack(other));
+          else
+            //TODO: add logic for talky NPCs and such
+            swap(entity, other);
           break;
         default:
         }
