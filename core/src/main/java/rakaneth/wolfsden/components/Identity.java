@@ -8,9 +8,9 @@ import com.badlogic.ashley.core.Component;
 
 public class Identity implements Component
 {
-  public String       name;
-  public String       desc;
-  public String       id;
+  public String name;
+  public String desc;
+  public String id;
 
   public Identity(String id)
   {

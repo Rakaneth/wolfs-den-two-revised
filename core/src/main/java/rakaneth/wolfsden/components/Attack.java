@@ -6,7 +6,7 @@ import com.badlogic.ashley.core.Entity;
 public class Attack implements Component
 {
   public Entity target;
-  
+
   public Attack(Entity entity)
   {
     target = entity;

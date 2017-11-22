@@ -24,8 +24,6 @@ import squidpony.squidmath.Coord;
 
 public class ActionResolverSystem extends SortedIteratingSystem
 {
-  public static boolean paused;
-
   public ActionResolverSystem()
   {
     super(Family.all(Stats.class, SecondaryStats.class, AI.class)
@@ -56,7 +54,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
     ai.actionStack.push(WolfGame.rng.getRandomElement(Direction.values()));
     move(pos, ai);
   }
-  
+
   private void swap(Entity e1, Entity e2)
   {
     Position e1p = Mapper.position.get(e1);
@@ -74,7 +72,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
   {
     SecondaryStats sStats = Mapper.secondaries.get(entity);
     AI ai = Mapper.AIs.get(entity);
-    if (!paused)
+    if (!GameInfo.paused)
       ai.delay--;
 
     if (ai.delay <= 0)
@@ -83,7 +81,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
         ai.stateMachine.update();
 
       if (Mapper.isPlayer(entity))
-        paused = true;
+        GameInfo.paused = true;
 
       Position pos = Mapper.position.get(entity);
       pos.dirty = false;
@@ -122,15 +120,15 @@ public class ActionResolverSystem extends SortedIteratingSystem
           if (FactionManager.instance.isEnemy(entity, other))
             entity.add(new Attack(other));
           else
-            //TODO: add logic for talky NPCs and such
+            // TODO: add logic for talky NPCs and such
             swap(entity, other);
           break;
         default:
           ai.delay = 10;
           ai.tookTurn = true;
         }
-        paused = false;
-      } else if (!paused)
+        GameInfo.paused = false;
+      } else if (!GameInfo.paused)
       {
         // entity took no action due to empty stack
       }

@@ -22,7 +22,7 @@ public class AI implements Component, Telegraph
   public FOV                 fov            = new FOV();
   public List<Entity>        visibleEnemies = new ArrayList<>();
   public List<Entity>        visibleAllies  = new ArrayList<>();
-  public List<Entity> visibleOthers = new ArrayList<>();
+  public List<Entity>        visibleOthers  = new ArrayList<>();
   public Entity              target;
   public GreasedRegion       grVisible;
   public DefaultStateMachine stateMachine   = null;
@@ -49,7 +49,7 @@ public class AI implements Component, Telegraph
     }
     actionStack.push(cmd);
   }
-  
+
   public boolean handleMessage(Telegram tele)
   {
     return stateMachine.handleMessage(tele);

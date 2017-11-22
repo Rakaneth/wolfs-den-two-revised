@@ -171,7 +171,7 @@ public class PlayScreen extends WolfScreen
         cmd = CommandTypes.STAIRS;
         break;
       }
-      
+
       if (cmd == CommandTypes.STAIRS || cmd == CommandTypes.WAIT)
         sendCmd(cmd);
       else
@@ -300,8 +300,8 @@ public class PlayScreen extends WolfScreen
                                           secs.dmg, vit, vitals.vit, vitals.maxVit),
         wStam = ICString("[%s]Sta[]%2d [%s]End[]%3d/%3d [%s]Arm[] %5d/%5d", info, stats.stam, info, vitals.end,
                          vitals.maxEnd, arm, 100, 100),
-        wSpd = ICString("[%s]Spd[]%2d [%s]Def[] %6d [%s] XP[] %5.0f/%5.0f", info, stats.spd, info, secs.def, XP, vitals.XP,
-                        vitals.totXP),
+        wSpd = ICString("[%s]Spd[]%2d [%s]Def[] %6d [%s] XP[] %5.0f/%5.0f", info, stats.spd, info, secs.def, XP,
+                        vitals.XP, vitals.totXP),
         wSkl = ICString("[%s]Skl[]%2d [%s]Atk[] %6s [%s]Mov[] %2d [%s]Dly[] %2d", info, stats.skl, info, secs.atk, info,
                         secs.moveDelay, info, secs.atkDelay),
         wID = ICString("[%s]%s[] - [%s]%s[]", warning, id.name, info, id.desc),
@@ -399,7 +399,8 @@ public class PlayScreen extends WolfScreen
     if (input.hasNext())
       input.next();
     float dt = Gdx.graphics.getDeltaTime();
-    GdxAI.getTimepiece().update(dt);
+    GdxAI.getTimepiece()
+         .update(dt);
     engine.update(dt);
     if (changedLevel)
     {

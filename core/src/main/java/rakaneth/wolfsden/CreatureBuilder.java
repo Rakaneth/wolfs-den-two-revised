@@ -102,7 +102,7 @@ public class CreatureBuilder
     PlayScreen.engine.addEntity(creature);
     return creature;
   }
-  
+
   public Entity build(String id, WolfMap map)
   {
     return build(id, map, null);

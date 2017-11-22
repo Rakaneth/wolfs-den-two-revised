@@ -11,7 +11,7 @@ public class Position implements Component
   public Coord   prev;
   public WolfMap map;
   public boolean dirty;
-  
+
   public Position(Coord startPoint, WolfMap map)
   {
     current = startPoint;

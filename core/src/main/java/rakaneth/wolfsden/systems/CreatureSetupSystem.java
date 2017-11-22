@@ -24,26 +24,26 @@ public class CreatureSetupSystem extends IteratingSystem
   @Override
   protected void processEntity(Entity entity, float deltaTime)
   {
-    //set creature to full HP/EP
+    // set creature to full HP/EP
     Vitals v = Mapper.vitals.get(entity);
     v.heal();
     v.rest();
-    
-    //set up vision
+
+    // set up vision
     AI ai = Mapper.AIs.get(entity);
     Position pos = Mapper.position.get(entity);
     ai.visible = ai.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, ai.visionRadius);
     ai.grVisible = new GreasedRegion(ai.visible, 0.0).not();
-    
-    //set up pathfinding
+
+    // set up pathfinding
     ai.aStar = new AStarSearch(pos.map.aStarMap, SearchType.CHEBYSHEV);
-    
-    //add to atlas
+
+    // add to atlas
     Mapper.atlas.put(entity, pos);
-    
-    //remove component when done
+
+    // remove component when done
     entity.remove(FreshCreature.class);
-    
+
   }
 
 }

@@ -15,8 +15,8 @@ import squidpony.DataConverter;
 public class FactionManager
 {
   private Map<String, Map<String, Float>> factions;
-  public static final FactionManager        instance = new FactionManager();
-  private static final String               fileName = "data/factions.js";
+  public static final FactionManager      instance = new FactionManager();
+  private static final String             fileName = "data/factions.js";
 
   @SuppressWarnings("unchecked")
   private FactionManager()

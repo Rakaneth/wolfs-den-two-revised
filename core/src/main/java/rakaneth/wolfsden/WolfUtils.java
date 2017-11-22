@@ -59,9 +59,10 @@ public final class WolfUtils
   {
     return (value == null ? dFault : value);
   }
-  
-  public static void log(String tag, String template, Object...args)
+
+  public static void log(String tag, String template, Object... args)
   {
-    GdxAI.getLogger().info(tag, String.format(template, args));
+    GdxAI.getLogger()
+         .info(tag, String.format(template, args));
   }
 }

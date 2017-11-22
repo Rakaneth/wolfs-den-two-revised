@@ -7,9 +7,9 @@ import squidpony.squidgrid.gui.gdx.SColor;
 
 public class Drawing implements Component
 {
-  public char  glyph;
+  public char   glyph;
   public SColor color;
-  public int layer;
+  public int    layer;
 
   public Drawing(char g, SColor color)
   {
@@ -17,7 +17,7 @@ public class Drawing implements Component
     this.color = color;
     layer = 3;
   }
-  
+
   public Drawing(char g, SColor color, int layer)
   {
     this(g, color);
