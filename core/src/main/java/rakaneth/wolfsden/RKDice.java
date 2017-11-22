@@ -62,7 +62,7 @@ public class RKDice
   {
     int realKeep = Math.min(roll, keep);
     if (realKeep > 0)
-      return dice.bestOf(realKeep, roll, "1!6");
+      return dice.bestOf(realKeep, roll, "!6");
     return 0;
   }
 
