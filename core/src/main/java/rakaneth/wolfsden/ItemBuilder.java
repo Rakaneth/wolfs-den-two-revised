@@ -140,7 +140,7 @@ public class ItemBuilder
 
     public enum ItemType
     {
-    REPAIR, FOOD, BUFF;
+      REPAIR, FOOD, BUFF;
     }
   }
 
@@ -189,7 +189,7 @@ public class ItemBuilder
 
     public enum Slot
     {
-    ARMOR, TRINKET, MH, OH;
+      ARMOR, TRINKET, MH, OH;
     }
   }
 }

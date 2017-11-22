@@ -213,21 +213,21 @@ public class WolfMap
 
   public enum Stairs
   {
-  DOWN, UP, OUT, NONE;
+    DOWN, UP, OUT, NONE;
 
-  public Stairs opp()
-  {
-    switch (this) {
-    case DOWN:
-      return UP;
-    case UP:
-      return DOWN;
-    case OUT:
-      return OUT;
-    default:
-      return NONE;
+    public Stairs opp()
+    {
+      switch (this) {
+      case DOWN:
+        return UP;
+      case UP:
+        return DOWN;
+      case OUT:
+        return OUT;
+      default:
+        return NONE;
+      }
     }
-  }
   }
 
   public class Connection
