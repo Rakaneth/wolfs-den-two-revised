@@ -8,7 +8,7 @@ import squidpony.squidmath.StatefulRNG;
 
 public class WolfGame extends ApplicationAdapter
 {
-  public static final StatefulRNG rng = new StatefulRNG(0xDEADBEEF);
+  public static final StatefulRNG rng = new StatefulRNG();
   private static WolfScreen       curScreen;
 
   @Override

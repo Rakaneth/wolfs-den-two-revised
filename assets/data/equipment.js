@@ -34,7 +34,7 @@
 	},
 	mattock: {
 		name: "Mattock",
-		desc: "A pickaxes designed for digging into rock.",
+		desc: "A pickaxe designed for digging into rock.",
 		dmg: "0k1",
 		delay: 10,
 		slot: "MH",
@@ -73,5 +73,19 @@
 		rarity: 5,
 		glyph: "=",
 		color: "White",
+	}
+	wolfClaws: {
+	  name: "Wolf Claws",
+	  desc: "The claws of a wolf.",
+	  atk: "1k0",
+	  delay: 5,
+	  slot: "OH",
+	}
+	wolfFangs: {
+	  name: "Wolf Fangs",
+	  desc: "The fangs of a wolf.",
+	  dmg: "0k1",
+	  delay: 8,
+	  slot: "MH",
 	}
 }

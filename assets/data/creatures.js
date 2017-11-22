@@ -11,6 +11,8 @@
 		glyph: "W",
 		factions: ["monsters"],
 		ai: "wolf",
+		mh: "wolfFangs",
+		oh: "wolfClaws",
 		vision: 10,
 	},
 	alpha: {
@@ -24,6 +26,8 @@
 		glyph: "W",
 		factions: ["monsters"],
 		ai: "alpha",
+    mh: "wolfFangs",
+    oh: "wolfClaws",
 		vision: 14,
 	},
 	fighter: {
