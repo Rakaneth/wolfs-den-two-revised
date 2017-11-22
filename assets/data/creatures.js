@@ -51,5 +51,6 @@
 	  glyph: "@",
 	  vision: 6,
 	  ai: "merchant",
+	  factions: ["talkies"],
 	}
 }
