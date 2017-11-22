@@ -110,19 +110,16 @@ public class FactionManager
 
   public boolean isEnemy(Entity e1, Entity e2)
   {
-    int raw = getReaction(e1, e2);
-    return raw < 0;
+    return getReaction(e1, e2) < 0;
   }
 
   public boolean isAlly(Entity e1, Entity e2)
   {
-    int raw = getReaction(e1, e2);
-    return raw > 0;
+    return getReaction(e1, e2) > 0;
   }
 
   public boolean isNeutral(Entity e1, Entity e2)
   {
-    return !(isAlly(e1, e2) || isEnemy(e1, e2));
+    return getReaction(e1, e2) == 0;
   }
-
 }
