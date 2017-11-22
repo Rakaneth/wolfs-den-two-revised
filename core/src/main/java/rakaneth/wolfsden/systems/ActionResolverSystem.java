@@ -63,8 +63,6 @@ public class ActionResolverSystem extends SortedIteratingSystem
     temp = e1p.current;
     e1p.current = e2p.current;
     e2p.current = temp;
-    Mapper.atlas.replace(e1, e1p);
-    Mapper.atlas.replace(e2, e2p);
   }
 
   @Override
@@ -93,7 +91,6 @@ public class ActionResolverSystem extends SortedIteratingSystem
         case MOVE:
           move(pos, ai);
           ai.delay = sStats.moveDelay;
-          Mapper.atlas.replace(entity, pos);
           break;
         case STAIRS:
           WolfMap.Stairs stair = pos.map.getStair(pos.current);
@@ -104,7 +101,6 @@ public class ActionResolverSystem extends SortedIteratingSystem
             entity.add(new ChangeLevel(pos.current, stair));
             ai.delay = 10;
             ai.tookTurn = true;
-            Mapper.atlas.replace(entity, pos);
             break;
           default:
             PlayScreen.addMessage("No stairs here.");
@@ -112,7 +108,6 @@ public class ActionResolverSystem extends SortedIteratingSystem
           break;
         case RANDOM:
           moveRandom(pos, ai);
-          Mapper.atlas.replace(entity, pos);
           ai.delay = sStats.moveDelay;
           break;
         case INTERACT:

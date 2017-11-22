@@ -45,6 +45,7 @@ import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Trinket;
 import rakaneth.wolfsden.components.Vitals;
 import rakaneth.wolfsden.systems.ActionResolverSystem;
+import rakaneth.wolfsden.systems.AtlasUpdateSystem;
 import rakaneth.wolfsden.systems.AttackResolverSystem;
 import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.CreatureSetupSystem;
@@ -219,6 +220,7 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new VisionSystem());
     engine.addSystem(new ActionResolverSystem());
     engine.addSystem(new AttackResolverSystem());
+    engine.addSystem(new AtlasUpdateSystem());
     engine.addSystem(new RenderingSystem(this, display));
     engine.addSystem(new LevelChangeSystem());
     engine.addSystem(new EndStepSystem());
