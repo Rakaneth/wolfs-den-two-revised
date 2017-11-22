@@ -168,6 +168,9 @@ public class PlayScreen extends WolfScreen
       case '<':
         cmd = CommandTypes.STAIRS;
         break;
+      case 't':
+        WolfGame.setScreen(TrainScreen.instance);
+        break;
       }
 
       if (cmd == CommandTypes.STAIRS || cmd == CommandTypes.WAIT)
@@ -321,12 +324,6 @@ public class PlayScreen extends WolfScreen
     invPanel.put(1, 4, wTrink);
   }
 
-  private IColoredString<Color> ICString(String template, Object... args)
-  {
-    String rawText = String.format(template, args);
-    return GDXMarkup.instance.colorString(rawText);
-  }
-
   public Coord cam()
   {
     Coord pos = player.getComponent(Position.class).current;
@@ -429,5 +426,10 @@ public class PlayScreen extends WolfScreen
   public String map()
   {
     return curMap.id;
+  }
+  
+  public Entity player()
+  {
+    return player;
   }
 }
