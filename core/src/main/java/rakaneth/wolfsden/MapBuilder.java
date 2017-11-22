@@ -39,7 +39,7 @@ public final class MapBuilder
       tt = TilesetType.DEFAULT_DUNGEON;
       break;
     case "cave":
-      tt = TilesetType.REFERENCE_CAVES;
+      tt = TilesetType.CORNER_CAVES;
       break;
     default:
       tt = TilesetType.DEFAULT_DUNGEON;

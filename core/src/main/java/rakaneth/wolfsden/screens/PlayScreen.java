@@ -163,13 +163,16 @@ public class PlayScreen extends WolfScreen
       case SquidInput.UP_LEFT_ARROW:
         d = Direction.UP_LEFT;
         break;
+      case SquidInput.CENTER_ARROW:
+        cmd = CommandTypes.WAIT;
+        break;
       case '>':
       case '<':
         cmd = CommandTypes.STAIRS;
         break;
       }
       
-      if (cmd == CommandTypes.STAIRS)
+      if (cmd == CommandTypes.STAIRS || cmd == CommandTypes.WAIT)
         sendCmd(cmd);
       else
       {
@@ -235,14 +238,8 @@ public class PlayScreen extends WolfScreen
   private void buildPlayer()
   {
     player = cb.buildPlayer("fighter", curMap, "Palmyra");
-    Entity wolf = cb.build("wolf", curMap);
-    String wolfID = wolf.getComponent(Identity.class).id;
-    FactionManager.instance.changeReaction(wolfID, "player", 30);
-    int wolfReact = FactionManager.instance.getReaction(wolf, player);
-    int playerReact = FactionManager.instance.getReaction(player, wolf);
-
-    System.out.println(String.format("Wolf to player: %d\nPlayer to wolf: %d", wolfReact, playerReact));
-
+    cb.build("wolf", curMap);
+    cb.build("lostMan", curMap);
   }
 
   private void setFOV(WolfMap map)
@@ -303,7 +300,7 @@ public class PlayScreen extends WolfScreen
                                           secs.dmg, vit, vitals.vit, vitals.maxVit),
         wStam = ICString("[%s]Sta[]%2d [%s]End[]%3d/%3d [%s]Arm[] %5d/%5d", info, stats.stam, info, vitals.end,
                          vitals.maxEnd, arm, 100, 100),
-        wSpd = ICString("[%s]Spd[]%2d [%s]Def[] %6d [%s] XP[] %5d/%5d", info, stats.spd, info, secs.def, XP, vitals.XP,
+        wSpd = ICString("[%s]Spd[]%2d [%s]Def[] %6d [%s] XP[] %5.0f/%5.0f", info, stats.spd, info, secs.def, XP, vitals.XP,
                         vitals.totXP),
         wSkl = ICString("[%s]Skl[]%2d [%s]Atk[] %6s [%s]Mov[] %2d [%s]Dly[] %2d", info, stats.skl, info, secs.atk, info,
                         secs.moveDelay, info, secs.atkDelay),

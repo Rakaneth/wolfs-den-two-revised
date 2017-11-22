@@ -40,4 +40,16 @@
 		ai: "fighter",
 		vision: 10,
 	}
+	lostMan: {
+	  name: "Lost Merchant",
+	  desc: "A lost merchant",
+	  str: 1,
+	  stam: 1,
+	  spd: 1,
+	  skl: 1,
+	  color: "Light Blue",
+	  glyph: "@",
+	  vision: 6,
+	  ai: "merchant",
+	}
 }

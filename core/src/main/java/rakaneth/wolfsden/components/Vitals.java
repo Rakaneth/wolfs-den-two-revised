@@ -10,15 +10,17 @@ public class Vitals implements Component
   public int     maxVit;
   public int     end;
   public int     maxEnd;
-  public int     XP;
-  public int     totXP;
+  public float   XP;
+  public float   totXP;
+  public float   xpMult;
 
   public Vitals()
   {
     alive = true;
+    xpMult = 10;
   }
 
-  public void gainXP(int amt)
+  public void gainXP(float amt)
   {
     XP += amt;
     totXP += amt;

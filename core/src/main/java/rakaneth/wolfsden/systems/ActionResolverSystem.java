@@ -126,6 +126,8 @@ public class ActionResolverSystem extends SortedIteratingSystem
             swap(entity, other);
           break;
         default:
+          ai.delay = 10;
+          ai.tookTurn = true;
         }
         paused = false;
       } else if (!paused)
