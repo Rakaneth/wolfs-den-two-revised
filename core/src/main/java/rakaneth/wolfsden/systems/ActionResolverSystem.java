@@ -2,7 +2,6 @@ package rakaneth.wolfsden.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 
 import rakaneth.wolfsden.CommandTypes;
@@ -11,10 +10,10 @@ import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.WolfUtils;
-import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Attack;
 import rakaneth.wolfsden.components.ChangeLevel;
+import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;

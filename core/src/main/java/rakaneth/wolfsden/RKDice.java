@@ -2,8 +2,6 @@ package rakaneth.wolfsden;
 
 import java.util.Arrays;
 
-import rakaneth.wolfsden.WolfGame;
-
 import squidpony.squidmath.Dice;
 
 public class RKDice

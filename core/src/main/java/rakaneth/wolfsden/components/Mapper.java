@@ -1,17 +1,13 @@
 package rakaneth.wolfsden.components;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.utils.ImmutableArray;
 
 import rakaneth.wolfsden.WolfMap;
-import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidmath.Coord;
 
 public class Mapper

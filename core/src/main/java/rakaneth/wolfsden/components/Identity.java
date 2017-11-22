@@ -1,9 +1,5 @@
 package rakaneth.wolfsden.components;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.badlogic.ashley.core.Component;
 
 public class Identity implements Component

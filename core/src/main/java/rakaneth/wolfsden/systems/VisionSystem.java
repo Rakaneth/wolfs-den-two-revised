@@ -8,7 +8,6 @@ import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
-import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidgrid.FOV;
 
 public class VisionSystem extends IteratingSystem

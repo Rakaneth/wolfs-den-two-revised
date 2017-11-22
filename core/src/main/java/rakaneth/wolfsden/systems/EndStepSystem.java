@@ -11,7 +11,6 @@ import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Vitals;
-import rakaneth.wolfsden.screens.PlayScreen;
 
 public class EndStepSystem extends EntitySystem
 {

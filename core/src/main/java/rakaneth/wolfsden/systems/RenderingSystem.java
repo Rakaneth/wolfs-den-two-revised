@@ -2,7 +2,6 @@ package rakaneth.wolfsden.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 
 import rakaneth.wolfsden.components.Drawing;

@@ -3,7 +3,6 @@ package rakaneth.wolfsden.ai;
 import java.util.Queue;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegram;

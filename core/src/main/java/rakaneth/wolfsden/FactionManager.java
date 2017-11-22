@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import rakaneth.wolfsden.components.Factions;
-import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
 import squidpony.DataConverter;
 

@@ -9,29 +9,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
-import squidpony.panel.IColoredString;
-import squidpony.squidgrid.Direction;
-import squidpony.squidgrid.FOV;
-import squidpony.squidgrid.gui.gdx.DefaultResources;
-import squidpony.squidgrid.gui.gdx.GDXMarkup;
-import squidpony.squidgrid.gui.gdx.SColor;
-import squidpony.squidgrid.gui.gdx.SparseLayers;
-import squidpony.squidgrid.gui.gdx.SquidInput;
-import squidpony.squidgrid.gui.gdx.SquidMessageBox;
-import squidpony.squidgrid.gui.gdx.SquidPanel;
-import squidpony.squidgrid.gui.gdx.TextCellFactory;
-import squidpony.squidgrid.gui.gdx.TextFamily;
-import squidpony.squidmath.Coord;
-import squidpony.squidmath.GreasedRegion;
-
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
-import rakaneth.wolfsden.FactionManager;
-import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.ItemBuilder;
-import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.Swatch;
+import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Armor;
@@ -53,6 +36,20 @@ import rakaneth.wolfsden.systems.EndStepSystem;
 import rakaneth.wolfsden.systems.LevelChangeSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
 import rakaneth.wolfsden.systems.VisionSystem;
+import squidpony.panel.IColoredString;
+import squidpony.squidgrid.Direction;
+import squidpony.squidgrid.FOV;
+import squidpony.squidgrid.gui.gdx.DefaultResources;
+import squidpony.squidgrid.gui.gdx.GDXMarkup;
+import squidpony.squidgrid.gui.gdx.SColor;
+import squidpony.squidgrid.gui.gdx.SparseLayers;
+import squidpony.squidgrid.gui.gdx.SquidInput;
+import squidpony.squidgrid.gui.gdx.SquidMessageBox;
+import squidpony.squidgrid.gui.gdx.SquidPanel;
+import squidpony.squidgrid.gui.gdx.TextCellFactory;
+import squidpony.squidgrid.gui.gdx.TextFamily;
+import squidpony.squidmath.Coord;
+import squidpony.squidmath.GreasedRegion;
 
 public class PlayScreen extends WolfScreen
 {

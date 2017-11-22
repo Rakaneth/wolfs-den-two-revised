@@ -1,7 +1,6 @@
 package rakaneth.wolfsden.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.graphics.Color;
 
 import squidpony.squidgrid.gui.gdx.SColor;
 

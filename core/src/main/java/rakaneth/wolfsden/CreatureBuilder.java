@@ -6,7 +6,6 @@ import java.util.HashMap;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
 
@@ -14,6 +13,7 @@ import rakaneth.wolfsden.ai.WolfState;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Factions;
+import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Inventory;
 import rakaneth.wolfsden.components.Player;
@@ -21,7 +21,6 @@ import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
 import rakaneth.wolfsden.components.Vitals;
-import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
 import squidpony.squidgrid.gui.gdx.SColor;
@@ -89,6 +88,7 @@ public class CreatureBuilder
       if (base.vision == 0)
         base.vision = 6;
       AI ai = new AI(IDid, base.vision);
+      @SuppressWarnings("rawtypes")
       DefaultStateMachine ds = null;
       switch (base.ai) {
       case "wolf":

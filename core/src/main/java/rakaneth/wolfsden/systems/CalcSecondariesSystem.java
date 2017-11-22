@@ -1,8 +1,5 @@
 package rakaneth.wolfsden.systems;
 
-import java.util.Arrays;
-import java.util.OptionalInt;
-
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
