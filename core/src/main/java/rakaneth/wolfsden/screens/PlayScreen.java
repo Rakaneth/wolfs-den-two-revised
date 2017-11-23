@@ -77,7 +77,7 @@ public class PlayScreen extends WolfScreen
   private final int              ttPixelHeight   = ttHeight * cellHeight;
   private final int              ablPixelWidth   = ablWidth * cellWidth;
   private final int              ablPixelHeight  = ablHeight * cellHeight;
-  private final int              fullWidth       = gridWidth + invWidth + 10;
+  private final int              fullWidth       = gridWidth + invWidth;
   private final int              fullHeight      = gridHeight + msgHeight;
   private final int              fullPixelWidth  = fullWidth * cellWidth;
   private final int              fullPixelHeight = fullHeight * cellHeight;

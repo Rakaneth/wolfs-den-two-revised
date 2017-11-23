@@ -34,17 +34,16 @@ public class TrainScreen extends WolfScreen
   private TrainScreen()
   {
     TextFamily slab = DefaultResources.getSlabFamily();
+    slab.width(cellWidth)
+        .height(cellHeight)
+        .tweakWidth(1.2f * cellWidth)
+        .tweakHeight(1.5f * cellHeight)
+        .initBySize();
     vport = new StretchViewport(fullPixelWidth, fullPixelHeight);
     stage = new Stage(vport, batch);
     player = PlayScreen.instance.player();
     display = new SquidPanel(gridWidth, gridHeight, slab);
-    display.getTextCellFactory()
-           .width(cellWidth)
-           .height(cellHeight)
-           .tweakWidth(1.2f * cellWidth)
-           .tweakHeight(1.5f * cellHeight)
-           .initBySize();
-    display.setBounds(0, 0, fullPixelWidth, fullPixelHeight);
+    display.setPosition(0, 0);
     input = new SquidInput((char key, boolean alt, boolean ctrl, boolean shift) ->
     {
       switch (key) {
@@ -60,6 +59,9 @@ public class TrainScreen extends WolfScreen
       case '4':
         incSkl();
         break;
+      case 'x':
+        player.getComponent(Vitals.class).gainXP(1000);
+        break;
       case SquidInput.ESCAPE:
         WolfGame.setScreen(PlayScreen.instance);
         break;
@@ -67,8 +69,8 @@ public class TrainScreen extends WolfScreen
       }
       getCosts();
     });
-    stage.addActor(display);
     setInput();
+    stage.addActor(display);
     getCosts();
   }
 
@@ -81,11 +83,15 @@ public class TrainScreen extends WolfScreen
     SColor stamColor = hasStamXP() ? SColor.WHITE : SColor.DARK_GRAY;
     SColor spdColor = hasSpdXP() ? SColor.WHITE : SColor.DARK_GRAY;
     SColor sklColor = hasSklXP() ? SColor.WHITE : SColor.DARK_GRAY;
+    String wStr = String.format("[1] Strength %.0f", strCost), wStam = String.format("[2] Stamina %.0f", stamCost),
+        wSpd = String.format("[3] Speed %.0f", spdCost), wSkl = String.format("[4] Skill %.0f", sklCost);
     display.putBordersCaptioned(SColor.FLOAT_WHITE, train);
-    display.put(1, 1, "[1] Strength", strColor);
-    display.put(1, 2, "[2] Stamina", stamColor);
-    display.put(1, 3, "[3] Speed", spdColor);
-    display.put(1, 4, "[4] Skill", sklColor);
+    display.put(1, 1, wStr, strColor);
+    display.put(1, 2, wStam, stamColor);
+    display.put(1, 3, wSpd, spdColor);
+    display.put(1, 4, wSkl, sklColor);
+    if (input.hasNext())
+      input.next();
     stage.act();
     stage.getViewport()
          .apply(false);
@@ -127,34 +133,47 @@ public class TrainScreen extends WolfScreen
 
   private void incStr()
   {
-    Stats stats = Mapper.stats.get(player);
-    Vitals vit = Mapper.vitals.get(player);
-    stats.str += 1;
-    vit.XP -= strCost;
+    if (hasStrXP())
+    {
+      Stats stats = Mapper.stats.get(player);
+      Vitals vit = Mapper.vitals.get(player);
+      stats.str++;
+      vit.XP -= strCost;
+    }
   }
 
   private void incStam()
   {
-    Stats stats = Mapper.stats.get(player);
-    Vitals vit = Mapper.vitals.get(player);
-    stats.stam += 1;
-    vit.XP -= stamCost;
+    if (hasStamXP())
+    {
+      Stats stats = Mapper.stats.get(player);
+      Vitals vit = Mapper.vitals.get(player);
+      stats.stam++;
+      vit.XP -= stamCost;
+    }
   }
 
   private void incSpd()
   {
-    Stats stats = Mapper.stats.get(player);
-    Vitals vit = Mapper.vitals.get(player);
-    stats.spd += 1;
-    vit.XP -= spdCost;
+    if (hasSpdXP())
+    {
+      Stats stats = Mapper.stats.get(player);
+      Vitals vit = Mapper.vitals.get(player);
+      stats.spd++;
+      vit.XP -= spdCost;
+    }
+
   }
 
   private void incSkl()
   {
-    Stats stats = Mapper.stats.get(player);
-    Vitals vit = Mapper.vitals.get(player);
-    stats.str += 1;
-    vit.XP -= sklCost;
+    if (hasSklXP())
+    {
+      Stats stats = Mapper.stats.get(player);
+      Vitals vit = Mapper.vitals.get(player);
+      stats.skl++;
+      vit.XP -= sklCost;
+    }
   }
 
 }
