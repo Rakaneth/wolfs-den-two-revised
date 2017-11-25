@@ -1,6 +1,8 @@
 package rakaneth.wolfsden;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -8,6 +10,8 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 import squidpony.DataConverter;
 import squidpony.squidgrid.mapping.DungeonGenerator;
+import squidpony.squidgrid.mapping.SectionDungeonGenerator;
+import squidpony.squidgrid.mapping.SerpentDeepMapGenerator;
 import squidpony.squidgrid.mapping.styled.TilesetType;
 
 public final class MapBuilder
@@ -57,7 +61,7 @@ public final class MapBuilder
       raw.makeOutStair(dg.stairsUp);
     maps.put(id, raw);
     return raw;
-  }
+  } 
 
   public void buildAll()
   {
@@ -94,6 +98,43 @@ public final class MapBuilder
         curMap.connect(curMap.stairsOut, outMap.getEmpty(), outMap);
       }
     }
+  }
+  
+  public List<WolfMap> buildZone(String zoneName)
+  {
+    SerpentDeepMapGenerator sdg = new SerpentDeepMapGenerator(100, 100, 7, WolfGame.rng);
+    SectionDungeonGenerator decorator = new SectionDungeonGenerator(100, 100, WolfGame.rng);
+    sdg.putBoxRoomCarvers(1);
+    sdg.putCaveCarvers(2);
+    sdg.putRoundRoomCarvers(4);
+    char[][][] raw = sdg.generate();
+    int counter = 0;
+    char[][] curRaw;
+    int[][] env;
+    List<WolfMap> result = new ArrayList<>();
+    WolfMap wm;
+    for (int z=0; z<raw.length; z++)
+    {
+      String mapName = String.format("%s-%d", zoneName, ++counter);
+      curRaw = raw[z];
+      env = sdg.getEnvironment(z);
+      if ((z & 1) == 1)
+      {
+        decorator.addBoulders(SectionDungeonGenerator.CAVE, 5)
+        .addGrass(SectionDungeonGenerator.CAVE, 10)
+        .addMaze(15);
+      }
+      else
+      {
+        decorator.addLake(15)
+        .addTraps(SectionDungeonGenerator.CORRIDOR, 5)
+        .addLake(10);
+      }
+      char[][] decoRaw = decorator.generate(curRaw, env);
+      wm = new WolfMap(decoRaw, mapName, false, mapName);
+      result.add(wm);
+    }
+    return result;
   }
 
   private static class MapBase

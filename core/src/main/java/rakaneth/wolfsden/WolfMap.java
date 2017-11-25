@@ -31,7 +31,7 @@ public class WolfMap
   public Coord                        stairsOut;
   private final String                name;
   private static final Set<Character> walkables = new HashSet<Character>(
-      Arrays.asList(new Character[] { '>', '<', '.', '\\', ',' }));
+      Arrays.asList(new Character[] { '>', '<', '.', '\\', ',', ':' }));
 
   public WolfMap(char[][] baseMap, String id, boolean dark, String name)
   {
@@ -71,6 +71,10 @@ public class WolfMap
           break;
         case '<':
           displayGlyph = Swatch.CHAR_UP;
+          aStar = 1;
+          break;
+        case ':':
+          displayGlyph = Swatch.BRIDGE;
           aStar = 1;
           break;
         default:

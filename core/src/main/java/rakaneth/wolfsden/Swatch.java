@@ -18,6 +18,7 @@ public final class Swatch
   public static char   BOX_BOT_RIGHT = 0x2518;
   public static char   BOX_HORZ      = 0x2500;
   public static char   BOX_VERT      = 0x2502;
+  public static char   BRIDGE        = 0x2550;
 
   // color constants
   public static String INFO          = SColor.LIGHT_BLUE.getName();

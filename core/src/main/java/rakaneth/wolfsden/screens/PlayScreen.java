@@ -1,5 +1,7 @@
 package rakaneth.wolfsden.screens;
 
+import java.util.List;
+
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -228,8 +230,8 @@ public class PlayScreen extends WolfScreen
 
   private void buildDungeon()
   {
-    mb.buildAll();
-    curMap = mb.maps.get("wolfDen1");
+    List<WolfMap> zones = mb.buildZone("testZone");
+    curMap = zones.get(0);
     int numItems = WolfGame.rng.between(1, 21);
     for (int i = 0; i < numItems; i++)
     {
@@ -382,7 +384,7 @@ public class PlayScreen extends WolfScreen
   {
     String rawText = String.format(template, args);
     IColoredString<Color> toWrite = GDXMarkup.instance.colorString(rawText);
-    msgs.appendMessage(toWrite);
+    msgs.appendWrappingMessage(toWrite);
   }
 
   @Override
