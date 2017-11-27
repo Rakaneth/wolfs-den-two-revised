@@ -171,6 +171,7 @@ public class PlayScreen extends WolfScreen
         cmd = CommandTypes.STAIRS;
         break;
       case 't':
+        disableSystems();
         WolfGame.setScreen(TrainScreen.instance);
         break;
       }
@@ -219,14 +220,24 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new CalcSecondariesSystem());
     engine.addSystem(new CreatureSetupSystem());
     engine.addSystem(new VisionSystem());
-    engine.addSystem(new ActionResolverSystem());
-    engine.addSystem(new AttackResolverSystem());
     engine.addSystem(new DrawDungeonSystem());
-    engine.addSystem(new AtlasUpdateSystem());
     engine.addSystem(new RenderingSystem(this, display));
     engine.addSystem(new DrawHudSystem());
+    engine.addSystem(new ActionResolverSystem());
+    engine.addSystem(new AttackResolverSystem());
+    engine.addSystem(new AtlasUpdateSystem());
     engine.addSystem(new LevelChangeSystem());
     engine.addSystem(new EndStepSystem());
+  }
+  
+  public void disableSystems()
+  {
+    engine.getSystems().forEach(s -> s.setProcessing(false));
+  }
+  
+  public void enableSystems()
+  {
+    engine.getSystems().forEach(s -> s.setProcessing(true));
   }
 
   private void buildDungeon()

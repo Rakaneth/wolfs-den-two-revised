@@ -34,6 +34,7 @@ public class CreatureSetupSystem extends IteratingSystem
     AI ai = Mapper.AIs.get(entity);
     Position pos = Mapper.position.get(entity);
     Player ply = Mapper.player.get(entity);
+    pos.dirty = true;
     ai.visible = ai.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, ai.visionRadius);
     ai.grVisible = new GreasedRegion(ai.visible, 0.0).not();
     if (ply != null)

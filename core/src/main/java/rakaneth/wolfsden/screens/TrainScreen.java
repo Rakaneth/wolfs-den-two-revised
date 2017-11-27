@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.Mapper;
@@ -63,7 +64,9 @@ public class TrainScreen extends WolfScreen
         player.getComponent(Vitals.class).gainXP(1000);
         break;
       case SquidInput.ESCAPE:
+        PlayScreen.instance.enableSystems();
         WolfGame.setScreen(PlayScreen.instance);
+        GameInfo.hudDirty = true;
         break;
       default:
       }
