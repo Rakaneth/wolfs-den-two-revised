@@ -12,6 +12,7 @@ import squidpony.DataConverter;
 import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.SectionDungeonGenerator;
 import squidpony.squidgrid.mapping.SerpentDeepMapGenerator;
+import squidpony.squidgrid.mapping.SerpentMapGenerator;
 import squidpony.squidgrid.mapping.styled.TilesetType;
 
 public final class MapBuilder
@@ -32,36 +33,26 @@ public final class MapBuilder
   public WolfMap buildMap(String id)
   {
     MapBase base = bases.get(id);
-    DungeonGenerator dg = new DungeonGenerator(base.width, base.height, WolfGame.rng);
-    TilesetType tt;
-    char[][] charMap;
-    switch (base.type) {
-    case "closedDungeon":
-      tt = TilesetType.LIMITED_CONNECTIVITY;
-      break;
-    case "openDungeon":
-      tt = TilesetType.DEFAULT_DUNGEON;
-      break;
-    case "cave":
-      tt = TilesetType.CORNER_CAVES;
-      break;
-    default:
-      tt = TilesetType.DEFAULT_DUNGEON;
-      break;
-    }
-    charMap = dg.addDoors(base.doors, base.doubleDoors)
-                .addWater(base.water)
-                .generate(tt);
+    SerpentMapGenerator smg = new SerpentMapGenerator(base.width, base.height, WolfGame.rng, 0.2);
+    SectionDungeonGenerator decorator = new SectionDungeonGenerator(base.width, base.height, WolfGame.rng);
+    char[][] charMap, rawMap;
+    smg.putBoxRoomCarvers(base.boxCarvers);
+    smg.putRoundRoomCarvers(base.roundCarvers);
+    smg.putCaveCarvers(base.caveCarvers);
+    rawMap = smg.generate();
+    decorator.addDoors(base.doors, base.doubleDoors);
+    decorator.addLake(base.water);
+    charMap = decorator.generate(rawMap, smg.getEnvironment());
     WolfMap raw = new WolfMap(charMap, id, base.dark, base.name);
     if (base.up != null)
-      raw.makeUpStair(dg.stairsUp);
+      raw.makeUpStair(decorator.stairsUp);
     if (base.down != null)
-      raw.makeDownStair(dg.stairsDown);
+      raw.makeDownStair(decorator.stairsDown);
     if (base.out != null)
-      raw.makeOutStair(dg.stairsUp);
+      raw.makeOutStair(decorator.stairsUp);
     maps.put(id, raw);
     return raw;
-  } 
+  }
 
   public void buildAll()
   {
@@ -99,50 +90,15 @@ public final class MapBuilder
       }
     }
   }
-  
-  public List<WolfMap> buildZone(String zoneName)
-  {
-    SerpentDeepMapGenerator sdg = new SerpentDeepMapGenerator(100, 100, 7, WolfGame.rng);
-    SectionDungeonGenerator decorator = new SectionDungeonGenerator(100, 100, WolfGame.rng);
-    sdg.putBoxRoomCarvers(1);
-    sdg.putCaveCarvers(2);
-    sdg.putRoundRoomCarvers(4);
-    char[][][] raw = sdg.generate();
-    int counter = 0;
-    char[][] curRaw;
-    int[][] env;
-    List<WolfMap> result = new ArrayList<>();
-    WolfMap wm;
-    for (int z=0; z<raw.length; z++)
-    {
-      String mapName = String.format("%s-%d", zoneName, ++counter);
-      curRaw = raw[z];
-      env = sdg.getEnvironment(z);
-      if ((z & 1) == 1)
-      {
-        decorator.addBoulders(SectionDungeonGenerator.CAVE, 5)
-        .addGrass(SectionDungeonGenerator.CAVE, 10)
-        .addMaze(15);
-      }
-      else
-      {
-        decorator.addLake(15)
-        .addTraps(SectionDungeonGenerator.CORRIDOR, 5)
-        .addLake(10);
-      }
-      char[][] decoRaw = decorator.generate(curRaw, env);
-      wm = new WolfMap(decoRaw, mapName, true, mapName);
-      result.add(wm);
-    }
-    return result;
-  }
 
   private static class MapBase
   {
     public int     width;
     public int     height;
     public boolean dark;
-    public String  type;
+    public int     caveCarvers;
+    public int     boxCarvers;
+    public int     roundCarvers;
     public int     doors;
     public int     water;
     public boolean doubleDoors;

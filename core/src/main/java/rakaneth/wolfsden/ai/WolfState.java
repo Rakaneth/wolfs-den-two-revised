@@ -122,7 +122,7 @@ public enum WolfState implements State<AI>
     @Override
     public void update(AI ai)
     {
-      if (ai.target.getComponent(Vitals.class).alive)
+      if (ai.target != null && ai.target.getComponent(Vitals.class).alive)
       {
         Coord targetC = Mapper.atlas.get(ai.target).current;
         Queue<Coord> path = ai.aStar.path(ai.location, targetC);
@@ -133,12 +133,12 @@ public enum WolfState implements State<AI>
           else
             ai.sendCmd(CommandTypes.MOVE, ai.location.toGoTo(path.remove()));
         }
-        else
+        else  
           //TODO: change this to go to last known location
           ai.stateMachine.changeState(FOLLOW_ALPHA);
       } else
         ai.stateMachine.changeState(FOLLOW_ALPHA);
-    }
+    }                            
 
     @Override
     public void exit(AI ai)

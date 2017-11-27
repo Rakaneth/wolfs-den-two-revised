@@ -242,8 +242,8 @@ public class PlayScreen extends WolfScreen
 
   private void buildDungeon()
   {
-    List<WolfMap> zones = mb.buildZone("testZone");
-    curMap = zones.get(0);
+    mb.buildAll();
+    curMap = mb.maps.get("wolfDen1");
     int numItems = WolfGame.rng.between(1, 21);
     for (int i = 0; i < numItems; i++)
     {

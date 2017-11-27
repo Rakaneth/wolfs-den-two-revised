@@ -40,5 +40,6 @@ public class RenderingSystem extends SortedIteratingSystem
         display.put(curPos.x - cam.x, curPos.y - cam.y, dr.glyph, dr.color);
       }
     }
+    pos.dirty = false;
   }
 }

@@ -49,4 +49,17 @@ public class Mapper
     else
       return null;
   }
+  
+  public static final boolean sameLevel(Entity e1, Entity e2)
+  {
+    Position p1 = position.get(e1);
+    Position p2 = position.get(e2);
+    return p1.map.id.equals(p2.map.id);
+  }
+  
+  public static final boolean sameLevel(Position p, Entity e)
+  {
+    Position ePos = position.get(e);
+    return p.map.id.equals(ePos.map.id);
+  }
 }
