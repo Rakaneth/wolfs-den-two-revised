@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Mapper;
+import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Vitals;
 import squidpony.squidmath.AStarSearch;
@@ -32,9 +33,14 @@ public class CreatureSetupSystem extends IteratingSystem
     // set up vision
     AI ai = Mapper.AIs.get(entity);
     Position pos = Mapper.position.get(entity);
+    Player ply = Mapper.player.get(entity);
     ai.visible = ai.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, ai.visionRadius);
     ai.grVisible = new GreasedRegion(ai.visible, 0.0).not();
-
+    if (ply != null)
+    {
+      ply.grSeen = ai.grVisible.copy();
+    }
+    
     // set up pathfinding
     ai.aStar = new AStarSearch(pos.map.aStarMap, SearchType.CHEBYSHEV);
 

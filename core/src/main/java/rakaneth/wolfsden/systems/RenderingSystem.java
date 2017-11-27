@@ -34,7 +34,7 @@ public class RenderingSystem extends SortedIteratingSystem
       Coord curPos = pos.current;
       Drawing dr = Mapper.drawing.get(entity);
       Coord cam = PlayScreen.instance.cam();
-      double[][] visible = PlayScreen.instance.visible();
+      double[][] visible = Mapper.AIs.get(PlayScreen.instance.player()).visible;
       if (visible[curPos.x][curPos.y] > 0.0)
       {
         display.put(curPos.x - cam.x, curPos.y - cam.y, dr.glyph, dr.color);

@@ -131,7 +131,7 @@ public final class MapBuilder
         .addLake(10);
       }
       char[][] decoRaw = decorator.generate(curRaw, env);
-      wm = new WolfMap(decoRaw, mapName, false, mapName);
+      wm = new WolfMap(decoRaw, mapName, true, mapName);
       result.add(wm);
     }
     return result;

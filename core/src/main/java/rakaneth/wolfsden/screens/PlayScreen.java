@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.CreatureBuilder;
+import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.ItemBuilder;
 import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.Swatch;
@@ -24,6 +25,7 @@ import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mainhand;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Offhand;
+import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
@@ -34,6 +36,8 @@ import rakaneth.wolfsden.systems.AtlasUpdateSystem;
 import rakaneth.wolfsden.systems.AttackResolverSystem;
 import rakaneth.wolfsden.systems.CalcSecondariesSystem;
 import rakaneth.wolfsden.systems.CreatureSetupSystem;
+import rakaneth.wolfsden.systems.DrawDungeonSystem;
+import rakaneth.wolfsden.systems.DrawHudSystem;
 import rakaneth.wolfsden.systems.EndStepSystem;
 import rakaneth.wolfsden.systems.LevelChangeSystem;
 import rakaneth.wolfsden.systems.RenderingSystem;
@@ -91,11 +95,7 @@ public class PlayScreen extends WolfScreen
   public static final Engine     engine          = new Engine();
   private Entity                 player;
   private WolfMap                curMap;
-  private double[][]             visible;
   public static CreatureBuilder  cb              = new CreatureBuilder();
-  private GreasedRegion          seen;
-  private GreasedRegion          currentlySeen;
-  private GreasedRegion          blockage;
   public static MapBuilder       mb              = MapBuilder.instance;;
   private boolean                changedLevel;
   public static ItemBuilder      ib              = new ItemBuilder();
@@ -212,7 +212,6 @@ public class PlayScreen extends WolfScreen
     buildEngine();
     buildDungeon();
     buildPlayer();
-    setFOV(curMap);
   }
 
   private void buildEngine()
@@ -222,8 +221,10 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new VisionSystem());
     engine.addSystem(new ActionResolverSystem());
     engine.addSystem(new AttackResolverSystem());
+    engine.addSystem(new DrawDungeonSystem());
     engine.addSystem(new AtlasUpdateSystem());
     engine.addSystem(new RenderingSystem(this, display));
+    engine.addSystem(new DrawHudSystem());
     engine.addSystem(new LevelChangeSystem());
     engine.addSystem(new EndStepSystem());
   }
@@ -246,27 +247,6 @@ public class PlayScreen extends WolfScreen
     cb.build("lostMan", curMap);
   }
 
-  private void setFOV(WolfMap map)
-  {
-    fov = new FOV();
-    Coord pos = player.getComponent(Position.class).current;
-    visible = fov.calculateFOV(map.resistanceMap, pos.x, pos.y, 10);
-    blockage = new GreasedRegion(visible, 0.0);
-    seen = blockage.not()
-                   .copy();
-    currentlySeen = seen.copy();
-    blockage.fringe8way();
-  }
-
-  private void updateFOV()
-  {
-    Coord pos = player.getComponent(Position.class).current;
-    FOV.reuseFOV(curMap.resistanceMap, visible, pos.x, pos.y, 10);
-    blockage.refill(visible, 0.0);
-    seen.or(currentlySeen.remake(blockage.not()));
-    blockage.fringe8way();
-  }
-
   private void sendCmd(CommandTypes cmd, Object... targets)
   {
     AI ply = player.getComponent(AI.class);
@@ -277,7 +257,7 @@ public class PlayScreen extends WolfScreen
     ply.actionStack.push(cmd);
   }
 
-  private void drawHUD()
+  public void drawHUD()
   {
     float white = SColor.FLOAT_WHITE;
     statPanel.putBorders(white, "Stats");
@@ -334,16 +314,20 @@ public class PlayScreen extends WolfScreen
     return Coord.get(left, top);
   }
 
-  private void cls()
+  public void clearDungeon()
   {
     display.clear();
+  }
+  
+  public void clearHUD()
+  {
     invPanel.erase();
     msgs.erase();
     statPanel.erase();
     ttPanel.erase();
   }
 
-  private void drawDungeon()
+  public void drawDungeon(double[][] visible, GreasedRegion seen)
   {
     Coord cam = cam();
     char[][] decoDungeon = curMap.displayMap;
@@ -385,38 +369,23 @@ public class PlayScreen extends WolfScreen
     String rawText = String.format(template, args);
     IColoredString<Color> toWrite = GDXMarkup.instance.colorString(rawText);
     msgs.appendWrappingMessage(toWrite);
+    GameInfo.hudDirty = true;
   }
 
   @Override
   public void render()
   {
     super.render();
-    cls();
-    drawDungeon();
-    drawHUD();
     if (input.hasNext())
       input.next();
     float dt = Gdx.graphics.getDeltaTime();
     GdxAI.getTimepiece()
          .update(dt);
     engine.update(dt);
-    if (changedLevel)
-    {
-      setFOV(curMap);
-      changedLevel = false;
-    } else
-    {
-      updateFOV();
-    }
     stage.act();
     stage.getViewport()
          .apply(false);
     stage.draw();
-  }
-
-  public double[][] visible()
-  {
-    return visible;
   }
 
   public void changeMap(WolfMap newMap)
