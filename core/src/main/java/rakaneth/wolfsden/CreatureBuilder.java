@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.FreshCreature;
@@ -60,6 +61,7 @@ public class CreatureBuilder
     creature.add(new Inventory());
     creature.add(new Factions(base.factions));
     creature.add(new Vision(base.vision));
+    creature.add(new Action());
 
     if (base.mh != null)
       PlayScreen.ib.equip(creature, base.mh);
