@@ -5,12 +5,9 @@ import java.util.HashMap;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.fsm.DefaultStateMachine;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import rakaneth.wolfsden.ai.WolfState;
-import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.FreshCreature;
@@ -20,6 +17,7 @@ import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
+import rakaneth.wolfsden.components.Vision;
 import rakaneth.wolfsden.components.Vitals;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.DataConverter;
@@ -61,6 +59,7 @@ public class CreatureBuilder
     creature.add(new FreshCreature());
     creature.add(new Inventory());
     creature.add(new Factions(base.factions));
+    creature.add(new Vision(base.vision));
 
     if (base.mh != null)
       PlayScreen.ib.equip(creature, base.mh);
@@ -84,19 +83,7 @@ public class CreatureBuilder
 
     if (base.ai != null)
     {
-      // TODO: different AIs
-      if (base.vision == 0)
-        base.vision = 6;
-      AI ai = new AI(IDid, base.vision);
-      @SuppressWarnings("rawtypes")
-      DefaultStateMachine ds = null;
-      switch (base.ai) {
-      case "wolf":
-        ds = new DefaultStateMachine<AI, WolfState>(ai, WolfState.FOLLOW_ALPHA);
-        break;
-      }
-      ai.stateMachine = ds;
-      creature.add(ai);
+      //TODO: wire up AIs
     }
 
     PlayScreen.engine.addEntity(creature);

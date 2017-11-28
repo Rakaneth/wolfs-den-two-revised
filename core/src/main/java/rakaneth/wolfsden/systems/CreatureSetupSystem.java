@@ -4,14 +4,12 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
-import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.components.Vision;
 import rakaneth.wolfsden.components.Vitals;
-import squidpony.squidmath.AStarSearch;
-import squidpony.squidmath.AStarSearch.SearchType;
 import squidpony.squidmath.GreasedRegion;
 
 public class CreatureSetupSystem extends IteratingSystem
@@ -31,19 +29,16 @@ public class CreatureSetupSystem extends IteratingSystem
     v.rest();
 
     // set up vision
-    AI ai = Mapper.AIs.get(entity);
+    Vision vis = Mapper.vision.get(entity);
     Position pos = Mapper.position.get(entity);
     Player ply = Mapper.player.get(entity);
     pos.dirty = true;
-    ai.visible = ai.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, ai.visionRadius);
-    ai.grVisible = new GreasedRegion(ai.visible, 0.0).not();
+    vis.visible = vis.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, vis.visionRadius);
+    vis.grVisible = new GreasedRegion(vis.visible, 0.0).not();
     if (ply != null)
     {
-      ply.grSeen = ai.grVisible.copy();
+      ply.grSeen = vis.grVisible.copy();
     }
-    
-    // set up pathfinding
-    ai.aStar = new AStarSearch(pos.map.aStarMap, SearchType.CHEBYSHEV);
 
     // add to atlas
     Mapper.atlas.put(entity, pos);

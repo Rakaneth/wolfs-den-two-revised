@@ -6,7 +6,6 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.RKDice;
 import rakaneth.wolfsden.Swatch;
-import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Attack;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Identity;
@@ -32,7 +31,6 @@ public class AttackResolverSystem extends IteratingSystem
     Drawing defDrw = Mapper.drawing.get(at.target);
     Identity atkID = Mapper.identity.get(entity);
     Identity defID = Mapper.identity.get(at.target);
-    AI atkAI = Mapper.AIs.get(entity);
 
     int atkSux = atkStats.atk.roll(defStats.def);
     String atkColor = atDrw.color.getName();
@@ -52,8 +50,6 @@ public class AttackResolverSystem extends IteratingSystem
       PlayScreen.addMessage("[%s]%s[] attacks [%s]%s[] and [%s]misses![]", atkColor, atkID.name, defColor, defID.name,
                             Swatch.WARNING);
     }
-    atkAI.tookTurn = true;
-    atkAI.delay = atkStats.atkDelay;
     entity.remove(Attack.class);
   }
 }

@@ -21,7 +21,7 @@ public class DrawDungeonSystem extends EntitySystem
     if (pos.dirty)
     {
       PlayScreen.instance.clearDungeon();
-      double[][] visible = Mapper.AIs.get(player).visible;
+      double[][] visible = Mapper.vision.get(player).visible;
       GreasedRegion seen = Mapper.player.get(player).grSeen;
       PlayScreen.instance.drawDungeon(visible, seen);
     }

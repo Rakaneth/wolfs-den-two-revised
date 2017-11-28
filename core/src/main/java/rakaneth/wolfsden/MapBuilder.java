@@ -1,19 +1,14 @@
 package rakaneth.wolfsden;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import squidpony.DataConverter;
-import squidpony.squidgrid.mapping.DungeonGenerator;
 import squidpony.squidgrid.mapping.SectionDungeonGenerator;
-import squidpony.squidgrid.mapping.SerpentDeepMapGenerator;
 import squidpony.squidgrid.mapping.SerpentMapGenerator;
-import squidpony.squidgrid.mapping.styled.TilesetType;
 
 public final class MapBuilder
 {

@@ -6,10 +6,10 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfMap;
-import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.components.Vision;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidmath.GreasedRegion;
 
@@ -17,7 +17,7 @@ public class LevelChangeSystem extends IteratingSystem
 {
   public LevelChangeSystem()
   {
-    super(Family.all(ChangeLevel.class, Position.class, AI.class)
+    super(Family.all(ChangeLevel.class, Position.class, Vision.class)
                 .get());
   }
 
@@ -27,29 +27,21 @@ public class LevelChangeSystem extends IteratingSystem
     Position pos = Mapper.position.get(entity);
     ChangeLevel lv = Mapper.changeLvl.get(entity);
     WolfMap.Connection headedTo = pos.map.getConnection(lv.from);
-    AI ai = Mapper.AIs.get(entity);
+    Vision vis = Mapper.vision.get(entity);
 
     pos.map = headedTo.getMap();
     pos.current = headedTo.toC;
     pos.dirty = true;
     GameInfo.hudDirty = true;
-    ai.visible = ai.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, ai.visionRadius);
-    ai.grVisible.remake(new GreasedRegion(ai.visible, 0.0).not());
+    vis.visible = vis.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, vis.visionRadius);
+    vis.grVisible.remake(new GreasedRegion(vis.visible, 0.0).not());
 
     if (Mapper.isPlayer(entity))
     {
       PlayScreen.instance.changeMap(pos.map);
-      Mapper.player.get(entity).grSeen = ai.grVisible.copy();
+      Mapper.player.get(entity).grSeen.remake(vis.grVisible.copy());
     }
-    
-    PlayScreen.engine.getEntities().forEach((e) -> 
-    {
-      AI eAI = e.getComponent(AI.class); 
-      if (eAI != null)
-        if (eAI.target == entity)
-          e.getComponent(AI.class).target = null;
-    });
-      
+
     entity.remove(ChangeLevel.class);
   }
 

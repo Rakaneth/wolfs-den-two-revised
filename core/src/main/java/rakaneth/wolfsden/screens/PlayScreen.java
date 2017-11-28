@@ -1,7 +1,5 @@
 package rakaneth.wolfsden.screens;
 
-import java.util.List;
-
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -19,13 +17,12 @@ import rakaneth.wolfsden.MapBuilder;
 import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
-import rakaneth.wolfsden.components.AI;
+import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Armor;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mainhand;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Offhand;
-import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Stats;
@@ -44,7 +41,6 @@ import rakaneth.wolfsden.systems.RenderingSystem;
 import rakaneth.wolfsden.systems.VisionSystem;
 import squidpony.panel.IColoredString;
 import squidpony.squidgrid.Direction;
-import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.GDXMarkup;
 import squidpony.squidgrid.gui.gdx.SColor;
@@ -91,13 +87,11 @@ public class PlayScreen extends WolfScreen
   private SparseLayers           display;
   private static SquidMessageBox msgs;
   private SquidPanel             invPanel, statPanel, ttPanel, ablPanel;
-  private FOV                    fov;
   public static final Engine     engine          = new Engine();
   private Entity                 player;
   private WolfMap                curMap;
   public static CreatureBuilder  cb              = new CreatureBuilder();
   public static MapBuilder       mb              = MapBuilder.instance;;
-  private boolean                changedLevel;
   public static ItemBuilder      ib              = new ItemBuilder();
 
   public static final PlayScreen instance        = new PlayScreen();
@@ -260,7 +254,7 @@ public class PlayScreen extends WolfScreen
 
   private void sendCmd(CommandTypes cmd, Object... targets)
   {
-    AI ply = player.getComponent(AI.class);
+    Action ply = player.getComponent(Action.class);
     for (Object target : targets)
     {
       ply.actionStack.push(target);
@@ -402,7 +396,6 @@ public class PlayScreen extends WolfScreen
   public void changeMap(WolfMap newMap)
   {
     curMap = newMap;
-    changedLevel = true;
   }
 
   public String map()

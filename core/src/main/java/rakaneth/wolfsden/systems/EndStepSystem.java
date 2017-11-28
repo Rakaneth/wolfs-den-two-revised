@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 
 import rakaneth.wolfsden.GameInfo;
-import rakaneth.wolfsden.components.AI;
+import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Vitals;
@@ -23,14 +23,14 @@ public class EndStepSystem extends EntitySystem
   @Override
   public void addedToEngine(Engine engine)
   {
-    entities = engine.getEntitiesFor(Family.all(AI.class, Position.class, Vitals.class)
+    entities = engine.getEntitiesFor(Family.all(Action.class, Position.class, Vitals.class)
                                            .get());
   }
 
   @Override
   public void removedFromEngine(Engine engine)
   {
-    entities = engine.getEntitiesFor(Family.all(AI.class, Position.class, Vitals.class)
+    entities = engine.getEntitiesFor(Family.all(Action.class, Position.class, Vitals.class)
                                            .get());
   }
 
@@ -48,8 +48,8 @@ public class EndStepSystem extends EntitySystem
       Entity entity = entities.get(i);
       Position pos = Mapper.position.get(entity);
       Vitals vit = Mapper.vitals.get(entity);
-      AI ai = Mapper.AIs.get(entity);
-      ai.tookTurn = false;
+      Action act = Mapper.actions.get(entity);
+      act.tookTurn = false;
       if (GameInfo.turnCount % 1000 == 0 && GameInfo.turnCount > 0 && Mapper.isPlayer(entity))
       {
         vit.gainXP(vit.xpMult);

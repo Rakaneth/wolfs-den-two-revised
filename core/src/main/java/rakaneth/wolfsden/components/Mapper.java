@@ -26,8 +26,9 @@ public class Mapper
   public static final ComponentMapper<Vitals>         vitals      = ComponentMapper.getFor(Vitals.class);
   public static final ComponentMapper<Consumable>     consumables = ComponentMapper.getFor(Consumable.class);
   public static final ComponentMapper<Factions>       factions    = ComponentMapper.getFor(Factions.class);
-  public static final ComponentMapper<AI>             AIs         = ComponentMapper.getFor(AI.class);
+  public static final ComponentMapper<Action>         actions     = ComponentMapper.getFor(Action.class);
   public static final ComponentMapper<Attack>         attackers   = ComponentMapper.getFor(Attack.class);
+  public static final ComponentMapper<Vision>         vision      = ComponentMapper.getFor(Vision.class);
   public static final HashMap<Entity, Position>       atlas       = new HashMap<>();
 
   public static final boolean isPlayer(Entity entity)
@@ -49,14 +50,14 @@ public class Mapper
     else
       return null;
   }
-  
+
   public static final boolean sameLevel(Entity e1, Entity e2)
   {
     Position p1 = position.get(e1);
     Position p2 = position.get(e2);
     return p1.map.id.equals(p2.map.id);
   }
-  
+
   public static final boolean sameLevel(Position p, Entity e)
   {
     Position ePos = position.get(e);
