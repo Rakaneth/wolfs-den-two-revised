@@ -23,7 +23,7 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
   {
     Entity subject = getObject();
     Position pos = Mapper.position.get(subject);
-    Coord curTarget = null;
+    Coord curTarget;
 
     if (status == Status.FRESH)
       dMap = new DijkstraMap(pos.map.baseMap);
