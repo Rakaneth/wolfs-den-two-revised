@@ -1,6 +1,8 @@
 package rakaneth.wolfsden.components;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -8,6 +10,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 
+import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.WolfMap;
 import squidpony.squidmath.Coord;
 
@@ -72,6 +75,13 @@ public class Mapper implements EntityListener
     return p.map.id.equals(ePos.map.id);
   }
 
+  public static final boolean canSee(Entity beholder, Entity subject)
+  {
+    Vision vis = vision.get(beholder);
+    Position sPos = position.get(subject);
+    return sameLevel(beholder, subject) && vis.grVisible.contains(sPos.current);
+  }
+
   @Override
   public void entityAdded(Entity entity)
   {
@@ -83,5 +93,22 @@ public class Mapper implements EntityListener
     Identity id = identity.get(entity);
     atlas.remove(entity);
     bestiary.remove(id.id);
+  }
+
+  public static final List<Entity> visibleEnemiesOf(Entity entity)
+  {
+    List<Entity> target = new ArrayList<>();
+    bestiary.values()
+            .stream()
+            .filter(f -> FactionManager.instance.isEnemy(entity, f))
+            .filter(g -> canSee(entity, g))
+            .forEach(target::add);
+
+    return target;
+  }
+
+  public static final String getID(Entity entity)
+  {
+    return identity.get(entity).id;
   }
 }

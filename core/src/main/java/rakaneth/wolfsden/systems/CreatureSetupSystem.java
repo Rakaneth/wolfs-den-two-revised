@@ -44,8 +44,8 @@ public class CreatureSetupSystem extends IteratingSystem
 
     // add to atlas
     Mapper.atlas.put(entity, pos);
-    
-    //add to bestiary
+
+    // add to bestiary
     Mapper.bestiary.put(id.id, entity);
 
     // remove component when done

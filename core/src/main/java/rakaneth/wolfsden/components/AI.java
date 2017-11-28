@@ -7,12 +7,12 @@ import com.badlogic.gdx.ai.btree.BehaviorTree;
 public class AI implements Component
 {
   private BehaviorTree<Entity> btree;
-  
+
   public AI(BehaviorTree<Entity> btree)
   {
     this.btree = btree;
   }
-  
+
   public BehaviorTree<Entity> btree()
   {
     return btree;

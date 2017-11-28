@@ -24,7 +24,7 @@ import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
 public class ActionResolverSystem extends SortedIteratingSystem
-{ 
+{
   public ActionResolverSystem()
   {
     super(Family.all(Stats.class, SecondaryStats.class, Action.class)
@@ -80,8 +80,9 @@ public class ActionResolverSystem extends SortedIteratingSystem
     if (act.delay <= 0)
     {
       if (ai != null)
-        ai.btree().step();
-      
+        ai.btree()
+          .step();
+
       if (Mapper.isPlayer(entity))
         GameInfo.paused = true;
 

@@ -4,14 +4,23 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
+import rakaneth.wolfsden.WolfUtils;
+import rakaneth.wolfsden.components.Mapper;
+
 public class DetectPreyTask extends LeafTask<Entity>
 {
 
   @Override
   public Status execute()
   {
-    // TODO Auto-generated method stub
-    return Status.FAILED;
+    Entity subject = getObject();
+    if (Mapper.visibleEnemiesOf(subject)
+              .size() > 0)
+    {
+      WolfUtils.log("AI", "%s detects prey", Mapper.getID(subject));
+      return Status.SUCCEEDED;
+    } else
+      return Status.FAILED;
   }
 
   @Override
@@ -19,5 +28,4 @@ public class DetectPreyTask extends LeafTask<Entity>
   {
     return task;
   }
-
 }

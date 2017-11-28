@@ -27,12 +27,11 @@ public class VisionSystem extends IteratingSystem
 
     if (pos.dirty)
     {
-
       FOV.reuseFOV(pos.map.resistanceMap, vis.visible, pos.current.x, pos.current.y, vis.visionRadius);
       vis.grVisible.refill(vis.visible, 0.0)
                    .not();
 
-      if (ply != null)
+      if (ply != null && pos.map.isDark())
         ply.grSeen.or(vis.grVisible);
     }
   }
