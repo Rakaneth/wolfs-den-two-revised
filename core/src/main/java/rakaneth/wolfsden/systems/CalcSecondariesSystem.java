@@ -26,7 +26,6 @@ public class CalcSecondariesSystem extends IteratingSystem
   @Override
   protected void processEntity(Entity entity, float deltaTime)
   {
-    // TODO: adjust when equipment is in
     Stats stats = Mapper.stats.get(entity);
     SecondaryStats secStats = Mapper.secondaries.get(entity);
     Armor arm = Mapper.armors.get(entity);
