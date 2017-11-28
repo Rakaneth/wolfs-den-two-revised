@@ -3,6 +3,7 @@ package rakaneth.wolfsden.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 
+import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.screens.PlayScreen;
@@ -20,7 +21,7 @@ public class DrawDungeonSystem extends EntitySystem
     Entity player = PlayScreen.instance.player();
     Position pos = Mapper.position.get(player);
 
-    if (pos.dirty)
+    if (GameInfo.mapDirty)
     {
       PlayScreen.instance.clearDungeon();
       double[][] visible = Mapper.vision.get(player).visible;

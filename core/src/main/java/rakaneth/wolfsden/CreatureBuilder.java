@@ -1,19 +1,27 @@
 package rakaneth.wolfsden;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibrary;
+import com.badlogic.gdx.ai.btree.utils.BehaviorTreeParser;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.badlogic.gdx.utils.StreamUtils;
 
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Inventory;
+import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
@@ -30,12 +38,34 @@ public class CreatureBuilder
   private static final String           fileName = "data/creatures.js";
   private HashMap<String, CreatureBase> creatures;
   private static int                    counter  = 1;
+  private BehaviorTreeLibrary           library;
 
   @SuppressWarnings("unchecked")
   public CreatureBuilder()
   {
     DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
     creatures = converter.fromJson(HashMap.class, CreatureBase.class, Gdx.files.internal(fileName));
+    library = new BehaviorTreeLibrary();
+    registerAIs();
+  }
+
+  private void registerAIs()
+  {
+    Reader reader = null;
+    BehaviorTreeParser<Entity> btp = new BehaviorTreeParser<Entity>(BehaviorTreeParser.DEBUG_LOW);
+    try
+    {
+      for (Map.Entry<String, CreatureBase> item : creatures.entrySet())
+      {
+        String aid = item.getValue().ai;
+        reader = Gdx.files.internal("data/ai/" + aid + ".tree")
+                          .reader();
+        library.registerArchetypeTree(aid, btp.parse(reader, null));
+      }
+    } finally
+    {
+      StreamUtils.closeQuietly(reader);
+    }
   }
 
   public Entity build(String id, WolfMap map, String name)
@@ -85,7 +115,7 @@ public class CreatureBuilder
 
     if (base.ai != null)
     {
-      // TODO: wire up AIs
+      creature.add(new AI(library.createBehaviorTree(base.ai, creature)));
     }
 
     PlayScreen.engine.addEntity(creature);
@@ -101,6 +131,7 @@ public class CreatureBuilder
   {
     Entity p = build(id, map, name);
     p.add(new Player());
+    p.remove(AI.class);
     p.getComponent(Drawing.class).layer = 4;
     p.getComponent(Factions.class).factions.add("player");
     return p;

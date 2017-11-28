@@ -21,7 +21,7 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
 			dMap = new DijkstraMap(Mapper.position.get(subject).map.baseMap);
 		//TODO: finish execute for moveTowardsPrey
 		
-		return null;
+		return Status.FAILED;
 	}
 
 	@Override

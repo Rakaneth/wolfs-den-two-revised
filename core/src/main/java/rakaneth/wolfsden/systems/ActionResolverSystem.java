@@ -10,6 +10,7 @@ import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfGame;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.WolfUtils;
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Attack;
 import rakaneth.wolfsden.components.ChangeLevel;
@@ -23,7 +24,7 @@ import squidpony.squidgrid.Direction;
 import squidpony.squidmath.Coord;
 
 public class ActionResolverSystem extends SortedIteratingSystem
-{
+{ 
   public ActionResolverSystem()
   {
     super(Family.all(Stats.class, SecondaryStats.class, Action.class)
@@ -44,6 +45,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
     {
       pos.dirty = true;
       pos.current = newCoord;
+      GameInfo.mapDirty = true;
     }
     act.tookTurn = true;
   }
@@ -62,6 +64,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
     temp = e1p.current;
     e1p.current = e2p.current;
     e2p.current = temp;
+    GameInfo.mapDirty = true;
   }
 
   @Override
@@ -70,13 +73,15 @@ public class ActionResolverSystem extends SortedIteratingSystem
     SecondaryStats sStats = Mapper.secondaries.get(entity);
     Action act = Mapper.actions.get(entity);
     Identity id = Mapper.identity.get(entity);
+    AI ai = Mapper.ai.get(entity);
     if (!GameInfo.paused)
       act.delay--;
 
     if (act.delay <= 0)
     {
-      // TODO: update ai machine here
-
+      if (ai != null)
+        ai.btree().step();
+      
       if (Mapper.isPlayer(entity))
         GameInfo.paused = true;
 
@@ -100,6 +105,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
             entity.add(new ChangeLevel(pos.current, stair));
             act.delay = 10;
             act.tookTurn = true;
+            GameInfo.mapDirty = true;
             break;
           default:
             PlayScreen.addMessage("No stairs here.");
@@ -116,6 +122,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
             entity.add(new Attack(other));
             act.tookTurn = true;
             act.delay = sStats.atkDelay;
+            GameInfo.mapDirty = true;
           } else
           {
             // TODO: add logic for talky NPCs and such

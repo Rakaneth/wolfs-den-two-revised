@@ -10,7 +10,7 @@
 		color: "CW Light Brown",
 		glyph: "W",
 		factions: ["monsters"],
-		ai: "wolf",
+		ai: "hunt",
 		mh: "wolfFangs",
 		oh: "wolfClaws",
 		vision: 10,
@@ -25,7 +25,7 @@
 		color: "Dark Slate Grey",
 		glyph: "W",
 		factions: ["monsters"],
-		ai: "alpha",
+		ai: "hunt",
     mh: "wolfFangs",
     oh: "wolfClaws",
 		vision: 14,
@@ -41,7 +41,7 @@
 		glyph: "@",
 		mh: "ironSword",
 		armor: "chainMail",
-		ai: "fighter",
+		ai: "hunt",
 		vision: 10,
 	}
 	lostMan: {

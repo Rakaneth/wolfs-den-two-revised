@@ -20,6 +20,7 @@ public class DrawHudSystem extends EntitySystem
   @Override
   public void update(float dt)
   {
+    GameInfo.mapDirty = false;
     PlayScreen.instance.clearHUD();
     PlayScreen.instance.drawHUD();
     GameInfo.hudDirty = false;
