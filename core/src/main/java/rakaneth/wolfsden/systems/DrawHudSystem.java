@@ -7,14 +7,16 @@ import rakaneth.wolfsden.screens.PlayScreen;
 
 public class DrawHudSystem extends EntitySystem
 {
-  public DrawHudSystem() {}
-  
+  public DrawHudSystem()
+  {
+  }
+
   @Override
   public boolean checkProcessing()
   {
     return GameInfo.hudDirty;
   }
-  
+
   @Override
   public void update(float dt)
   {

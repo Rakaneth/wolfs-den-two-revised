@@ -39,13 +39,12 @@ public abstract class WolfScreen
     int startX = (w - l) / 2;
     display.put(startX, y, text, color);
   }
-  
+
   protected IColoredString<Color> ICString(String template, Object... args)
   {
     String rawText = String.format(template, args);
     return GDXMarkup.instance.colorString(rawText);
   }
-
 
   public void setInput()
   {

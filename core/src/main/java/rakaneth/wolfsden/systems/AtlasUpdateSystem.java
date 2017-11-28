@@ -11,7 +11,8 @@ public class AtlasUpdateSystem extends IteratingSystem
 {
   public AtlasUpdateSystem()
   {
-    super(Family.all(Position.class).get());
+    super(Family.all(Position.class)
+                .get());
   }
 
   @Override

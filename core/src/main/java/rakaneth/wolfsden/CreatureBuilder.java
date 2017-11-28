@@ -83,7 +83,7 @@ public class CreatureBuilder
 
     if (base.ai != null)
     {
-      //TODO: wire up AIs
+      // TODO: wire up AIs
     }
 
     PlayScreen.engine.addEntity(creature);

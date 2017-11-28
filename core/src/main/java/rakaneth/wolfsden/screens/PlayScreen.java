@@ -223,15 +223,17 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new LevelChangeSystem());
     engine.addSystem(new EndStepSystem());
   }
-  
+
   public void disableSystems()
   {
-    engine.getSystems().forEach(s -> s.setProcessing(false));
+    engine.getSystems()
+          .forEach(s -> s.setProcessing(false));
   }
-  
+
   public void enableSystems()
   {
-    engine.getSystems().forEach(s -> s.setProcessing(true));
+    engine.getSystems()
+          .forEach(s -> s.setProcessing(true));
   }
 
   private void buildDungeon()
@@ -323,7 +325,7 @@ public class PlayScreen extends WolfScreen
   {
     display.clear();
   }
-  
+
   public void clearHUD()
   {
     invPanel.erase();
@@ -402,7 +404,7 @@ public class PlayScreen extends WolfScreen
   {
     return curMap.id;
   }
-  
+
   public Entity player()
   {
     return player;

@@ -61,7 +61,8 @@ public class TrainScreen extends WolfScreen
         incSkl();
         break;
       case 'x':
-        player.getComponent(Vitals.class).gainXP(1000);
+        player.getComponent(Vitals.class)
+              .gainXP(1000);
         break;
       case SquidInput.ESCAPE:
         PlayScreen.instance.enableSystems();
@@ -77,6 +78,7 @@ public class TrainScreen extends WolfScreen
     getCosts();
   }
 
+  @Override
   public void render()
   {
     super.render();

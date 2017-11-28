@@ -91,10 +91,10 @@ public class FactionManager
   {
     Factions fac1 = Mapper.factions.get(e1);
     Factions fac2 = Mapper.factions.get(e2);
-    
+
     if (fac1 == null || fac2 == null)
       return 0;
-    
+
     int acc = 0;
     for (String f : fac1.factions)
     {

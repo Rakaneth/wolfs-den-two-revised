@@ -10,14 +10,16 @@ import squidpony.squidmath.GreasedRegion;
 
 public class DrawDungeonSystem extends EntitySystem
 {
-  public DrawDungeonSystem() {}
-  
+  public DrawDungeonSystem()
+  {
+  }
+
   @Override
-  public void update (float dt)
+  public void update(float dt)
   {
     Entity player = PlayScreen.instance.player();
     Position pos = Mapper.position.get(player);
-   
+
     if (pos.dirty)
     {
       PlayScreen.instance.clearDungeon();

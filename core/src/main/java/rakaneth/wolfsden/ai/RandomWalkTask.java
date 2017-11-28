@@ -14,7 +14,8 @@ public class RandomWalkTask extends LeafTask<Entity>
   public Status execute()
   {
     Entity subject = getObject();
-    Mapper.actions.get(subject).sendCmd(CommandTypes.RANDOM);
+    Mapper.actions.get(subject)
+                  .sendCmd(CommandTypes.RANDOM);
     return Status.SUCCEEDED;
   }
 
@@ -24,5 +25,5 @@ public class RandomWalkTask extends LeafTask<Entity>
     // TODO Auto-generated method stub
     return task;
   }
-  
+
 }

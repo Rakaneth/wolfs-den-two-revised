@@ -75,8 +75,8 @@ public class ActionResolverSystem extends SortedIteratingSystem
 
     if (act.delay <= 0)
     {
-      //TODO: update ai machine here
-      
+      // TODO: update ai machine here
+
       if (Mapper.isPlayer(entity))
         GameInfo.paused = true;
 
@@ -116,8 +116,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
             entity.add(new Attack(other));
             act.tookTurn = true;
             act.delay = sStats.atkDelay;
-          }
-          else
+          } else
           {
             // TODO: add logic for talky NPCs and such
             swap(entity, other);

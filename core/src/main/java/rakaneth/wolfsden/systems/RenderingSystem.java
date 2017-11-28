@@ -26,6 +26,7 @@ public class RenderingSystem extends SortedIteratingSystem
     this.display = display;
   }
 
+  @Override
   public void processEntity(Entity entity, float dt)
   {
     Position pos = Mapper.position.get(entity);
