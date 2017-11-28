@@ -222,6 +222,7 @@ public class PlayScreen extends WolfScreen
     engine.addSystem(new AtlasUpdateSystem());
     engine.addSystem(new LevelChangeSystem());
     engine.addSystem(new EndStepSystem());
+    engine.addEntityListener(Mapper.instance);
   }
 
   public void disableSystems()

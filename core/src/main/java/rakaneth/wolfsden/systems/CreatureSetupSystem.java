@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.components.FreshCreature;
+import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
@@ -16,7 +17,7 @@ public class CreatureSetupSystem extends IteratingSystem
 {
   public CreatureSetupSystem()
   {
-    super(Family.all(FreshCreature.class)
+    super(Family.all(FreshCreature.class, Vision.class, Position.class, Identity.class)
                 .get());
   }
 
@@ -32,6 +33,7 @@ public class CreatureSetupSystem extends IteratingSystem
     Vision vis = Mapper.vision.get(entity);
     Position pos = Mapper.position.get(entity);
     Player ply = Mapper.player.get(entity);
+    Identity id = Mapper.identity.get(entity);
     pos.dirty = true;
     vis.visible = vis.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, vis.visionRadius);
     vis.grVisible = new GreasedRegion(vis.visible, 0.0).not();
@@ -42,6 +44,9 @@ public class CreatureSetupSystem extends IteratingSystem
 
     // add to atlas
     Mapper.atlas.put(entity, pos);
+    
+    //add to bestiary
+    Mapper.bestiary.put(id.id, entity);
 
     // remove component when done
     entity.remove(FreshCreature.class);
