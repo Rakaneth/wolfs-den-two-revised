@@ -66,6 +66,16 @@ public class ActionResolverSystem extends SortedIteratingSystem
     e2p.current = temp;
     GameInfo.mapDirty = true;
   }
+  
+  private void attack(Entity attacker, Entity defender)
+  {
+    attacker.add(new Attack(defender));
+    Action act = Mapper.actions.get(attacker);
+    SecondaryStats sStats = Mapper.secondaries.get(attacker);
+    act.tookTurn = true;
+    act.delay = sStats.atkDelay;
+    GameInfo.mapDirty = true;
+  }
 
   @Override
   protected void processEntity(Entity entity, float deltaTime)
@@ -120,10 +130,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
           Entity other = (Entity) act.actionStack.pop();
           if (FactionManager.instance.isEnemy(entity, other))
           {
-            entity.add(new Attack(other));
-            act.tookTurn = true;
-            act.delay = sStats.atkDelay;
-            GameInfo.mapDirty = true;
+            attack(entity, other);
           } else
           {
             // TODO: add logic for talky NPCs and such
@@ -134,10 +141,8 @@ public class ActionResolverSystem extends SortedIteratingSystem
           break;
         case ATTACK:
           Entity foe = (Entity) act.actionStack.pop();
-          entity.add(new Attack(foe));
-          act.tookTurn = true;
-          act.delay = sStats.atkDelay;
-          GameInfo.mapDirty = true;
+          attack(entity, foe);
+          break;
         default:
           act.delay = 10;
           act.tookTurn = true;

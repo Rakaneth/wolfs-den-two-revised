@@ -36,6 +36,8 @@ public class Vitals implements Component
   public void heal(int amt)
   {
     vit = Math.min(amt + vit, maxVit);
+    if (vit > 0)
+      alive = true;
   }
 
   public void heal()

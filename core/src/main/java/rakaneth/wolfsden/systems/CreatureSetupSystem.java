@@ -20,7 +20,7 @@ public class CreatureSetupSystem extends IteratingSystem
 {
   public CreatureSetupSystem()
   {
-    super(Family.all(FreshCreature.class, Vision.class, Position.class, Identity.class, AI.class)
+    super(Family.all(FreshCreature.class, Vision.class, Position.class, Identity.class)
                 .get());
   }
 
@@ -47,7 +47,8 @@ public class CreatureSetupSystem extends IteratingSystem
     }
 
     // initialize AI dmap
-    ai.setDMap(new DijkstraMap(pos.map.baseMap, DijkstraMap.Measurement.CHEBYSHEV));
+    if (ai != null)
+      ai.setDMap(new DijkstraMap(pos.map.baseMap, DijkstraMap.Measurement.CHEBYSHEV));
 
     // add to atlas
     GameInfo.atlas.put(entity, pos);

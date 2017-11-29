@@ -11,6 +11,7 @@ import rakaneth.wolfsden.components.Drawing;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.SecondaryStats;
+import rakaneth.wolfsden.components.Vitals;
 import rakaneth.wolfsden.screens.PlayScreen;
 
 public class AttackResolverSystem extends IteratingSystem
@@ -31,6 +32,7 @@ public class AttackResolverSystem extends IteratingSystem
     Drawing defDrw = Mapper.drawing.get(at.target);
     Identity atkID = Mapper.identity.get(entity);
     Identity defID = Mapper.identity.get(at.target);
+    Vitals defVit = Mapper.vitals.get(at.target);
 
     int atkSux = atkStats.atk.roll(defStats.def);
     String atkColor = atDrw.color.getName();
@@ -44,7 +46,8 @@ public class AttackResolverSystem extends IteratingSystem
                             .roll();
       PlayScreen.addMessage("[%s]%s[] attacks [%s]%s[] for [%s]%d damage![]", atkColor, atkID.name, defColor,
                             defID.name, "Crimson", dmg);
-      // TODO: process damage
+      //TODO: account for armor
+      defVit.takeDmg(dmg);
     } else
     {
       PlayScreen.addMessage("[%s]%s[] attacks [%s]%s[] and [%s]misses![]", atkColor, atkID.name, defColor, defID.name,
