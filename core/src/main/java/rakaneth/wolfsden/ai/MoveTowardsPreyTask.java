@@ -10,6 +10,8 @@ import com.badlogic.gdx.ai.btree.Task;
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.WolfUtils;
+import rakaneth.wolfsden.components.Action;
+import rakaneth.wolfsden.components.Attack;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 import squidpony.squidai.DijkstraMap;
@@ -27,7 +29,7 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
     Coord curTarget;
 
     if (status == Status.FRESH)
-      dMap = new DijkstraMap(pos.map.baseMap);
+      dMap = new DijkstraMap(pos.map.baseMap, DijkstraMap.Measurement.CHEBYSHEV);
 
     List<Coord> targetCoords = new ArrayList<>();
     List<Entity> enemies = Mapper.visibleEnemiesOf(subject);
@@ -38,25 +40,29 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
       for (Entity enemy : enemies)
         targetCoords.add(Mapper.position.get(enemy).current);
 
-      //TODO: Better target selection - store a target?
+      // TODO: Better target selection - store a target?
       curTarget = dMap.findNearest(pos.current, targetCoords);
       List<Coord> path = dMap.findPath(1, null, null, pos.current, curTarget);
       if (path.size() > 0)
       {
         Coord nextStep = path.get(0);
+        Action act = Mapper.actions.get(subject);
 
         if (pos.current.isAdjacent(curTarget))
-        { 
-          return Status.SUCCEEDED;
-        }
-        else
         {
-          Mapper.actions.get(subject)
-                        .sendCmd(CommandTypes.MOVE, pos.current.toGoTo(nextStep));
+          Entity target = Mapper.creatureAt(curTarget, pos.map);
+
+          if (target != null)
+            act.sendCmd(CommandTypes.INTERACT, target);
+
+          return Status.SUCCEEDED;
+        } else
+        {
+          act.sendCmd(CommandTypes.MOVE, pos.current.toGoTo(nextStep));
           return Status.RUNNING;
         }
       } else
-        //TODO: go to last known location?
+        // TODO: go to last known location?
         return Status.FAILED;
     }
   }

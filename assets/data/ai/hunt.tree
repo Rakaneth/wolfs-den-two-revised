@@ -4,7 +4,6 @@
 import randomWalk: "rakaneth.wolfsden.ai.RandomWalkTask"
 import detectPrey?: "rakaneth.wolfsden.ai.DetectPreyTask"
 import moveTowardsPrey: "rakaneth.wolfsden.ai.MoveTowardsPreyTask"
-import attackPrey: "rakaneth.wolfsden.ai.AttackPreyTask"
 
 #tree definition
 root
@@ -12,7 +11,6 @@ root
 		sequence
 			detectPrey?
 			moveTowardsPrey
-			attackPrey
 		randomWalk
 
 
