@@ -9,7 +9,7 @@ import com.badlogic.ashley.core.Entity;
 public class Inventory implements Component
 {
   public int          capacity;
-  public List<Entity> inventory;
+  public List<String> inventory;
 
   public Inventory(int capacity)
   {
@@ -36,12 +36,23 @@ public class Inventory implements Component
     {
       e.remove(Position.class);
       e.remove(Drawing.class);
-      inventory.add(e);
+      inventory.add(Mapper.identity.get(e).id);
       return true;
     }
   }
 
-  public void remove(Entity e)
+  public boolean add(String id)
+  {
+    if (atMax())
+      return false;
+    else
+    {
+      inventory.add(id);
+      return true;
+    }
+  }
+
+  public void remove(String e)
   {
     inventory.remove(e);
   }

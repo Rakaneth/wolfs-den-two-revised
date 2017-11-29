@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
+import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
@@ -43,10 +44,10 @@ public class CreatureSetupSystem extends IteratingSystem
     }
 
     // add to atlas
-    Mapper.atlas.put(entity, pos);
+    GameInfo.atlas.put(entity, pos);
 
     // add to bestiary
-    Mapper.bestiary.put(id.id, entity);
+    GameInfo.bestiary.put(id.id, entity);
 
     // remove component when done
     entity.remove(FreshCreature.class);

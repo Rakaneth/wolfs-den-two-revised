@@ -1,7 +1,6 @@
 package rakaneth.wolfsden.components;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,9 +8,12 @@ import java.util.Optional;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
+import com.badlogic.ashley.core.Family;
 
 import rakaneth.wolfsden.FactionManager;
+import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidmath.Coord;
 
 public class Mapper implements EntityListener
@@ -34,8 +36,6 @@ public class Mapper implements EntityListener
   public static final ComponentMapper<Attack>         attackers   = ComponentMapper.getFor(Attack.class);
   public static final ComponentMapper<Vision>         vision      = ComponentMapper.getFor(Vision.class);
   public static final ComponentMapper<AI>             ai          = ComponentMapper.getFor(AI.class);
-  public static final HashMap<Entity, Position>       atlas       = new HashMap<>();
-  public static final HashMap<String, Entity>         bestiary    = new HashMap<>();
   public static final Mapper                          instance    = new Mapper();
 
   private Mapper()
@@ -49,11 +49,11 @@ public class Mapper implements EntityListener
 
   public static final Entity creatureAt(Coord c, WolfMap map)
   {
-    Optional<Map.Entry<Entity, Position>> result = atlas.entrySet()
-                                                        .stream()
-                                                        .filter(f -> f.getValue().current.equals(c)
-                                                            && f.getValue().map.id.equals(map.id))
-                                                        .findFirst();
+    Optional<Map.Entry<Entity, Position>> result = GameInfo.atlas.entrySet()
+                                                                 .stream()
+                                                                 .filter(f -> f.getValue().current.equals(c)
+                                                                     && f.getValue().map.id.equals(map.id))
+                                                                 .findFirst();
 
     if (result.isPresent())
       return result.get()
@@ -91,18 +91,26 @@ public class Mapper implements EntityListener
   public void entityRemoved(Entity entity)
   {
     Identity id = identity.get(entity);
-    atlas.remove(entity);
-    bestiary.remove(id.id);
+    Family AIs = Family.all(AI.class)
+                       .get();
+    for (Entity orphan : PlayScreen.engine.getEntitiesFor(AIs))
+    {
+      AI eAI = ai.get(orphan);
+      if (eAI.target() == entity)
+        eAI.clearTarget();
+    }
+    GameInfo.atlas.remove(entity);
+    GameInfo.bestiary.remove(id.id);
   }
 
   public static final List<Entity> visibleEnemiesOf(Entity entity)
   {
     List<Entity> target = new ArrayList<>();
-    bestiary.values()
-            .stream()
-            .filter(f -> FactionManager.instance.isEnemy(entity, f))
-            .filter(g -> canSee(entity, g))
-            .forEach(target::add);
+    GameInfo.bestiary.values()
+                     .stream()
+                     .filter(f -> FactionManager.instance.isEnemy(entity, f))
+                     .filter(g -> canSee(entity, g))
+                     .forEach(target::add);
 
     return target;
   }

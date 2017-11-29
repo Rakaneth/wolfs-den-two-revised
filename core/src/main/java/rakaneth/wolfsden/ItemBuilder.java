@@ -98,6 +98,7 @@ public class ItemBuilder
     }
 
     engine.addEntity(mold);
+    GameInfo.catalog.put(Mapper.identity.get(mold).id, mold);
     return mold;
   }
 
