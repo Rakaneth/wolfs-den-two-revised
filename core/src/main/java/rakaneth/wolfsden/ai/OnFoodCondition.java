@@ -1,26 +1,31 @@
 package rakaneth.wolfsden.ai;
 
+import java.util.List;
+
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
 import rakaneth.wolfsden.components.Mapper;
-import rakaneth.wolfsden.components.Position;
 
-public class PreyAdjacentCondition extends LeafTask<Entity>
+public class OnFoodCondition extends LeafTask<Entity>
 {
 
   @Override
   public Status execute()
   {
     Entity subject = getObject();
-    Position subPos = Mapper.position.get(subject);
-    Position targetPos = Mapper.position.get(Mapper.ai.get(subject)
-                                                      .creatureTarget());
+    List<Entity> foodList = Mapper.visibleFood(subject);
 
-    if (subPos.current.isAdjacent(targetPos.current))
-      return Status.SUCCEEDED;
-
+    for (Entity food : foodList)
+    {
+      if (Mapper.isOn(subject, food))
+      {
+        Mapper.ai.get(subject)
+                 .setTarget(food);
+        return Status.SUCCEEDED;
+      }
+    }
     return Status.FAILED;
   }
 
@@ -29,5 +34,4 @@ public class PreyAdjacentCondition extends LeafTask<Entity>
   {
     return task;
   }
-
 }

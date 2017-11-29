@@ -10,7 +10,7 @@
 		color: "CW Light Brown",
 		glyph: "W",
 		factions: ["monsters"],
-		ai: "hunt",
+		ai: "wolf",
 		mh: "wolfFangs",
 		oh: "wolfClaws",
 		vision: 10,

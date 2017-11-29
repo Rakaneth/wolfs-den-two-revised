@@ -15,7 +15,8 @@ public class AttackPreyTask extends LeafTask<Entity>
   public Status execute()
   {
     Entity subject = getObject();
-    Entity target = Mapper.ai.get(subject).target();
+    Entity target = Mapper.ai.get(subject)
+                             .creatureTarget();
     Action act = Mapper.actions.get(subject);
     act.sendCmd(CommandTypes.ATTACK, target);
     return Status.SUCCEEDED;

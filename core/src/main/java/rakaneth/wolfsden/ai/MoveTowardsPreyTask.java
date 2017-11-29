@@ -23,7 +23,7 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
     AI ai = Mapper.ai.get(subject);
     Action act = Mapper.actions.get(subject);
     Position subPos = Mapper.position.get(subject);
-    Position tarPos = Mapper.position.get(ai.target());
+    Position tarPos = Mapper.position.get(ai.creatureTarget());
     List<Coord> path = ai.dMap()
                          .findPath(1, null, null, subPos.current, tarPos.current);
 

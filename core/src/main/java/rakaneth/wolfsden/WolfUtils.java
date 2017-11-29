@@ -4,6 +4,13 @@ import com.badlogic.gdx.ai.GdxAI;
 
 public final class WolfUtils
 {
+  private static boolean logging = true;
+
+  public static final void setLogging(boolean setting)
+  {
+    logging = setting;
+  }
+
   /**
    * Returns the nth member of the Fibonacci sequence.
    * 
@@ -62,7 +69,8 @@ public final class WolfUtils
 
   public static void log(String tag, String template, Object... args)
   {
-    GdxAI.getLogger()
-         .info(tag, String.format(template, args));
+    if (logging)
+      GdxAI.getLogger()
+           .info(tag, String.format(template, args));
   }
 }

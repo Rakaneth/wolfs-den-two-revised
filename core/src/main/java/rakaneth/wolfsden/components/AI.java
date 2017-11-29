@@ -23,9 +23,14 @@ public class AI implements Component
     return btree;
   }
 
-  public Entity target()
+  public Entity creatureTarget()
   {
     return GameInfo.bestiary.get(target);
+  }
+
+  public Entity itemTarget()
+  {
+    return GameInfo.catalog.get(target);
   }
 
   public void setTarget(Entity e)

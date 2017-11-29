@@ -55,7 +55,7 @@ public class EndStepSystem extends EntitySystem
       Action act = Mapper.actions.get(entity);
       Drawing draw = Mapper.drawing.get(entity);
       Identity id = Mapper.identity.get(entity);
-      
+
       act.tookTurn = false;
       if (GameInfo.turnCount % 1000 == 0 && GameInfo.turnCount > 0 && Mapper.isPlayer(entity))
       {

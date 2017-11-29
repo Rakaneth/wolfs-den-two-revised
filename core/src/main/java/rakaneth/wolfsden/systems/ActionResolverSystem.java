@@ -66,7 +66,7 @@ public class ActionResolverSystem extends SortedIteratingSystem
     e2p.current = temp;
     GameInfo.mapDirty = true;
   }
-  
+
   private void attack(Entity attacker, Entity defender)
   {
     attacker.add(new Attack(defender));

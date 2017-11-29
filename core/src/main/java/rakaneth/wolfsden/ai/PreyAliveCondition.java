@@ -14,7 +14,7 @@ public class PreyAliveCondition extends LeafTask<Entity>
   {
     Entity subject = getObject();
     Entity target = Mapper.ai.get(subject)
-                             .target();
+                             .creatureTarget();
 
     if (Mapper.vitals.get(target).alive)
       return Status.SUCCEEDED;

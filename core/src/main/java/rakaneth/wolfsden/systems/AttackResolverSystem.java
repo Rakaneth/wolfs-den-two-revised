@@ -46,7 +46,7 @@ public class AttackResolverSystem extends IteratingSystem
                             .roll();
       PlayScreen.addMessage("[%s]%s[] attacks [%s]%s[] for [%s]%d damage![]", atkColor, atkID.name, defColor,
                             defID.name, "Crimson", dmg);
-      //TODO: account for armor
+      // TODO: account for armor
       defVit.takeDmg(dmg);
     } else
     {

@@ -10,6 +10,10 @@ import attackPrey: "rakaneth.wolfsden.ai.AttackPreyTask"
 import preyNull?: "rakaneth.wolfsden.ai.PreyNullCondition"
 import preyAlive?: "rakaneth.wolfsden.ai.PreyAliveCondition"
 import preySameLevel?: "rakaneth.wolfsden.ai.PreySameLevelCondition"
+import detectFood?: "rakaneth.wolfsden.ai.DetectFoodCondition"
+import onFood?: "rakaneth.wolfsden.ai.OnFoodCondition"
+import moveTowardsFood: "rakaneth.wolfsden.ai.MoveTowardsFoodTask"
+import eatFood: "rakaneth.wolfsden.ai.EatFoodTask"
 
 #Check for prey existence
 subtree name: "preyExists?"
@@ -25,10 +29,16 @@ subtree name: "huntPrey"
 		(preyAdjacent?) attackPrey
 		moveTowardsPrey
 
+#Looking for food
+subtree name:"huntFood"
+	selector
+		(onFood?) eatFood
+		moveTowardsFood
 
 #tree definition
 root
 	dynamicGuardSelector
 		($preyExists?) $huntPrey
 		(detectPrey?) getTarget
+		(detectFood?) $huntFood
 		() randomWalk

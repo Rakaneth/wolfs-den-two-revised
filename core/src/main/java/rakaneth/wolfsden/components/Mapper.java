@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -12,6 +13,7 @@ import com.badlogic.ashley.core.Family;
 
 import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.GameInfo;
+import rakaneth.wolfsden.ItemBuilder.ItemBase.ItemType;
 import rakaneth.wolfsden.WolfMap;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidmath.Coord;
@@ -96,7 +98,7 @@ public class Mapper implements EntityListener
     for (Entity orphan : PlayScreen.engine.getEntitiesFor(AIs))
     {
       AI eAI = ai.get(orphan);
-      if (eAI.target() == entity)
+      if (eAI.creatureTarget() == entity)
         eAI.clearTarget();
     }
     GameInfo.atlas.remove(entity);
@@ -114,6 +116,29 @@ public class Mapper implements EntityListener
                      .forEach(target::add);
 
     return target;
+  }
+
+  public static final List<Entity> visibleThings(Entity entity)
+  {
+    return GameInfo.catalog.values()
+                           .stream()
+                           .filter(f -> canSee(entity, f))
+                           .collect(Collectors.toList());
+  }
+
+  public static final List<Entity> visibleFood(Entity entity)
+  {
+    return visibleThings(entity).stream()
+                                .filter(f -> Mapper.consumables.get(f) != null)
+                                .filter(g -> Mapper.consumables.get(g).type == ItemType.FOOD)
+                                .collect(Collectors.toList());
+  }
+
+  public static final boolean isOn(Entity standing, Entity on)
+  {
+    Position standPos = position.get(standing);
+    Position onPos = position.get(on);
+    return sameLevel(standing, on) && (standPos.current.equals(onPos.current));
   }
 
   public static final String getID(Entity entity)
