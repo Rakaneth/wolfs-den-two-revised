@@ -9,6 +9,7 @@ import com.badlogic.gdx.ai.btree.Task;
 
 import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 import squidpony.squidai.DijkstraMap;
@@ -37,18 +38,26 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
       for (Entity enemy : enemies)
         targetCoords.add(Mapper.position.get(enemy).current);
 
+      //TODO: Better target selection - store a target?
       curTarget = dMap.findNearest(pos.current, targetCoords);
       List<Coord> path = dMap.findPath(1, null, null, pos.current, curTarget);
-      Coord nextStep = path.get(0);
-
-      if (pos.current.isAdjacent(nextStep))
-        return Status.SUCCEEDED;
-      else
+      if (path.size() > 0)
       {
-        Mapper.actions.get(subject)
-                      .sendCmd(CommandTypes.MOVE, pos.current.toGoTo(nextStep));
-        return Status.RUNNING;
-      }
+        Coord nextStep = path.get(0);
+
+        if (pos.current.isAdjacent(curTarget))
+        { 
+          return Status.SUCCEEDED;
+        }
+        else
+        {
+          Mapper.actions.get(subject)
+                        .sendCmd(CommandTypes.MOVE, pos.current.toGoTo(nextStep));
+          return Status.RUNNING;
+        }
+      } else
+        //TODO: go to last known location?
+        return Status.FAILED;
     }
   }
 
