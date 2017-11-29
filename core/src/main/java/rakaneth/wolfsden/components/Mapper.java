@@ -110,6 +110,7 @@ public class Mapper implements EntityListener
                      .stream()
                      .filter(f -> FactionManager.instance.isEnemy(entity, f))
                      .filter(g -> canSee(entity, g))
+                     .filter(h -> vitals.get(h).alive)
                      .forEach(target::add);
 
     return target;

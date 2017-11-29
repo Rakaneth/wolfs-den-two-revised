@@ -19,10 +19,9 @@ subtree name: "preyExists?"
 
 #Hunting a target
 subtree name: "huntPrey"
-	sequence
+	selector
+		(preyAdjacent?) attackPrey
 		moveTowardsPrey
-		preyAdjacent?
-		attackPrey
 
 
 #tree definition
