@@ -1,7 +1,9 @@
 package rakaneth.wolfsden;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
@@ -105,6 +107,24 @@ public class FactionManager
     }
 
     return acc;
+  }
+
+  public List<Entity> allInFaction(String faction)
+  {
+    return GameInfo.bestiary.values()
+                            .stream()
+                            .filter(f -> Mapper.factions.get(f).factions.contains(faction))
+                            .collect(Collectors.toList());
+  }
+
+  public void addToFaction(Entity supplicant, String faction)
+  {
+    Mapper.factions.get(supplicant).factions.add(faction);
+  }
+
+  public void removeFromFaction(Entity apostate, String faction)
+  {
+    Mapper.factions.get(apostate).factions.remove(faction);
   }
 
   public boolean isEnemy(Entity e1, Entity e2)
