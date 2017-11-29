@@ -5,11 +5,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.BehaviorTree;
 
 import rakaneth.wolfsden.GameInfo;
+import squidpony.squidai.DijkstraMap;
 
 public class AI implements Component
 {
   private BehaviorTree<Entity> btree;
   private String               target;
+  private DijkstraMap          dMap;
 
   public AI(BehaviorTree<Entity> btree)
   {
@@ -39,5 +41,15 @@ public class AI implements Component
   public void clearTarget()
   {
     target = null;
+  }
+
+  public void setDMap(DijkstraMap dMap)
+  {
+    this.dMap = dMap;
+  }
+
+  public DijkstraMap dMap()
+  {
+    return dMap;
   }
 }

@@ -6,6 +6,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.ChangeLevel;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
@@ -28,6 +29,7 @@ public class LevelChangeSystem extends IteratingSystem
     ChangeLevel lv = Mapper.changeLvl.get(entity);
     WolfMap.Connection headedTo = pos.map.getConnection(lv.from);
     Vision vis = Mapper.vision.get(entity);
+    AI ai = Mapper.ai.get(entity);
 
     pos.map = headedTo.getMap();
     pos.current = headedTo.toC;
@@ -35,6 +37,10 @@ public class LevelChangeSystem extends IteratingSystem
     GameInfo.hudDirty = true;
     vis.visible = vis.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, vis.visionRadius);
     vis.grVisible.remake(new GreasedRegion(vis.visible, 0.0).not());
+
+    if (ai != null)
+      ai.dMap()
+        .initialize(pos.map.baseMap);
 
     if (Mapper.isPlayer(entity))
     {

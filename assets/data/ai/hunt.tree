@@ -2,16 +2,32 @@
 
 #Aliases
 import randomWalk: "rakaneth.wolfsden.ai.RandomWalkTask"
-import detectPrey?: "rakaneth.wolfsden.ai.DetectPreyTask"
+import detectPrey?: "rakaneth.wolfsden.ai.DetectPreyCondition"
+import getTarget: "rakaneth.wolfsden.ai.GetTargetTask"
 import moveTowardsPrey: "rakaneth.wolfsden.ai.MoveTowardsPreyTask"
+import preyAdjacent?: "rakaneth.wolfsden.ai.PreyAdjacentCondition"
+import attackPrey: "rakaneth.wolfsden.ai.AttackPreyTask"
+import preyNull?: "rakaneth.wolfsden.ai.PreyNullCondition"
+import preyAlive?: "rakaneth.wolfsden.ai.PreyAliveCondition"
+
+#Check for prey existence
+subtree name: "preyExists?"
+	sequence
+		invert
+			preyNull?
+		preyAlive?
+
+#Hunting a target
+subtree name: "huntPrey"
+	sequence
+		moveTowardsPrey
+		preyAdjacent?
+		attackPrey
+
 
 #tree definition
 root
-	selector
-		sequence
-			detectPrey?
-			moveTowardsPrey
-		randomWalk
-
-
-
+	dynamicGuardSelector
+		($preyExists?) $huntPrey
+		(detectPrey?) getTarget
+		() randomWalk

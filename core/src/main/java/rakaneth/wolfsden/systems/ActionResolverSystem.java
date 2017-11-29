@@ -132,6 +132,12 @@ public class ActionResolverSystem extends SortedIteratingSystem
             act.delay = sStats.moveDelay;
           }
           break;
+        case ATTACK:
+          Entity foe = (Entity) act.actionStack.pop();
+          entity.add(new Attack(foe));
+          act.tookTurn = true;
+          act.delay = sStats.atkDelay;
+          GameInfo.mapDirty = true;
         default:
           act.delay = 10;
           act.tookTurn = true;

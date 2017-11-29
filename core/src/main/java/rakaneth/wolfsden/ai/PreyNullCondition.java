@@ -4,19 +4,20 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
-import rakaneth.wolfsden.CommandTypes;
 import rakaneth.wolfsden.components.Mapper;
 
-public class RandomWalkTask extends LeafTask<Entity>
+public class PreyNullCondition extends LeafTask<Entity>
 {
 
   @Override
   public Status execute()
   {
     Entity subject = getObject();
-    Mapper.actions.get(subject)
-                  .sendCmd(CommandTypes.RANDOM);
-    return Status.SUCCEEDED;
+    if (Mapper.ai.get(subject)
+                 .target() == null)
+      return Status.SUCCEEDED;
+
+    return Status.FAILED;
   }
 
   @Override
@@ -24,5 +25,4 @@ public class RandomWalkTask extends LeafTask<Entity>
   {
     return task;
   }
-
 }

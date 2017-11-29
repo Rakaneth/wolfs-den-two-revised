@@ -4,23 +4,24 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
-import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.Mapper;
+import rakaneth.wolfsden.components.Position;
 
-public class DetectPreyTask extends LeafTask<Entity>
+public class PreyAdjacentCondition extends LeafTask<Entity>
 {
 
   @Override
   public Status execute()
   {
     Entity subject = getObject();
-    if (Mapper.visibleEnemiesOf(subject)
-              .size() > 0)
-    {
-      WolfUtils.log("AI", "%s detects prey", Mapper.getID(subject));
+    Position subPos = Mapper.position.get(subject);
+    Position targetPos = Mapper.position.get(Mapper.ai.get(subject)
+                                                      .target());
+
+    if (subPos.current.isAdjacent(targetPos.current))
       return Status.SUCCEEDED;
-    } else
-      return Status.FAILED;
+
+    return Status.FAILED;
   }
 
   @Override
@@ -28,4 +29,5 @@ public class DetectPreyTask extends LeafTask<Entity>
   {
     return task;
   }
+
 }

@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.GameInfo;
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
@@ -12,13 +13,14 @@ import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.Vision;
 import rakaneth.wolfsden.components.Vitals;
+import squidpony.squidai.DijkstraMap;
 import squidpony.squidmath.GreasedRegion;
 
 public class CreatureSetupSystem extends IteratingSystem
 {
   public CreatureSetupSystem()
   {
-    super(Family.all(FreshCreature.class, Vision.class, Position.class, Identity.class)
+    super(Family.all(FreshCreature.class, Vision.class, Position.class, Identity.class, AI.class)
                 .get());
   }
 
@@ -35,6 +37,7 @@ public class CreatureSetupSystem extends IteratingSystem
     Position pos = Mapper.position.get(entity);
     Player ply = Mapper.player.get(entity);
     Identity id = Mapper.identity.get(entity);
+    AI ai = Mapper.ai.get(entity);
     pos.dirty = true;
     vis.visible = vis.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, vis.visionRadius);
     vis.grVisible = new GreasedRegion(vis.visible, 0.0).not();
@@ -42,6 +45,9 @@ public class CreatureSetupSystem extends IteratingSystem
     {
       ply.grSeen = vis.grVisible.copy();
     }
+
+    // initialize AI dmap
+    ai.setDMap(new DijkstraMap(pos.map.baseMap, DijkstraMap.Measurement.CHEBYSHEV));
 
     // add to atlas
     GameInfo.atlas.put(entity, pos);
@@ -51,7 +57,5 @@ public class CreatureSetupSystem extends IteratingSystem
 
     // remove component when done
     entity.remove(FreshCreature.class);
-
   }
-
 }

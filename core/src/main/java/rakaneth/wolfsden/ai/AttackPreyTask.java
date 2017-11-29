@@ -5,17 +5,19 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Mapper;
 
-public class RandomWalkTask extends LeafTask<Entity>
+public class AttackPreyTask extends LeafTask<Entity>
 {
 
   @Override
   public Status execute()
   {
     Entity subject = getObject();
-    Mapper.actions.get(subject)
-                  .sendCmd(CommandTypes.RANDOM);
+    Entity target = Mapper.ai.get(subject).target();
+    Action act = Mapper.actions.get(subject);
+    act.sendCmd(CommandTypes.ATTACK, target);
     return Status.SUCCEEDED;
   }
 
