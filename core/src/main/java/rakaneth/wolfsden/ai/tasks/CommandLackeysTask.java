@@ -1,4 +1,4 @@
-package rakaneth.wolfsden.ai;
+package rakaneth.wolfsden.ai.tasks;
 
 import java.util.List;
 
@@ -20,12 +20,12 @@ public class CommandLackeysTask extends LeafTask<Entity>
     Entity subject = getObject();
     Identity id = Mapper.identity.get(subject);
     AI ai = Mapper.ai.get(subject);
-    Entity alphaTarget = ai.creatureTarget(); 
+    Entity alphaTarget = ai.creatureTarget();
     List<Entity> lackeys = FactionManager.instance.lackeys(id.id);
     Entity lackeyTarget = null;
     if (alphaTarget != null)
     {
-      for (Entity lackey: lackeys)
+      for (Entity lackey : lackeys)
       {
         AI lAI = Mapper.ai.get(lackey);
         lackeyTarget = lAI.creatureTarget();

@@ -1,4 +1,4 @@
-package rakaneth.wolfsden.ai;
+package rakaneth.wolfsden.ai.tasks;
 
 import java.util.List;
 import java.util.stream.Collectors;

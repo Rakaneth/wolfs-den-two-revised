@@ -135,14 +135,14 @@ public class CreatureBuilder
     p.getComponent(Identity.class).id = "player";
     return p;
   }
-  
+
   public void buildWolfPack(WolfMap map)
   {
     int packSize = WolfGame.rng.between(1, 5);
     Entity alpha = build("alpha", map);
     String alphaID = alpha.getComponent(Identity.class).id;
     FactionManager.instance.addReaction(alphaID, "player", -100);
-    for (int w=0; w<packSize; w++)
+    for (int w = 0; w < packSize; w++)
     {
       Entity wolf = build("wolf", map);
       FactionManager.instance.addToFaction(wolf, alphaID);

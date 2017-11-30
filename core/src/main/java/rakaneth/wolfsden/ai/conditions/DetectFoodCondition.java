@@ -1,22 +1,25 @@
-package rakaneth.wolfsden.ai;
+package rakaneth.wolfsden.ai.conditions;
+
+import java.util.List;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Mapper;
 
-public class PreyAliveCondition extends LeafTask<Entity>
+public class DetectFoodCondition extends LeafTask<Entity>
 {
 
   @Override
   public Status execute()
   {
     Entity subject = getObject();
-    Entity target = Mapper.ai.get(subject)
-                             .creatureTarget();
+    AI ai = Mapper.ai.get(subject);
+    List<Entity> foodList = Mapper.visibleFood(subject);
 
-    if (Mapper.vitals.get(target).alive)
+    if (foodList.size() > 0)
       return Status.SUCCEEDED;
 
     return Status.FAILED;

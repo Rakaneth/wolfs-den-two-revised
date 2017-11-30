@@ -1,6 +1,6 @@
 #placeholder merchant tree
 
-import randomWalk: "rakaneth.wolfsden.ai.RandomWalkTask"
+import randomWalk: "rakaneth.wolfsden.ai.tasks.RandomWalkTask"
 
 root
 	randomWalk

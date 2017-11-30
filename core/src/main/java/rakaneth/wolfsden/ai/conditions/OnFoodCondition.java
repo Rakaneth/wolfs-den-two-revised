@@ -1,26 +1,31 @@
-package rakaneth.wolfsden.ai;
+package rakaneth.wolfsden.ai.conditions;
+
+import java.util.List;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
-import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Mapper;
 
-public class PreySameLevelCondition extends LeafTask<Entity>
+public class OnFoodCondition extends LeafTask<Entity>
 {
 
   @Override
   public Status execute()
   {
     Entity subject = getObject();
-    AI ai = Mapper.ai.get(subject);
-    Entity target = ai.creatureTarget();
+    List<Entity> foodList = Mapper.visibleFood(subject);
 
-    if (Mapper.sameLevel(subject, target))
-      return Status.SUCCEEDED;
-
-    ai.clearTarget();
+    for (Entity food : foodList)
+    {
+      if (Mapper.isOn(subject, food))
+      {
+        Mapper.ai.get(subject)
+                 .setTarget(food);
+        return Status.SUCCEEDED;
+      }
+    }
     return Status.FAILED;
   }
 
