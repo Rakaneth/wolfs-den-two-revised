@@ -1,8 +1,11 @@
 package rakaneth.wolfsden;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.badlogic.ashley.core.Entity;
@@ -12,6 +15,7 @@ import com.badlogic.gdx.utils.JsonWriter;
 import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.Mapper;
 import squidpony.DataConverter;
+import squidpony.squidmath.Coord;
 
 public class FactionManager
 {
@@ -141,22 +145,42 @@ public class FactionManager
   {
     return getReaction(e1, e2) == 0;
   }
-  
+
   public boolean isLeader(Entity e, String faction)
   {
     return Mapper.identity.get(e).id.equals(faction);
   }
-  
+
   public Entity leader(String faction)
   {
     return GameInfo.bestiary.get(faction);
   }
-  
+
   public List<Entity> lackeys(String faction)
   {
-    return allInFaction(faction)
-        .stream()
-        .filter(f -> !isLeader(f, faction))
-        .collect(Collectors.toList());
+    return allInFaction(faction).stream()
+                                .filter(f -> !isLeader(f, faction))
+                                .collect(Collectors.toList());
+  }
+
+  public List<Entity> allTeammates(Entity entity)
+  {
+    List<Entity> finalList = new ArrayList<>();
+    Factions fac = Mapper.factions.get(entity);
+    for (String faction : fac.factions)
+    {
+      finalList.addAll(allInFaction(faction));
+    }
+
+    return finalList.stream()
+                    .distinct()
+                    .collect(Collectors.toList());
+  }
+
+  public List<Coord> allTeammateCoords(Entity entity)
+  {
+    return allTeammates(entity).stream()
+                               .map(m -> Mapper.position.get(m).current)
+                               .collect(Collectors.toList());
   }
 }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Mapper;
@@ -33,8 +34,9 @@ public class MoveTowardsFoodTask extends LeafTask<Entity>
                                     .collect(Collectors.toList());
     Coord nearest = ai.dMap()
                       .findNearest(start, foodPoses);
+    List<Coord> packCoords = FactionManager.instance.allTeammateCoords(subject);
     List<Coord> nextSteps = ai.dMap()
-                              .findPath(1, null, null, start, nearest);
+                              .findPath(1, null, packCoords, start, nearest);
 
     if (nextSteps.size() == 0)
       return Status.FAILED;
