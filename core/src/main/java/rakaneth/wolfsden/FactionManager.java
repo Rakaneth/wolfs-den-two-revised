@@ -141,4 +141,22 @@ public class FactionManager
   {
     return getReaction(e1, e2) == 0;
   }
+  
+  public boolean isLeader(Entity e, String faction)
+  {
+    return Mapper.identity.get(e).id.equals(faction);
+  }
+  
+  public Entity leader(String faction)
+  {
+    return GameInfo.bestiary.get(faction);
+  }
+  
+  public List<Entity> lackeys(String faction)
+  {
+    return allInFaction(faction)
+        .stream()
+        .filter(f -> !isLeader(f, faction))
+        .collect(Collectors.toList());
+  }
 }
