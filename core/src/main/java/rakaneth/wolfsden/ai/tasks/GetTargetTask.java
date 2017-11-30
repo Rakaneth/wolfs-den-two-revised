@@ -36,14 +36,14 @@ public class GetTargetTask extends LeafTask<Entity>
     {
       ai.clearTarget();
       WolfUtils.log("AI", "%s fails to acquire a target", id.id);
+      return Status.FAILED;
     } else
     {
       ai.setTarget(tempMap.get(targetC));
       Identity tarID = Mapper.identity.get(ai.creatureTarget());
       WolfUtils.log("AI", "%s acquires a target: %s", id.id, tarID.id);
+      return Status.SUCCEEDED;
     }
-
-    return Status.SUCCEEDED;
   }
 
   @Override

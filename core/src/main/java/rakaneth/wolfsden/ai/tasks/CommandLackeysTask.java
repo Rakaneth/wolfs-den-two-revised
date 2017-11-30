@@ -7,6 +7,7 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
 import rakaneth.wolfsden.FactionManager;
+import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
@@ -30,11 +31,18 @@ public class CommandLackeysTask extends LeafTask<Entity>
         AI lAI = Mapper.ai.get(lackey);
         lackeyTarget = lAI.creatureTarget();
         if (lackeyTarget != alphaTarget)
+        {
           lAI.setTarget(alphaTarget);
+          WolfUtils.log("AI", "%s changes targets to %s due to %s's orders", Mapper.getID(lackey),
+                        Mapper.getID(alphaTarget), Mapper.getID(subject));
+        }
       }
       return Status.SUCCEEDED;
+    } else
+    {
+      WolfUtils.log("AI", "%s failed to order lackeys due to loss of target", Mapper.getID(subject));
+      return Status.FAILED;
     }
-    return Status.FAILED;
   }
 
   @Override

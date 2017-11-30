@@ -10,6 +10,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
 
 import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.GameInfo;
@@ -38,6 +39,7 @@ public class Mapper implements EntityListener
   public static final ComponentMapper<Attack>         attackers   = ComponentMapper.getFor(Attack.class);
   public static final ComponentMapper<Vision>         vision      = ComponentMapper.getFor(Vision.class);
   public static final ComponentMapper<AI>             ai          = ComponentMapper.getFor(AI.class);
+  public static final ComponentMapper<Duration>       durations   = ComponentMapper.getFor(Duration.class);
   public static final Mapper                          instance    = new Mapper();
 
   private Mapper()
@@ -93,8 +95,10 @@ public class Mapper implements EntityListener
   public void entityRemoved(Entity entity)
   {
     Identity id = identity.get(entity);
+    AI enAI = ai.get(entity);
     Family AIs = Family.all(AI.class)
                        .get();
+    
     for (Entity orphan : PlayScreen.engine.getEntitiesFor(AIs))
     {
       AI eAI = ai.get(orphan);

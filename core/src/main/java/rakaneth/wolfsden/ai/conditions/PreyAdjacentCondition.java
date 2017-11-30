@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
+import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
 
@@ -15,13 +16,19 @@ public class PreyAdjacentCondition extends LeafTask<Entity>
   {
     Entity subject = getObject();
     Position subPos = Mapper.position.get(subject);
-    Position targetPos = Mapper.position.get(Mapper.ai.get(subject)
-                                                      .creatureTarget());
+    AI ai = Mapper.ai.get(subject);
+    Position targetPos = null;
+    
+    if (ai.creatureTarget() != null)
+      targetPos = Mapper.position.get(ai.creatureTarget());
+    else
+      return Status.FAILED;
+    
 
     if (subPos.current.isAdjacent(targetPos.current))
       return Status.SUCCEEDED;
-
-    return Status.FAILED;
+    else
+      return Status.FAILED;
   }
 
   @Override

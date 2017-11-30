@@ -22,6 +22,11 @@ public class AI implements Component
   {
     return btree;
   }
+  
+  public void setBTree(BehaviorTree<Entity> btree)
+  {
+    this.btree = btree;
+  }
 
   public Entity creatureTarget()
   {

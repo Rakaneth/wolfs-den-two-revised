@@ -8,6 +8,7 @@ import java.util.Map;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibrary;
+import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeParser;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
@@ -16,10 +17,12 @@ import com.badlogic.gdx.utils.StreamUtils;
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.Duration;
 import rakaneth.wolfsden.components.Factions;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Inventory;
+import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
 import rakaneth.wolfsden.components.SecondaryStats;
@@ -36,15 +39,15 @@ public class CreatureBuilder
   private static final String           fileName = "data/creatures.js";
   private HashMap<String, CreatureBase> creatures;
   private static int                    counter  = 1;
-  private BehaviorTreeLibrary           library;
+  private FactionManager                fm;
 
   @SuppressWarnings("unchecked")
   public CreatureBuilder()
   {
     DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
     creatures = converter.fromJson(HashMap.class, CreatureBase.class, Gdx.files.internal(fileName));
-    library = new BehaviorTreeLibrary();
     registerAIs();
+    fm = FactionManager.instance;
   }
 
   private void registerAIs()
@@ -58,7 +61,9 @@ public class CreatureBuilder
         String aid = item.getValue().ai;
         reader = Gdx.files.internal("data/ai/" + aid + ".tree")
                           .reader();
-        library.registerArchetypeTree(aid, btp.parse(reader, null));
+        BehaviorTreeLibraryManager.getInstance()
+                                  .getLibrary()
+                                  .registerArchetypeTree(aid, btp.parse(reader, null));
       }
     } finally
     {
@@ -113,7 +118,8 @@ public class CreatureBuilder
 
     if (base.ai != null)
     {
-      creature.add(new AI(library.createBehaviorTree(base.ai, creature)));
+      creature.add(new AI(BehaviorTreeLibraryManager.getInstance()
+                                                    .createBehaviorTree(base.ai, creature)));
     }
 
     PlayScreen.engine.addEntity(creature);
@@ -141,11 +147,31 @@ public class CreatureBuilder
     int packSize = WolfGame.rng.between(1, 5);
     Entity alpha = build("alpha", map);
     String alphaID = alpha.getComponent(Identity.class).id;
-    FactionManager.instance.addReaction(alphaID, "player", -100);
+    fm.addReaction(alphaID, "player", -100);
     for (int w = 0; w < packSize; w++)
     {
       Entity wolf = build("wolf", map);
-      FactionManager.instance.addToFaction(wolf, alphaID);
+      fm.addToFaction(wolf, alphaID);
+    }
+  }
+
+  // TODO: adjust for durations
+  public void summon(Entity entity, String slaveID, Integer durationInTix)
+  {
+    Position summonerPos = Mapper.position.get(entity);
+    Entity slave = build(slaveID, summonerPos.map);
+    Identity id = Mapper.identity.get(entity);
+    Identity sID = Mapper.identity.get(slave);
+    Drawing summonerDraw = Mapper.drawing.get(entity);
+    Drawing slaveDraw = Mapper.drawing.get(slave);
+    fm.removeAllFactions(slave);
+    fm.addToFaction(slave, id.id);
+
+    if (durationInTix != null)
+    {
+      String exitMsg = String.format("[%s]%s's[] summoned [%s]%s[] vanishes.", summonerDraw.color.getName(), id.name,
+                                     slaveDraw.color.getName(), sID.name);
+      slave.add(new Duration(durationInTix, exitMsg));
     }
   }
 

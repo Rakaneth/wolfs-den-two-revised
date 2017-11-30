@@ -1,0 +1,11 @@
+import preySameLevel?: "rakaneth.wolfsden.ai.conditions.PreySameLevelCondition"
+import preyAlive?: "rakaneth.wolfsden.ai.conditions.PreyAliveCondition"
+import preyNull?: "rakaneth.wolfsden.ai.conditions.PreyNullCondition"
+
+#Check for prey existence
+root
+	sequence
+		invert
+			preyNull?
+		preySameLevel?
+		preyAlive?

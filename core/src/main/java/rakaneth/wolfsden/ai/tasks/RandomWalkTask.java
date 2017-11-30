@@ -5,6 +5,7 @@ import com.badlogic.gdx.ai.btree.LeafTask;
 import com.badlogic.gdx.ai.btree.Task;
 
 import rakaneth.wolfsden.CommandTypes;
+import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.components.Mapper;
 
 public class RandomWalkTask extends LeafTask<Entity>
@@ -16,6 +17,7 @@ public class RandomWalkTask extends LeafTask<Entity>
     Entity subject = getObject();
     Mapper.actions.get(subject)
                   .sendCmd(CommandTypes.RANDOM);
+    WolfUtils.log("AI", "%s moves randomly", Mapper.getID(subject));
     return Status.SUCCEEDED;
   }
 

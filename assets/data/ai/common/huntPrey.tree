@@ -1,0 +1,9 @@
+import moveTowardsPrey: "rakaneth.wolfsden.ai.tasks.MoveTowardsPreyTask"
+import preyAdjacent?: "rakaneth.wolfsden.ai.conditions.PreyAdjacentCondition"
+import attackPrey: "rakaneth.wolfsden.ai.tasks.AttackPreyTask"
+
+#hunt prey
+root
+	selector
+		(preyAdjacent?) attackPrey
+		moveTowardsPrey

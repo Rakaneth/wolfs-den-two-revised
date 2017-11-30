@@ -1,0 +1,9 @@
+import moveTowardsFood: "rakaneth.wolfsden.ai.tasks.MoveTowardsFoodTask"
+import eatFood: "rakaneth.wolfsden.ai.tasks.EatFoodTask"
+import onFood?: "rakaneth.wolfsden.ai.conditions.OnFoodCondition"
+
+#Looking for food
+root
+	selector
+		(onFood?) eatFood
+		moveTowardsFood

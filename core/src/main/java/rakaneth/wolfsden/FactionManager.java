@@ -181,4 +181,9 @@ public class FactionManager
                                .map(m -> Mapper.position.get(m).current)
                                .collect(Collectors.toList());
   }
+
+  public void removeAllFactions(Entity entity)
+  {
+    Mapper.factions.get(entity).factions.clear();
+  }
 }

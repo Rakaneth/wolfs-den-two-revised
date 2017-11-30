@@ -5,9 +5,9 @@
 		dark: true,
 		down: "wolfDen2",
 		name: "Wolf's Den-1",
-		caveCarvers: 1,
-		boxCarvers: 1,
-		roundCarvers: 4,
+		caveCarvers: 0,
+		boxCarvers: 0,
+		roundCarvers: 1,
 	},
 	wolfDen2: {
 		width: 120,
