@@ -132,6 +132,7 @@ public class CreatureBuilder
     p.remove(AI.class);
     p.getComponent(Drawing.class).layer = 4;
     p.getComponent(Factions.class).factions.add("player");
+    p.getComponent(Identity.class).id = "player";
     return p;
   }
 

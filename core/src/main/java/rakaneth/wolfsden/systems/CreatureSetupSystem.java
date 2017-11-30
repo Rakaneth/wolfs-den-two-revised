@@ -6,11 +6,13 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.components.AI;
+import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.FreshCreature;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Player;
 import rakaneth.wolfsden.components.Position;
+import rakaneth.wolfsden.components.SecondaryStats;
 import rakaneth.wolfsden.components.Vision;
 import rakaneth.wolfsden.components.Vitals;
 import squidpony.squidai.DijkstraMap;
@@ -38,6 +40,9 @@ public class CreatureSetupSystem extends IteratingSystem
     Player ply = Mapper.player.get(entity);
     Identity id = Mapper.identity.get(entity);
     AI ai = Mapper.ai.get(entity);
+    Action act = Mapper.actions.get(entity);
+    SecondaryStats sStats = Mapper.secondaries.get(entity);
+    
     pos.dirty = true;
     vis.visible = vis.fov.calculateFOV(pos.map.resistanceMap, pos.current.x, pos.current.y, vis.visionRadius);
     vis.grVisible = new GreasedRegion(vis.visible, 0.0).not();
@@ -49,6 +54,10 @@ public class CreatureSetupSystem extends IteratingSystem
     // initialize AI dmap
     if (ai != null)
       ai.setDMap(new DijkstraMap(pos.map.baseMap, DijkstraMap.Measurement.CHEBYSHEV));
+    
+    //first round inits
+    if (!(act == null || sStats == null))
+      act.delay = sStats.moveDelay;
 
     // add to atlas
     GameInfo.atlas.put(entity, pos);
