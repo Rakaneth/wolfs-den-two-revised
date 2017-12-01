@@ -19,4 +19,4 @@ root
 		(include subtree: "data/ai/common/preyExists.tree") $commandAndHuntPrey
 		(detectPrey?) getTarget
 		(detectFood?) include subtree: "data/ai/common/lookForFood.tree"
-		() randomWalk
+		randomWalk
