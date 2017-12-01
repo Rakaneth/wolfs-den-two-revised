@@ -6,6 +6,9 @@ import detectPrey?: "rakaneth.wolfsden.ai.conditions.DetectPreyCondition"
 import detectFood?: "rakaneth.wolfsden.ai.conditions.DetectFoodCondition"
 import randomWalk: "rakaneth.wolfsden.ai.tasks.RandomWalkTask"
 import getTarget: "rakaneth.wolfsden.ai.tasks.GetTargetTask"
+import preyNull?: "rakaneth.wolfsden.ai.conditions.PreyNullCondition"
+import preySameLevel?: "rakaneth.wolfsden.ai.conditions.PreySameLevelCondition"
+import preyAlive?: "rakaneth.wolfsden.ai.conditions.PreyAliveCondition"
 
 #Hunting a target
 subtree name: "commandAndHuntPrey"
@@ -13,10 +16,14 @@ subtree name: "commandAndHuntPrey"
 		commandLackeys
 		include subtree: "data/ai/common/huntPrey.tree"
 
+subtree name: "lookForFood"
+include subtree: "data/ai/common/lookForFood.tree"
+
+
 #tree definition
 root
 	dynamicGuardSelector
 		(include subtree: "data/ai/common/preyExists.tree") $commandAndHuntPrey
 		(detectPrey?) getTarget
-		(detectFood?) include subtree: "data/ai/common/lookForFood.tree"
+		(detectFood?) $lookForFood
 		randomWalk
