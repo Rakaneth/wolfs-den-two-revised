@@ -9,7 +9,7 @@ import detectFood?: "rakaneth.wolfsden.ai.conditions.DetectFoodCondition"
 #tree definition
 root
 	dynamicGuardSelector
-		(include subtree: "data/ai/common/preyExists.tree") include subtree: "data/ai/common/huntPrey.tree"
+		(include subtree: "data/ai/common/preyExists.tree" lazy:true) include subtree: "data/ai/common/huntPrey.tree" lazy:true
 		(detectPrey?) getTarget
-		(detectFood?) include subtree: "data/ai/common/lookForFood.tree"
+		(detectFood?) include subtree: "data/ai/common/lookForFood.tree" lazy:true
 		() randomWalk

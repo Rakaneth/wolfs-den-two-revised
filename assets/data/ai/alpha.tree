@@ -14,16 +14,12 @@ import preyAlive?: "rakaneth.wolfsden.ai.conditions.PreyAliveCondition"
 subtree name: "commandAndHuntPrey"
 	sequence
 		commandLackeys
-		include subtree: "data/ai/common/huntPrey.tree"
-
-subtree name: "lookForFood"
-include subtree: "data/ai/common/lookForFood.tree"
-
+		include subtree: "data/ai/common/huntPrey.tree" lazy:true
 
 #tree definition
 root
 	dynamicGuardSelector
-		(include subtree: "data/ai/common/preyExists.tree") $commandAndHuntPrey
+		(include subtree: "data/ai/common/preyExists.tree" lazy:true) $commandAndHuntPrey
 		(detectPrey?) getTarget
-		(detectFood?) $lookForFood
+		(detectFood?) include subtree: "data/ai/common/lookForFood.tree" lazy:true
 		() randomWalk
