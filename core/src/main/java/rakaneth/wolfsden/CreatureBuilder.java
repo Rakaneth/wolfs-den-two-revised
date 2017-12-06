@@ -46,29 +46,7 @@ public class CreatureBuilder
   {
     DataConverter converter = new DataConverter(JsonWriter.OutputType.javascript);
     creatures = converter.fromJson(HashMap.class, CreatureBase.class, Gdx.files.internal(fileName));
-    registerAIs();
     fm = FactionManager.instance;
-  }
-
-  private void registerAIs()
-  {
-    Reader reader = null;
-    BehaviorTreeParser<Entity> btp = new BehaviorTreeParser<Entity>(BehaviorTreeParser.DEBUG_LOW);
-    try
-    {
-      for (Map.Entry<String, CreatureBase> item : creatures.entrySet())
-      {
-        String aid = item.getValue().ai;
-        reader = Gdx.files.internal("data/ai/" + aid + ".tree")
-                          .reader();
-        BehaviorTreeLibraryManager.getInstance()
-                                  .getLibrary()
-                                  .registerArchetypeTree(aid, btp.parse(reader, null));
-      }
-    } finally
-    {
-      StreamUtils.closeQuietly(reader);
-    }
   }
 
   public Entity build(String id, WolfMap map, String name)
@@ -118,8 +96,9 @@ public class CreatureBuilder
 
     if (base.ai != null)
     {
+      String bTreePath = "data/ai/" + base.ai + ".tree";
       creature.add(new AI(BehaviorTreeLibraryManager.getInstance()
-                                                    .createBehaviorTree(base.ai, creature)));
+                                                    .createBehaviorTree(bTreePath, creature)));
     }
 
     PlayScreen.engine.addEntity(creature);

@@ -14,13 +14,17 @@ public class DetectPreyCondition extends LeafTask<Entity>
   public Status execute()
   {
     Entity subject = getObject();
+    String subID = Mapper.getID(subject);
     if (Mapper.visibleEnemiesOf(subject)
               .size() > 0)
     {
-      WolfUtils.log("AI", "%s detects prey", Mapper.getID(subject));
+      WolfUtils.log("AI", "%s detects prey", subID);
       return Status.SUCCEEDED;
     } else
+    {
+      WolfUtils.log("AI", "%s fails to detect prey", subID);
       return Status.FAILED;
+    }
   }
 
   @Override

@@ -16,7 +16,7 @@ import moveTowardsFood: "rakaneth.wolfsden.ai.tasks.MoveTowardsFoodTask"
 import eatFood: "rakaneth.wolfsden.ai.tasks.EatFoodTask"
 import followLeader: "rakaneth.wolfsden.ai.tasks.FollowLeaderTask"
 import leaderNull?: "rakaneth.wolfsden.ai.conditions.LeaderNullCondition"
-import canSeeLeader? "rakaneth.wolfsden.ai.conditions.CanSeeLeaderCondition"
+import canSeeLeader?: "rakaneth.wolfsden.ai.conditions.CanSeeLeaderCondition"
 
 #Check for prey existence
 subtree name: "preyExists?"
