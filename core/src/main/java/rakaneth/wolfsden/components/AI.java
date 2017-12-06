@@ -12,6 +12,7 @@ public class AI implements Component
   private BehaviorTree<Entity> btree;
   private String               target;
   private DijkstraMap          dMap;
+  private String leader;
 
   public AI(BehaviorTree<Entity> btree)
   {
@@ -37,6 +38,11 @@ public class AI implements Component
   {
     return GameInfo.catalog.get(target);
   }
+  
+  public Entity leader()
+  {
+    return GameInfo.bestiary.get(leader);
+  }
 
   public void setTarget(Entity e)
   {
@@ -46,6 +52,16 @@ public class AI implements Component
   public void setTarget(String id)
   {
     target = id;
+  }
+  
+  public void setLeader(Entity leader)
+  {
+    this.leader = Mapper.getID(leader);
+  }
+  
+  public void setLeader(String id)
+  {
+    leader = id;
   }
 
   public void clearTarget()

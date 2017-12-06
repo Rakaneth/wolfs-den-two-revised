@@ -125,12 +125,13 @@ public class CreatureBuilder
   {
     int packSize = WolfGame.rng.between(1, 5);
     Entity alpha = build("alpha", map);
-    String alphaID = alpha.getComponent(Identity.class).id;
+    String alphaID = Mapper.getID(alpha);
     fm.addReaction(alphaID, "player", -100);
     for (int w = 0; w < packSize; w++)
     {
       Entity wolf = build("wolf", map);
       fm.addToFaction(wolf, alphaID);
+      Mapper.ai.get(wolf).setLeader(alphaID);
     }
   }
 
