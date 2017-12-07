@@ -24,27 +24,28 @@ public class FollowLeaderTask extends LeafTask<Entity>
     String eID = Mapper.getID(entity);
     AI eAI = Mapper.ai.get(entity);
     Entity leader = eAI.leader();
-    
+
     if (leader == null)
     {
       WolfUtils.log("AI", "%s cannot follow leader because leader is null", eID);
       return Status.FAILED;
     }
-    
+
     String lID = Mapper.getID(leader);
     DijkstraMap dMap = eAI.dMap();
     Coord start = Mapper.position.get(entity).current;
     Coord leaderC = Mapper.position.get(leader).current;
-    
+
     List<Coord> path = dMap.findPath(1, null, FactionManager.instance.allTeammateCoords(entity), start, leaderC);
-    
+
     if (path.isEmpty())
     {
       WolfUtils.log("AI", "%s cannot follow %s; no path", eID, lID);
       return Status.FAILED;
     } else
     {
-      Mapper.actions.get(entity).sendCmd(CommandTypes.MOVE, start.toGoTo(path.get(0)));
+      Mapper.actions.get(entity)
+                    .sendCmd(CommandTypes.MOVE, start.toGoTo(path.get(0)));
       return Status.SUCCEEDED;
     }
   }

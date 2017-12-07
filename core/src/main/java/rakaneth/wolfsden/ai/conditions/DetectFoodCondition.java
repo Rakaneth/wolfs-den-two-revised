@@ -26,7 +26,7 @@ public class DetectFoodCondition extends LeafTask<Entity>
     } else
     {
       WolfUtils.log("AI", "%s finds no food nearby.", Mapper.getID(subject));
-      return Status.FAILED;  
+      return Status.FAILED;
     }
   }
 

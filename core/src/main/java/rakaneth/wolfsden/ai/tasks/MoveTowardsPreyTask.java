@@ -28,16 +28,14 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
     Position subPos = Mapper.position.get(subject);
     Entity target = ai.creatureTarget();
     Identity id = Mapper.identity.get(subject);
-    
+
     if (target == null)
     {
       act.sendCmd(CommandTypes.WAIT);
       WolfUtils.log("AI", "%s had to wait because target was lost", id.id);
       return Status.FAILED;
     }
-      
-      
-    
+
     Position tarPos = Mapper.position.get(target);
     List<Coord> packSquares = FactionManager.instance.allTeammateCoords(subject);
     List<Coord> path = ai.dMap()
@@ -49,7 +47,7 @@ public class MoveTowardsPreyTask extends LeafTask<Entity>
       WolfUtils.log("AI", "%s had to wait because no path to target was found", id.id);
       return Status.FAILED;
     }
-      
+
     act.sendCmd(CommandTypes.MOVE, subPos.current.toGoTo(path.get(0)));
     return Status.SUCCEEDED;
   }

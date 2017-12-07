@@ -57,11 +57,11 @@ public class EndStepSystem extends EntitySystem
       Identity id = Mapper.identity.get(entity);
       Duration dur = Mapper.durations.get(entity);
 
-      //clear turn
+      // clear turn
       act.tookTurn = false;
       if (GameInfo.turnCount % 1000 == 0 && GameInfo.turnCount > 0 && Mapper.isPlayer(entity))
       {
-        //passive XP for player
+        // passive XP for player
         vit.gainXP(vit.xpMult);
         vit.xpMult = Math.max(vit.xpMult - 0.5f, 0.1f);
       }
@@ -71,9 +71,9 @@ public class EndStepSystem extends EntitySystem
         PlayScreen.addMessage("[%s]%s[] has been [%s]slain![]", draw.color.getName(), id.name, Swatch.VIT);
         PlayScreen.engine.removeEntity(entity);
       }
-      
-      //cleanup durations
-      //TODO: cleanup for effects - check for effect component and remove component
+
+      // cleanup durations
+      // TODO: cleanup for effects - check for effect component and remove component
       if (dur != null)
       {
         dur.duration--;

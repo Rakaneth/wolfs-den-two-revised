@@ -15,10 +15,11 @@ public class CallOffLackeysTask extends LeafTask<Entity>
   public Status execute()
   {
     Entity entity = getObject();
-    for (Entity lackey: FactionManager.instance.allTeammates(entity))
+    for (Entity lackey : FactionManager.instance.allTeammates(entity))
     {
       WolfUtils.log("AI", "%s calls off %s", Mapper.getID(entity), Mapper.getID(lackey));
-      Mapper.ai.get(lackey).clearTarget();
+      Mapper.ai.get(lackey)
+               .clearTarget();
     }
     return Status.SUCCEEDED;
   }
@@ -28,5 +29,5 @@ public class CallOffLackeysTask extends LeafTask<Entity>
   {
     return task;
   }
-  
+
 }

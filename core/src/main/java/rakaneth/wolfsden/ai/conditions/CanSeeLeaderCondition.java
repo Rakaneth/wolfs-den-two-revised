@@ -14,14 +14,15 @@ public class CanSeeLeaderCondition extends LeafTask<Entity>
   public Status execute()
   {
     Entity entity = getObject();
-    Entity leader = Mapper.ai.get(entity).leader();
+    Entity leader = Mapper.ai.get(entity)
+                             .leader();
     String eID = Mapper.getID(entity);
     if (leader == null)
     {
       WolfUtils.log("AI", "%s can't see leader because leader is null", eID);
       return Status.FAILED;
     }
-    
+
     String lID = Mapper.getID(leader);
     if (Mapper.canSee(entity, leader))
     {
@@ -39,5 +40,5 @@ public class CanSeeLeaderCondition extends LeafTask<Entity>
   {
     return task;
   }
-  
+
 }

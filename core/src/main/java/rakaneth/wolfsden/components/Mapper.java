@@ -16,6 +16,7 @@ import rakaneth.wolfsden.FactionManager;
 import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.ItemBuilder.ItemBase.ItemType;
 import rakaneth.wolfsden.WolfMap;
+import rakaneth.wolfsden.WolfUtils;
 import rakaneth.wolfsden.screens.PlayScreen;
 import squidpony.squidmath.Coord;
 
@@ -60,10 +61,25 @@ public class Mapper implements EntityListener
                                                                  .findFirst();
 
     if (result.isPresent())
-      return result.get()
-                   .getKey();
-    else
+    {
+      Entity potential = result.get()
+                               .getKey();
+      if (isCreature(potential))
+        return potential;
+      else
+        return null;
+    } else
       return null;
+  }
+
+  public static boolean isCreature(Entity entity)
+  {
+    return GameInfo.bestiary.containsKey(getID(entity));
+  }
+
+  public static boolean isItem(Entity entity)
+  {
+    return GameInfo.catalog.containsKey(getID(entity));
   }
 
   public static final boolean sameLevel(Entity e1, Entity e2)
@@ -95,18 +111,21 @@ public class Mapper implements EntityListener
   public void entityRemoved(Entity entity)
   {
     Identity id = identity.get(entity);
-    AI enAI = ai.get(entity);
     Family AIs = Family.all(AI.class)
                        .get();
-    
+
     for (Entity orphan : PlayScreen.engine.getEntitiesFor(AIs))
     {
       AI eAI = ai.get(orphan);
       if (eAI.creatureTarget() == entity)
+      {
+        WolfUtils.log("Engine", "Entity %s removed from %s's target", getID(entity), getID(orphan));
         eAI.clearTarget();
+      }
     }
     GameInfo.atlas.remove(entity);
     GameInfo.bestiary.remove(id.id);
+    GameInfo.catalog.remove(id.id);
   }
 
   public static final List<Entity> visibleEnemiesOf(Entity entity)
@@ -143,6 +162,14 @@ public class Mapper implements EntityListener
     Position standPos = position.get(standing);
     Position onPos = position.get(on);
     return sameLevel(standing, on) && (standPos.current.equals(onPos.current));
+  }
+
+  public static List<Entity> thingsUnder(Entity entity)
+  {
+    return GameInfo.catalog.values()
+                           .stream()
+                           .filter(f -> isOn(entity, f))
+                           .collect(Collectors.toList());
   }
 
   public static final String getID(Entity entity)

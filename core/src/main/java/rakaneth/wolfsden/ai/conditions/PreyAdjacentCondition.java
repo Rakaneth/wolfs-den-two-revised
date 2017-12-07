@@ -18,12 +18,11 @@ public class PreyAdjacentCondition extends LeafTask<Entity>
     Position subPos = Mapper.position.get(subject);
     AI ai = Mapper.ai.get(subject);
     Position targetPos = null;
-    
+
     if (ai.creatureTarget() != null)
       targetPos = Mapper.position.get(ai.creatureTarget());
     else
       return Status.FAILED;
-    
 
     if (subPos.current.isAdjacent(targetPos.current))
       return Status.SUCCEEDED;

@@ -1,18 +1,13 @@
 package rakaneth.wolfsden;
 
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibrary;
 import com.badlogic.gdx.ai.btree.utils.BehaviorTreeLibraryManager;
-import com.badlogic.gdx.ai.btree.utils.BehaviorTreeParser;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.badlogic.gdx.utils.StreamUtils;
 
 import rakaneth.wolfsden.components.AI;
 import rakaneth.wolfsden.components.Action;
@@ -131,7 +126,8 @@ public class CreatureBuilder
     {
       Entity wolf = build("wolf", map);
       fm.addToFaction(wolf, alphaID);
-      Mapper.ai.get(wolf).setLeader(alphaID);
+      Mapper.ai.get(wolf)
+               .setLeader(alphaID);
     }
   }
 
@@ -143,14 +139,16 @@ public class CreatureBuilder
     Identity id = Mapper.identity.get(entity);
     Identity sID = Mapper.identity.get(slave);
     slave.remove(AI.class);
-    slave.add(new AI(BehaviorTreeLibraryManager.getInstance().createBehaviorTree("data/ai/summoned.tree", slave)));
+    slave.add(new AI(BehaviorTreeLibraryManager.getInstance()
+                                               .createBehaviorTree("data/ai/summoned.tree", slave)));
     Position slavePos = Mapper.position.get(slave);
     slavePos.current = slavePos.map.getEmptyNear(Mapper.position.get(entity).current);
     Drawing summonerDraw = Mapper.drawing.get(entity);
     Drawing slaveDraw = Mapper.drawing.get(slave);
     fm.removeAllFactions(slave);
     fm.addToFaction(slave, id.id);
-    Mapper.ai.get(slave).setLeader(entity);
+    Mapper.ai.get(slave)
+             .setLeader(entity);
 
     if (durationInTix != null)
     {

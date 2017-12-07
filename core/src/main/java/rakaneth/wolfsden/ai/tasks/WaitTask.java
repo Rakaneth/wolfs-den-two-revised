@@ -14,7 +14,8 @@ public class WaitTask extends LeafTask<Entity>
   public Status execute()
   {
     Entity entity = getObject();
-    Mapper.actions.get(entity).sendCmd(CommandTypes.WAIT);
+    Mapper.actions.get(entity)
+                  .sendCmd(CommandTypes.WAIT);
     return Status.SUCCEEDED;
   }
 

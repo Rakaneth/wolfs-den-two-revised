@@ -99,8 +99,7 @@ public class ItemBuilder
         {
           WolfUtils.log("ItemBuilder", "%s has no base", id);
           return null;
-        }
-        else
+        } else
         {
           color = (SColor) Colors.get(iBase.color);
           glyph = iBase.glyph;
@@ -110,7 +109,7 @@ public class ItemBuilder
         color = (SColor) Colors.get(base.color);
         glyph = base.glyph;
       }
-        
+
       mold.add(new Drawing(glyph, color, 2));
       mold.add(new Position(map.getEmpty(), map));
     }

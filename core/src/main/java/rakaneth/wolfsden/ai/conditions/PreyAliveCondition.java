@@ -24,11 +24,10 @@ public class PreyAliveCondition extends LeafTask<Entity>
       WolfUtils.log("AI", "%s has target: %s", Mapper.getID(subject), Mapper.getID(target));
       return Status.SUCCEEDED;
     }
-      
 
     WolfUtils.log("AI", "%s's target is dead", Mapper.getID(subject));
     ai.clearTarget();
-    
+
     return Status.FAILED;
   }
 
