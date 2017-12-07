@@ -56,9 +56,9 @@ public class ItemBuilder
     Engine engine = PlayScreen.engine;
     EquipBase base = equipment.get(id);
     Entity mold = engine.createEntity();
+    ItemBase iBase = consumables.get(id);
     if (base == null)
     {
-      ItemBase iBase = consumables.get(id);
       if (iBase == null)
         return null;
       else
@@ -92,8 +92,26 @@ public class ItemBuilder
 
     if (map != null)
     {
-      SColor color = base.color == null ? SColor.WHITE : (SColor) Colors.get(base.color);
-      mold.add(new Drawing(base.glyph, color, 2));
+      SColor color = SColor.WHITE;
+      char glyph = 0;
+      if (base == null)
+        if (iBase == null)
+        {
+          WolfUtils.log("ItemBuilder", "%s has no base", id);
+          return null;
+        }
+        else
+        {
+          color = (SColor) Colors.get(iBase.color);
+          glyph = iBase.glyph;
+        }
+      else
+      {
+        color = (SColor) Colors.get(base.color);
+        glyph = base.glyph;
+      }
+        
+      mold.add(new Drawing(glyph, color, 2));
       mold.add(new Position(map.getEmpty(), map));
     }
 
@@ -140,7 +158,7 @@ public class ItemBuilder
 
     public enum ItemType
     {
-      REPAIR, FOOD, BUFF;
+      REPAIR, FOOD, BUFF, MONEY;
     }
   }
 
