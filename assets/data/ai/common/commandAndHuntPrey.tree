@@ -1,0 +1,15 @@
+#Generic leader tree
+
+#imports
+import preyAlive?: "rakaneth.wolfsden.ai.conditions.PreyAliveCondition"
+import commandLackeys: "rakaneth.wolfsden.ai.tasks.CommandLackeysTask"
+import callOffLackeys: "rakaneth.wolfsden.ai.tasks.CallOffLackeysTask"
+
+#Hunting a target
+root
+	sequence
+		commandLackeys
+		include subtree: "data/ai/common/huntPrey.tree" lazy:true
+		invert
+			preyAlive?
+		callOffLackeys

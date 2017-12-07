@@ -1,25 +1,15 @@
 #Wolf alpha tree
 
 #imports
-import commandLackeys: "rakaneth.wolfsden.ai.tasks.CommandLackeysTask"
 import detectPrey?: "rakaneth.wolfsden.ai.conditions.DetectPreyCondition"
 import detectFood?: "rakaneth.wolfsden.ai.conditions.DetectFoodCondition"
 import randomWalk: "rakaneth.wolfsden.ai.tasks.RandomWalkTask"
 import getTarget: "rakaneth.wolfsden.ai.tasks.GetTargetTask"
-import preyNull?: "rakaneth.wolfsden.ai.conditions.PreyNullCondition"
-import preySameLevel?: "rakaneth.wolfsden.ai.conditions.PreySameLevelCondition"
-import preyAlive?: "rakaneth.wolfsden.ai.conditions.PreyAliveCondition"
-
-#Hunting a target
-subtree name: "commandAndHuntPrey"
-	sequence
-		commandLackeys
-		include subtree: "data/ai/common/huntPrey.tree" lazy:true
 
 #tree definition
 root
 	dynamicGuardSelector
-		(include subtree: "data/ai/common/preyExists.tree" lazy:true) $commandAndHuntPrey
+		(include subtree: "data/ai/common/preyExists.tree" lazy:true) include subtree: "data/ai/common/commandAndHuntPrey.tree" lazy:true
 		(detectPrey?) getTarget
 		(detectFood?) include subtree: "data/ai/common/lookForFood.tree" lazy:true
 		() randomWalk
