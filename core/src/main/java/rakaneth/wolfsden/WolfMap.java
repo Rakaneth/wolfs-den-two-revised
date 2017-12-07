@@ -8,9 +8,11 @@ import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 
+import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.gui.gdx.MapUtility;
 import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
+import squidpony.squidmath.CoordPacker;
 import squidpony.squidmath.GreasedRegion;
 
 public class WolfMap
@@ -150,9 +152,9 @@ public class WolfMap
 
   public Coord getEmptyNear(Coord c, int radius)
   {
-    GreasedRegion gr = new GreasedRegion();
-    gr.insertRectangle(c.x, c.y, radius, radius);
-    return gr.singleRandom(WolfGame.rng);
+    FOV tempFOV = new FOV();
+    double[][] tempVis = tempFOV.calculateFOV(resistanceMap, c.x, c.y, radius);
+    return CoordPacker.singleRandom(CoordPacker.pack(tempVis), WolfGame.rng);
   }
 
   public Coord getEmptyNear(Coord c)

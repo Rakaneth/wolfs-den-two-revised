@@ -142,10 +142,15 @@ public class CreatureBuilder
     Entity slave = build(slaveID, summonerPos.map);
     Identity id = Mapper.identity.get(entity);
     Identity sID = Mapper.identity.get(slave);
+    slave.remove(AI.class);
+    slave.add(new AI(BehaviorTreeLibraryManager.getInstance().createBehaviorTree("data/ai/summoned.tree", slave)));
+    Position slavePos = Mapper.position.get(slave);
+    slavePos.current = slavePos.map.getEmptyNear(Mapper.position.get(entity).current);
     Drawing summonerDraw = Mapper.drawing.get(entity);
     Drawing slaveDraw = Mapper.drawing.get(slave);
     fm.removeAllFactions(slave);
     fm.addToFaction(slave, id.id);
+    Mapper.ai.get(slave).setLeader(entity);
 
     if (durationInTix != null)
     {

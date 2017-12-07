@@ -1,7 +1,7 @@
 #Lackey tree
 
 #Aliases
-import wait: "rakaneth.wolfsden.ai.tasks.WaitTask"
+import waitForLeader: "rakaneth.wolfsden.ai.tasks.WaitTask"
 import detectPrey?: "rakaneth.wolfsden.ai.conditions.DetectPreyCondition"
 import getTarget: "rakaneth.wolfsden.ai.tasks.GetTargetTask"
 import followLeader: "rakaneth.wolfsden.ai.tasks.FollowLeaderTask"
@@ -13,4 +13,4 @@ root
 		(include subtree: "data/ai/common/preyExists.tree" lazy:true) include subtree: "data/ai/common/huntPrey.tree" lazy:true
 		(detectPrey?) getTarget
 		(leaderNear?) followLeader 
-		() wait
+		() waitForLeader
