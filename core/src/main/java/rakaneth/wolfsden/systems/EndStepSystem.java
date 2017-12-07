@@ -10,6 +10,7 @@ import rakaneth.wolfsden.GameInfo;
 import rakaneth.wolfsden.Swatch;
 import rakaneth.wolfsden.components.Action;
 import rakaneth.wolfsden.components.Drawing;
+import rakaneth.wolfsden.components.Duration;
 import rakaneth.wolfsden.components.Identity;
 import rakaneth.wolfsden.components.Mapper;
 import rakaneth.wolfsden.components.Position;
@@ -50,15 +51,17 @@ public class EndStepSystem extends EntitySystem
     for (int i = 0; i < entities.size(); ++i)
     {
       Entity entity = entities.get(i);
-      Position pos = Mapper.position.get(entity);
       Vitals vit = Mapper.vitals.get(entity);
       Action act = Mapper.actions.get(entity);
       Drawing draw = Mapper.drawing.get(entity);
       Identity id = Mapper.identity.get(entity);
+      Duration dur = Mapper.durations.get(entity);
 
+      //clear turn
       act.tookTurn = false;
       if (GameInfo.turnCount % 1000 == 0 && GameInfo.turnCount > 0 && Mapper.isPlayer(entity))
       {
+        //passive XP for player
         vit.gainXP(vit.xpMult);
         vit.xpMult = Math.max(vit.xpMult - 0.5f, 0.1f);
       }
@@ -67,6 +70,18 @@ public class EndStepSystem extends EntitySystem
       {
         PlayScreen.addMessage("[%s]%s[] has been [%s]slain![]", draw.color.getName(), id.name, Swatch.VIT);
         PlayScreen.engine.removeEntity(entity);
+      }
+      
+      //cleanup durations
+      //TODO: cleanup for effects - check for effect component and remove component
+      if (dur != null)
+      {
+        dur.duration--;
+        if (dur.duration <= 0)
+        {
+          PlayScreen.addMessage(dur.exitMsg);
+          PlayScreen.engine.removeEntity(entity);
+        }
       }
     }
     GameInfo.turnCount++;

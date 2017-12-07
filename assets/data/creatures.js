@@ -31,7 +31,7 @@
 		vision: 14,
 	},
 	fighter: {
-		name: "Player",
+		name: "Mercenary Fighter",
 		desc: "Fighter",
 		str: 2,
 		stam: 2,

@@ -169,7 +169,7 @@ public class PlayScreen extends WolfScreen
         WolfGame.setScreen(TrainScreen.instance);
         break;
       case 's':
-        cb.summon(player, "fighter", null);
+        cb.summon(player, "fighter", 30);
         break;
       }
 
