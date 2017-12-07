@@ -71,6 +71,6 @@ public final class WolfUtils
   {
     if (logging)
       GdxAI.getLogger()
-           .info(tag, String.format(template, args));
+           .info("[" +  String.valueOf(GameInfo.turnCount) + "]" + tag, String.format(template, args));
   }
 }
