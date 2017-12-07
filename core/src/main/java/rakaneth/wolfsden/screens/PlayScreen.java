@@ -63,9 +63,9 @@ public class PlayScreen extends WolfScreen
   private final int              invHeight       = 16;
   private final int              ablWidth        = 40;
   private final int              ablHeight       = 16;
-  private final int              statWidth       = 40;
+  private final int              statWidth       = 42;
   private final int              statHeight      = 8;
-  private final int              ttWidth         = 40;
+  private final int              ttWidth         = 38;
   private final int              ttHeight        = 8;
   private final int              pixelWidth      = gridWidth * cellWidth;
   private final int              pixelHeight     = gridHeight * cellHeight;
@@ -291,14 +291,14 @@ public class PlayScreen extends WolfScreen
     Offhand oh = Mapper.offhands.get(player);
     Vitals vitals = Mapper.vitals.get(player);
     String eqTemplate = "%8s: %s";
-    IColoredString<Color> wStr = ICString("[%s]Str[]%2d [%s]Dmg[] %6s [%s]Vit[] %5d/%5d", info, stats.str, info,
-                                          secs.dmg, vit, vitals.vit, vitals.maxVit),
-        wStam = ICString("[%s]Sta[]%2d [%s]End[]%3d/%3d [%s]Arm[] %5d/%5d", info, stats.stam, info, vitals.end,
-                         vitals.maxEnd, arm, 100, 100),
-        wSpd = ICString("[%s]Spd[]%2d [%s]Def[] %6d [%s] XP[] %5.0f/%5.0f", info, stats.spd, info, secs.def, XP,
-                        vitals.XP, vitals.totXP),
-        wSkl = ICString("[%s]Skl[]%2d [%s]Atk[] %6s [%s]Mov[] %2d [%s]Dly[] %2d", info, stats.skl, info, secs.atk, info,
-                        secs.moveDelay, info, secs.atkDelay),
+    IColoredString<Color> wStr = ICString("[%s]Str[] %2d [%s]Dmg[] %-5s [%s]Vit[] %5d/%5d [%s]Mov[] %2d", info, stats.str, info,
+                                          secs.dmg, vit, vitals.vit, vitals.maxVit, info, secs.moveDelay),
+        wStam = ICString("[%s]Sta[] %2d [%s]Sav[] %2d    [%s]End[] %5d/%5d [%s]Dly[] %2d", info, stats.stam, info, 99,
+                         info, vitals.end, vitals.maxEnd, info, secs.atkDelay),
+        wSpd = ICString("[%s]Spd[] %2d [%s]Def[] %2d    [%s]Arm[] %5d/%5d [%s]Silver[]", info, stats.spd, info, secs.def, arm,
+                        99999, 99999, "Silver"),
+        wSkl = ICString("[%s]Skl[] %2d [%s]Atk[] %-5s  [%s]XP[] %5.0f/%5.0f %5d", info, stats.skl, info, secs.atk, XP,
+                        vitals.XP, vitals.totXP, 999999),
         wID = ICString("[%s]%s[] - [%s]%s[]", warning, id.name, info, id.desc),
         wLoc = ICString("[%s]Location:[] %s %s", info, pos.map.name(), pos.current),
         wMH = ICString(eqTemplate, "Mainhand", mh.name), wOH = ICString(eqTemplate, "Offhand", oh.name),
